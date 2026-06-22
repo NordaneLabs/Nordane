@@ -1,0 +1,5 @@
+# local / scratch — never deploy these
+.DS_Store
+.playwright-mcp/
+scaffold-check.png
+*.local.*
