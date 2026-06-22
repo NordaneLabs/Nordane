@@ -1,5 +1,12 @@
 # local / scratch — never deploy these
 .DS_Store
 .playwright-mcp/
-scaffold-check.png
 *.local.*
+
+# stray screenshots / images at the repo ROOT are scratch.
+# (real image assets, if ever needed, go in /assets and are tracked there)
+/*.png
+/*.jpg
+/*.jpeg
+/*.gif
+/*.webp
