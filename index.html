@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="warm">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="theme-color" content="#241b20" />
-<!-- set the saved theme BEFORE first paint (no flash) -->
-<script>(function(){try{var t=localStorage.getItem('nordane-theme');if(['warm','dark','light'].indexOf(t)<0)t='warm';document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+<meta name="theme-color" content="#0a141f" />
+<!-- theme is fixed to "dark" (the blue / cool palette) — toggle removed for now -->>
 <title>Nordane</title>
 <meta name="description" content="Nordane — a Swiss holding company. We build and back software companies." />
 <!-- Inline SVG favicon: beak-free Apex raven-in-flight, cream on a rounded plum tile. No /favicon.ico round-trip. -->
@@ -227,10 +226,7 @@
         </svg>
         <span class="wm">NORDANE</span>
       </a>
-      <div class="top-right">
-        <span class="loc">CH</span>
-        <button class="theme-toggle" type="button" aria-label="Switch colour theme"></button>
-      </div>
+      <span class="loc">CH</span>
     </div>
   </header>
 
@@ -295,25 +291,6 @@
     </div>
   </footer>
 
-  <!-- theme toggle: cycles Warm → Blue (cool) → Light; persists to localStorage; the
-       solid engine listens for the 'themechange' event and swaps its facet palette. -->
-  <script>
-  (function(){
-    var order=["warm","dark","light"], label={warm:"Warm",dark:"Blue",light:"Light"}, meta={warm:"#241b20",dark:"#0a141f",light:"#f4f3ef"};
-    var root=document.documentElement, metaT=document.querySelector('meta[name="theme-color"]'), btn=document.querySelector(".theme-toggle");
-    function cur(){ var t=root.getAttribute("data-theme"); return order.indexOf(t)<0?"warm":t; }
-    function apply(t){
-      root.setAttribute("data-theme",t);
-      try{ localStorage.setItem("nordane-theme",t); }catch(e){}
-      if(metaT&&meta[t]) metaT.setAttribute("content",meta[t]);
-      if(btn) btn.textContent=label[order[(order.indexOf(t)+1)%order.length]];   // show the NEXT theme
-      window.dispatchEvent(new CustomEvent("themechange",{detail:{theme:t}}));
-    }
-    if(btn) btn.addEventListener("click",function(){ apply(order[(order.indexOf(cur())+1)%order.length]); });
-    apply(cur());   // sync the button label + meta to the already-set theme (no change)
-  })();
-  </script>
-
   <!-- ============ NORDANE · APEX — SOLID FACETED MARK · CRYSTALLIZE ASSEMBLY ============
        The hero is the SOLID FACETED Apex (the look the founder picked). Each of the 8 verbatim
        logo polygons (head / body / forked tail / two layered primaries per wing) is built into a
@@ -357,7 +334,7 @@
       dark: { light:false, lit:[226,238,245], litHi:[244,252,255], shadow:[60,98,118],   deep:[12,26,38], glint:[210,244,255], rim:[47,203,232],  bloom:[44,150,190] },
       light:{ light:true,  lit:[250,250,248], litHi:[255,255,255], shadow:[120,140,152], deep:[70,90,104], glint:[150,186,205], rim:[14,116,144],  bloom:[120,160,180] }
     };
-    function themeKey(){ var k = document.documentElement.getAttribute("data-theme"); return THEMES[k] ? k : "warm"; }
+    function themeKey(){ var k = document.documentElement.getAttribute("data-theme"); return THEMES[k] ? k : "dark"; }
     var TH = THEMES[themeKey()];
     window.addEventListener("themechange", function(){ TH = THEMES[themeKey()]; });
 
