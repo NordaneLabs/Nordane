@@ -29,7 +29,7 @@
 
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600&family=Fraunces:ital,opsz,wght@1,9..144,400;1,9..144,500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <style>
   :root{
     --bg:#0a141f; --snow:#f0f8fc; --mist:#bcd2df; --steel:#7e97a8;
@@ -102,8 +102,12 @@
   .ix{ display:grid; grid-template-columns:clamp(64px,9vw,120px) minmax(0,1fr) auto; align-items:baseline;
     gap:clamp(16px,3vw,40px); padding:clamp(36px,6vh,60px) 4px; border-bottom:1px solid var(--line); position:relative; }
   .ix:first-child{ border-top:1px solid var(--line); }
+  .ix .q{ grid-column:2 / -1; font-family:"Fraunces", serif; font-style:italic; font-weight:400;
+    font-size:clamp(1.05rem,1.7vw,1.35rem); color:var(--steel); line-height:1.5; margin-bottom:10px; }
+  .ix .q::before{ content:"« "; color:var(--cyan); }
+  .ix .q::after{ content:" »"; color:var(--cyan); }
   .ix .no{ font-family:"JetBrains Mono"; font-size:clamp(.85rem,1.3vw,1rem); color:var(--steel); letter-spacing:.06em;
-    transition:color .5s var(--ease); }
+    grid-row:2; transition:color .5s var(--ease); }
   .ix:hover .no{ color:var(--cyan); }
   .ix h2{ font-size:clamp(1.8rem,4.2vw,3rem); font-weight:500; letter-spacing:-.026em; line-height:1.05;
     transition:transform .55s var(--ease); }
@@ -135,6 +139,10 @@
     border-bottom:1px solid var(--line-2); padding-bottom:6px;
     transition:color .4s var(--ease), border-color .4s var(--ease); }
   .case-link:hover{ color:var(--cyan-br); border-color:var(--cyan); }
+
+  .sec-note{ font-family:"JetBrains Mono"; font-size:11px; letter-spacing:.24em; text-transform:uppercase;
+    color:var(--steel); padding-bottom:18px; }
+  .case.alt{ background:transparent; border-bottom:1px solid var(--line); }
 
   /* ---- pull-quote — the people ---- */
   .pull{ border-top:1px solid var(--line); border-bottom:1px solid var(--line); background:var(--panel-hi); }
@@ -219,34 +227,41 @@
     </section>
 
     <section class="index wrap">
+      <div class="sec-note rv">Where we help — if one of these sounds like you, we should talk.</div>
       <div class="ix rv">
+        <span class="q">Our data can't leave the company — but our people paste it into ChatGPT anyway.</span>
         <span class="no">01</span>
-        <h2>Agents that do the work</h2>
-        <span class="side">Operations</span>
-        <p>Quote requests answered, orders confirmed, invoices chased, bookings managed —
-        <b>software that acts</b>, wired into the tools you already run. Not a chatbot in the corner:
-        a colleague that never sleeps.</p>
+        <h2>Own your AI</h2>
+        <span class="side">Sovereign</span>
+        <p>Private AI on your own hardware — a <b>Mac Studio cluster in your server room</b>, or your
+        Swiss cloud. Open models, private by architecture: <b>your data never leaves the building</b>,
+        and you're not renting intelligence from a US provider by the token.</p>
       </div>
       <div class="ix rv">
+        <span class="q">We have AI pilots everywhere — and nothing in production.</span>
         <span class="no">02</span>
-        <h2>Your data, answering</h2>
-        <span class="side">Intelligence</span>
-        <p>Your ERP, POS, mail, and documents connected into one layer your agents can read.
-        <b>Ask your business a question — get the real answer</b>, from your real numbers, in seconds.</p>
-      </div>
-      <div class="ix rv">
-        <span class="no">03</span>
-        <h2>Private by design</h2>
-        <span class="side">Swiss-grade</span>
-        <p>Sensitive business? The systems run <b>on your infrastructure</b> — on-premise or Swiss cloud.
-        Your data never leaves the house. That's not a feature here; it's the default.</p>
-      </div>
-      <div class="ix rv">
-        <span class="no">04</span>
-        <h2>Live in weeks</h2>
+        <h2>Agents in production</h2>
         <span class="side">Delivery</span>
-        <p>First system <b>in production in weeks, not quarters</b> — and you keep everything:
-        the code, the infrastructure, the keys. No lock-in, no dependency by design.</p>
+        <p>Most pilots never touch the P&amp;L. We take <b>one workflow that matters</b> and ship it —
+        wired into your ERP, POS and mail over MCP, tested, measured, <b>live in weeks</b>.
+        Idea → testing → automation.</p>
+      </div>
+      <div class="ix rv">
+        <span class="q">Everything we know is buried in PDFs, mail and SharePoint.</span>
+        <span class="no">03</span>
+        <h2>Your knowledge, answering</h2>
+        <span class="side">Intelligence</span>
+        <p>Twenty years of documents, systems and history connected into <b>one private layer your
+        agents can read</b>. Ask your business a question — get the real answer, with the source.</p>
+      </div>
+      <div class="ix rv">
+        <span class="q">Software costs us too much and takes too long.</span>
+        <span class="no">04</span>
+        <h2>The code factory</h2>
+        <span class="side">Engineering</span>
+        <p>AI-native delivery: forward-deployed engineers, coding agents, and <b>verification
+        pipelines that make AI prove its work</b> before anything ships. We run one on ourselves —
+        see below.</p>
       </div>
     </section>
 
@@ -278,6 +293,36 @@
           </div>
         </div>
         <a class="case-link" href="https://okam.no" target="_blank" rel="noopener">See it live — okam.no ↗</a>
+      </div>
+    </div>
+
+    <!-- built & running II — the code factory itself -->
+    <div class="case alt rv">
+      <div class="wrap case-in">
+        <div class="case-head">
+          <div class="kicker">Built &amp; running — our own tooling</div>
+          <h2>auto-mate. The code factory we built for ourselves.</h2>
+          <p class="case-note">The machine behind our delivery — an agentic engineering platform,
+          ~240,000 lines, in daily development. This is what "past the hype" looks like in code.</p>
+        </div>
+        <div class="specs">
+          <div class="spec">
+            <span class="k">The loop</span>
+            <span class="v">AI reviews a pull request, validates its own findings, verifies them against the project's real test suite — and only then, behind an approval gate, patches and pushes</span>
+          </div>
+          <div class="spec">
+            <span class="k">The integration</span>
+            <span class="v">Production-grade MCP — servers over stdio and HTTP with OAuth&nbsp;2.0, key rotation and scoped permissions. The same protocol now under the Linux Foundation</span>
+          </div>
+          <div class="spec">
+            <span class="k">The rigor</span>
+            <span class="v">235+ test files, isolated Docker runners per project, performance benchmarks that fail the build on regression</span>
+          </div>
+          <div class="spec">
+            <span class="k">Why it matters to you</span>
+            <span class="v">The pipelines we sell are the pipelines we run — AI that must prove its work before it ships</span>
+          </div>
+        </div>
       </div>
     </div>
 
