@@ -126,7 +126,7 @@
   .case-in{ padding:clamp(56px,10vh,110px) 0; }
   .kicker{ font-family:"JetBrains Mono"; font-size:10.5px; letter-spacing:.3em; text-transform:uppercase;
     color:var(--cyan); margin-bottom:18px; }
-  .case-head h2{ font-size:clamp(1.9rem,4.4vw,3.2rem); font-weight:500; letter-spacing:-.026em; line-height:1.1; }
+  .case-head h2{ font-size:clamp(1.9rem,4.4vw,3.2rem); font-weight:500; letter-spacing:-.026em; line-height:1.1; text-wrap:balance; }
   .case-note{ margin-top:16px; max-width:56ch; color:var(--mist); font-weight:300;
     font-size:clamp(1rem,1.4vw,1.14rem); line-height:1.7; }
   .specs{ margin-top:clamp(30px,5vh,48px); border-top:1px solid var(--line); }
@@ -197,6 +197,19 @@
     .ix .side{ display:none; }
     .facts-in{ grid-template-columns:1fr; }
     .fact + .fact::before{ left:24%; right:24%; top:0; bottom:auto; width:auto; height:1px; }
+  }
+  @media (max-width:700px){
+    h1{ font-size:clamp(1.9rem,8.6vw,2.5rem); }
+    .room{ min-height:auto; padding-top:clamp(40px,8vh,70px); }
+    .case-head h2{ font-size:clamp(1.55rem,6.6vw,2rem); }
+    .pull h2{ font-size:clamp(1.55rem,6.4vw,2rem); }
+    .close h2{ font-size:clamp(1.65rem,7.2vw,2.2rem); }
+    /* spec tables stack: label above value, full width */
+    .spec{ grid-template-columns:1fr; gap:7px; padding:18px 4px; }
+    .b-stat{ font-size:clamp(1.05rem,4.9vw,1.3rem); }
+    .brief-row{ grid-template-columns:44px minmax(0,1fr); }
+    .ix h2{ font-size:clamp(1.55rem,7vw,2.1rem); }
+    .ix .q{ font-size:clamp(.98rem,4.4vw,1.15rem); }
   }
   @media (prefers-reduced-motion: reduce){
     .brand,.loc,.cap,.room p,.invite{ animation:none; opacity:1; }
