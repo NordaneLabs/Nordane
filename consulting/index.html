@@ -95,8 +95,8 @@
   .hero-grid{ position:relative; z-index:1; display:grid;
     grid-template-columns:minmax(0,1.02fr) minmax(0,1.2fr); gap:clamp(24px,4vw,56px); align-items:center; }
   .hero-copy .eyebrow{ opacity:0; animation:fady 1.2s .5s var(--ease) forwards; }
-  h1{ font-weight:600; font-size:clamp(2.1rem,4.2vw,3.3rem); line-height:1.08; letter-spacing:-.028em;
-    margin-top:18px; max-width:15ch; }
+  h1{ font-weight:600; font-size:clamp(2rem,3.3vw,2.85rem); line-height:1.1; letter-spacing:-.028em;
+    margin-top:18px; max-width:20ch; }
   h1 .ch{ display:inline-block; opacity:0; transform:translateY(.34em); filter:blur(5px);
     animation:chIn .8s var(--ease) forwards; }
   h1 .w{ display:inline-block; white-space:nowrap; }
@@ -612,8 +612,10 @@
           pending=[]; t=0;
         }, 40);
       }
-    }, { threshold:0.15, rootMargin:"0px 0px -6% 0px" });
+    }, { threshold:0.1, rootMargin:"0px 0px 14% 0px" });
     els.forEach(function(e){ io.observe(e); });
+    /* watchdog: if anything was missed (fast scroll, odd viewport), reveal it */
+    setTimeout(function(){ els.forEach(function(e){ if(!e.classList.contains("in")) e.classList.add("in"); }); }, 9000);
   })();
   </script>
 </body>

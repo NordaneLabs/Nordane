@@ -123,7 +123,7 @@
   @keyframes emblemIn{ to{ opacity:1; filter:blur(0); } }
 
   /* cinematic hero backdrop — the panorama emerges from the page bottom */
-  .hero{ position:relative; min-height:92svh; }
+  .hero{ position:relative; min-height:92svh; margin-bottom:clamp(36px,5vh,52px); }
   .hero-bg{ position:absolute; left:calc(50% - 50vw); bottom:0; width:100vw; height:min(38svh,360px);
     z-index:0; pointer-events:none; overflow:hidden; }
   .hero-copy, .survey-frame{ position:relative; z-index:1; }
@@ -463,8 +463,10 @@
           pending = []; flushT = 0;
         }, 40);
       }
-    }, { threshold:0.18, rootMargin:"0px 0px -6% 0px" });
+    }, { threshold:0.12, rootMargin:"0px 0px 14% 0px" });
     els.forEach(function(e){ io.observe(e); });
+    /* watchdog: if anything was missed (fast scroll, odd viewport), reveal it */
+    setTimeout(function(){ els.forEach(function(e){ if(!e.classList.contains("in")) e.classList.add("in"); }); }, 9000);
   })();
   </script>
 
