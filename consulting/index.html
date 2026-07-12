@@ -4,6 +4,18 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="theme-color" content="#f5f7fa" />
+<script>
+/* pre-paint theme restore — runs before any CSS so there is no flash of the wrong theme */
+(function(){
+  try{
+    if(localStorage.getItem("nordane-theme")==="dark"){
+      document.documentElement.setAttribute("data-theme","dark");
+      var m=document.querySelector('meta[name="theme-color"]');
+      if(m) m.setAttribute("content","#071426");
+    }
+  }catch(e){}
+})();
+</script>
 <title>Consulting — Nordane</title>
 <meta name="description" content="We build AI systems that do real work — in production, on your data, in your environment." />
 <!-- icons -->
@@ -32,6 +44,7 @@
   /* ALPINE · consulting — the glass-architecture direction from the founder's board.
      Ice paper, steel blue, glass renders, instrument annotations. */
   :root{
+    color-scheme:light;
     --bg:#f5f7fa; --ink:#0e1722; --body:#2b3a4d; --steel:#54718f;
     --acc:#5c7fa3; --acc-deep:#3d5c7e; --acc-ice:#8fb6d6; --ice:#d7e3ee;
     --line:rgba(14,23,34,0.10); --line-2:rgba(14,23,34,0.20);
@@ -324,6 +337,121 @@
     .cube-frame img{ animation:none; opacity:1; filter:blur(0); }
     .rv{ opacity:1; transform:none; transition:none; }
   }
+
+  /* ==================== NIGHT MODE ====================
+     Founder palette: Midnight Navy #071426 · Deep Navy #0B1F3A · Steel Navy #18324F ·
+     Coral #FF765F / #FF8A70 / #D95745 · Ice White #F5F8FA · Cool Silver #AAB6C3.
+     Light mode is untouched: everything below is either the toggle control,
+     the transition machinery, or scoped under html[data-theme="dark"]. */
+
+  /* --- toggle — Nordic four-point North-star, seated beside the .loc label --- */
+  .top-right{ display:flex; align-items:center; gap:clamp(14px,3vw,22px); }
+  .theme-toggle{ appearance:none; -webkit-appearance:none; width:40px; height:40px; flex:0 0 auto;
+    display:inline-flex; align-items:center; justify-content:center; padding:0;
+    border:1px solid var(--line-2); border-radius:999px; background:transparent; color:var(--ink); cursor:pointer;
+    opacity:0; animation:fady 1.2s .4s var(--ease) forwards;
+    transition:border-color .3s var(--ease), color .3s var(--ease), transform .3s var(--ease); }
+  .theme-toggle:hover{ border-color:var(--acc); color:var(--acc-deep); transform:translateY(-1px); }
+  .theme-toggle:active{ transform:translateY(0); }
+  .theme-toggle .tstar{ width:18px; height:18px; display:block;
+    transition:transform .7s var(--ease), filter .5s var(--ease); }
+  .theme-toggle .tstar .core{ fill:none; stroke:currentColor; stroke-width:1.5; stroke-linejoin:round; }
+  .theme-toggle .tstar .rays{ fill:none; stroke:currentColor; stroke-width:1.1; stroke-linecap:round; }
+  .theme-toggle .tstar.pop{ animation:starPop .7s var(--ease); }
+  @keyframes starPop{ 0%{ scale:1; } 45%{ scale:1.3; } 100%{ scale:1; } } /* `scale`, not transform — composes with the rotation */
+  html[data-theme="dark"] .theme-toggle .tstar{ transform:rotate(90deg);
+    filter:drop-shadow(0 0 5px rgba(255,118,95,.55)) drop-shadow(0 0 16px rgba(255,118,95,.25)); }
+  html[data-theme="dark"] .theme-toggle .tstar .core{ fill:#ff765f; stroke:#ff765f; }
+  html[data-theme="dark"] .theme-toggle .tstar .rays{ stroke:#ff765f; }
+  html[data-theme="dark"] .theme-toggle:hover .tstar .core{ fill:#ff8a70; stroke:#ff8a70; }
+  html[data-theme="dark"] .theme-toggle:hover .tstar .rays{ stroke:#ff8a70; }
+  html[data-theme="dark"] .theme-toggle:active .tstar .core{ fill:#d95745; stroke:#d95745; }
+
+  /* --- view-transition radial reveal: old snapshot holds still underneath,
+         the new theme sweeps over it as an expanding circle (clip-path animated from JS) --- */
+  ::view-transition-old(root){ animation:none; mix-blend-mode:normal; z-index:0; }
+  ::view-transition-new(root){ animation:none; mix-blend-mode:normal; z-index:1; }
+
+  /* --- fallback pulse wave (browsers without startViewTransition) --- */
+  .theme-pulse{ position:fixed; inset:0; z-index:2147483000; pointer-events:none; }
+  .theme-pulse.out{ opacity:0; transition:opacity .3s ease; }
+  .theme-pulse .flood, .theme-pulse .ring{ position:absolute; left:var(--px); top:var(--py);
+    width:20px; height:20px; margin:-10px 0 0 -10px; border-radius:50%; transform:scale(0); }
+  .theme-pulse .flood{ background:var(--pc); animation:pulseFlood .65s cubic-bezier(0.22,1,0.36,1) forwards; }
+  .theme-pulse .ring{ border:2px solid rgba(255,118,95,.55); animation:pulseRing .62s cubic-bezier(0.22,1,0.36,1) forwards; }
+  .theme-pulse .ring.r2{ border-color:rgba(255,118,95,.3); animation-delay:.1s; }
+  @keyframes pulseFlood{ to{ transform:scale(var(--ps,150)); } }
+  @keyframes pulseRing{ 55%{ opacity:1; } to{ transform:scale(var(--ps,150)); opacity:0; } }
+
+  /* --- the dark palette --- */
+  html[data-theme="dark"]{
+    color-scheme:dark;
+    --bg:#071426; --ink:#f5f8fa; --body:#aab6c3; --steel:#8b99a8;
+    --acc:#ff765f; --acc-deep:#ff765f; --acc-ice:#8fb6d6;
+    --line:rgba(24,50,79,0.55); --line-2:rgba(24,50,79,0.95);
+    --panel:#0b1f3a; --ok:#4ade80;
+  }
+  html[data-theme="dark"] ::selection{ background:rgba(255,118,95,0.3); color:#f5f8fa; }
+  html[data-theme="dark"] .bg{ background:
+    radial-gradient(110% 80% at 80% -12%, rgba(255,118,95,0.07), transparent 55%),
+    radial-gradient(120% 100% at 12% 110%, rgba(24,50,79,0.45), transparent 60%),
+    linear-gradient(180deg, #081627 0%, #071426 45%, #060f1d 100%); }
+  html[data-theme="dark"] .grain{ opacity:.035; }
+  html[data-theme="dark"] .btn.primary{ background:#ff765f; border-color:#ff765f; color:#071426; }
+  html[data-theme="dark"] .btn.primary:hover{ background:#ff8a70; border-color:#ff8a70; }
+  html[data-theme="dark"] .btn.primary:active{ background:#d95745; border-color:#d95745; }
+  html[data-theme="dark"] .btn.ghost{ color:#f5f8fa; }
+  html[data-theme="dark"] .btn.ghost:hover{ border-color:#ff765f; color:#ff8a70; }
+  /* brandmark: dedicated coral render in dark mode (filters can't add opacity) */
+  .brand .brandmark-dark{ display:none; }
+  html[data-theme="dark"] .brand .brandmark-light{ display:none; }
+  html[data-theme="dark"] .brand .brandmark-dark{ display:block;
+    filter:drop-shadow(0 0 9px rgba(255,118,95,.4)); }
+  html[data-theme="dark"] .rail-item::before{ box-shadow:0 0 0 3px rgba(255,118,95,.2); }
+
+  /* hero glass stack (deep steel-blue render on alpha) — invert flips it to warm tan,
+     hue-rotate(195deg) swings it back to cool ice, brightness lifts it luminous on the navy.
+     !important so it outbids the visIn keyframe's persisted `filter:blur(0)`. tune here */
+  html[data-theme="dark"] .cube-frame img{
+    filter:invert(1) hue-rotate(195deg) brightness(1.5) saturate(.55)
+           drop-shadow(0 0 30px rgba(255,118,95,.1)) !important; }
+
+  /* capability cards — the near-white .pic plates deliberately STAY light: mounted prints
+     on a dark gallery wall, ringed with a steel-navy hairline (shadow ring: no layout shift) */
+  html[data-theme="dark"] .cap{ box-shadow:0 14px 40px -28px rgba(0,0,0,0.7); }
+  html[data-theme="dark"] .cap:hover{ box-shadow:0 22px 50px -28px rgba(0,0,0,0.85); }
+  html[data-theme="dark"] .cap .pic{ box-shadow:0 0 0 1px #18324f; }
+
+  /* command center miniature — Deep Navy chrome, coral instruments */
+  html[data-theme="dark"] .cc{ box-shadow:0 30px 70px -40px rgba(0,0,0,0.85); }
+  html[data-theme="dark"] .cc-nav span.on{ background:rgba(255,118,95,.1); }
+  html[data-theme="dark"] .agent .bar{ background:rgba(255,118,95,.16); }
+
+  /* work panels — the okam screenshot stays a light framed plate, gently dimmed to seat it */
+  html[data-theme="dark"] .wpanel{ box-shadow:0 18px 50px -30px rgba(0,0,0,0.7); }
+  html[data-theme="dark"] .wpanel .shot{ box-shadow:0 0 0 1px #18324f; }
+  html[data-theme="dark"] .wpanel .shot img{ filter:brightness(.94); }
+
+  /* the factory miniature already lives on near-black — lift it to a lighter navy
+     and ring it so it still reads as its own panel against the dark page */
+  html[data-theme="dark"] .factory{ background:#122a47; box-shadow:0 0 0 1px #18324f; }
+
+  /* close band — deep navy panel, the white radial glow becomes a low coral halo,
+     and the glass cube gets the same luminous treatment as the hero render */
+  html[data-theme="dark"] .close-in{ background:linear-gradient(180deg,#0d2340 0%,#081832 100%);
+    box-shadow:0 24px 60px -34px rgba(0,0,0,0.8); }
+  html[data-theme="dark"] .close-pic::before{
+    background:radial-gradient(50% 50% at 50% 50%, rgba(255,118,95,0.16), rgba(255,118,95,0) 70%); }
+  html[data-theme="dark"] .close-pic img{
+    filter:invert(1) hue-rotate(195deg) brightness(1.5) saturate(.55)
+           drop-shadow(0 0 26px rgba(255,118,95,.12)); } /* tune here */
+
+  @media (prefers-reduced-motion: reduce){
+    .theme-toggle{ animation:none; opacity:1; }
+    .theme-toggle .tstar{ transition:none; }
+    .theme-toggle .tstar.pop{ animation:none; }
+    .theme-pulse{ display:none; }
+  }
 </style>
 </head>
 <body>
@@ -333,10 +461,19 @@
   <header>
     <div class="wrap top">
       <a class="brand" href="../" aria-label="Nordane home">
-        <img class="brandmark" src="../assets/spine-icon.png?v=3" alt="" width="115" height="255" />
+        <img class="brandmark brandmark-light" src="../assets/spine-icon.png?v=3" alt="" width="115" height="255" />
+        <img class="brandmark brandmark-dark" src="../assets/spine-icon-coral.png" alt="" width="115" height="255" />
         <span class="wm">N<svg class="dia" viewBox="0 0 100 100" aria-hidden="true"><path d="M50 8 92 50 50 92 8 50Z" fill="none" stroke="currentColor" stroke-width="10"/><path d="M50 36 64 50 50 64 36 50Z" fill="currentColor"/></svg>RDANE</span>
       </a>
-      <span class="loc">Consulting · CH</span>
+      <div class="top-right">
+        <span class="loc">Consulting · CH</span>
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to night mode" aria-pressed="false">
+          <svg class="tstar" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path class="core" d="M12 2 L13.6 10.4 L18.8 12 L13.6 13.6 L12 22 L10.4 13.6 L5.2 12 L10.4 10.4 Z"/>
+            <path class="rays" d="M15.7 8.3l1.6-1.6M8.3 8.3L6.7 6.7M15.7 15.7l1.6 1.6M8.3 15.7l-1.6 1.6"/>
+          </svg>
+        </button>
+      </div>
     </div>
   </header>
 
@@ -616,6 +753,80 @@
     els.forEach(function(e){ io.observe(e); });
     /* watchdog: if anything was missed (fast scroll, odd viewport), reveal it */
     setTimeout(function(){ els.forEach(function(e){ if(!e.classList.contains("in")) e.classList.add("in"); }); }, 9000);
+  })();
+  </script>
+
+  <!-- ============ NIGHT MODE — North-star toggle + radial reveal ============
+       Primary: View Transitions API, clip-path circle expanding from the button.
+       Fallback: an expanding pulse-wave overlay. Reduced motion: instant swap. -->
+  <script>
+  (function(){
+    "use strict";
+    var KEY = "nordane-theme";
+    var root = document.documentElement;
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var btn = document.getElementById("themeToggle");
+    if(!btn) return;
+    var meta = document.querySelector('meta[name="theme-color"]');
+    var busy = false;
+
+    function isDark(){ return root.getAttribute("data-theme") === "dark"; }
+    function syncUi(){
+      var dark = isDark();
+      btn.setAttribute("aria-pressed", dark ? "true" : "false");
+      btn.setAttribute("aria-label", dark ? "Switch to day mode" : "Switch to night mode");
+      if(meta) meta.setAttribute("content", dark ? "#071426" : "#f5f7fa");
+    }
+    function apply(dark){
+      if(dark) root.setAttribute("data-theme","dark");
+      else root.removeAttribute("data-theme");
+      try{ localStorage.setItem(KEY, dark ? "dark" : "light"); }catch(e){}
+      syncUi();
+      try{ document.dispatchEvent(new CustomEvent("nordane-themechange")); }catch(e){}
+    }
+    function coverRadius(x,y){
+      var dx = Math.max(x, window.innerWidth - x), dy = Math.max(y, window.innerHeight - y);
+      return Math.hypot(dx,dy) * 1.1; /* ~1.1× the distance to the farthest corner */
+    }
+    function pulseFallback(x,y,toDark){
+      busy = true;
+      var ov = document.createElement("div");
+      ov.className = "theme-pulse";
+      ov.style.setProperty("--px", x+"px");
+      ov.style.setProperty("--py", y+"px");
+      ov.style.setProperty("--pc", toDark ? "#071426" : "#f5f7fa");
+      ov.style.setProperty("--ps", (coverRadius(x,y)/10).toFixed(2)); /* flood disc is 20px, radius 10 */
+      ov.innerHTML = '<span class="ring"></span><span class="ring r2"></span><span class="flood"></span>';
+      document.body.appendChild(ov);
+      setTimeout(function(){ apply(toDark); }, 260);            /* flip ~40% through the wave */
+      setTimeout(function(){ ov.classList.add("out"); }, 650);
+      setTimeout(function(){ if(ov.parentNode) ov.parentNode.removeChild(ov); busy = false; }, 980);
+    }
+
+    btn.addEventListener("click", function(){
+      if(busy) return;
+      var toDark = !isDark();
+      if(reduce){ apply(toDark); return; }                      /* instant, no animation */
+      var star = btn.querySelector(".tstar");
+      if(star){ star.classList.remove("pop"); void star.offsetWidth; star.classList.add("pop"); }
+      var r = btn.getBoundingClientRect();
+      var x = r.left + r.width/2, y = r.top + r.height/2;
+      if(document.startViewTransition){
+        var vt = document.startViewTransition(function(){ apply(toDark); });
+        vt.ready.then(function(){
+          root.animate(
+            { clipPath:[ "circle(0px at "+x+"px "+y+"px)",
+                         "circle("+coverRadius(x,y).toFixed(0)+"px at "+x+"px "+y+"px)" ] },
+            { duration:700, easing:"cubic-bezier(0.22,1,0.36,1)",
+              pseudoElement:"::view-transition-new(root)" }
+          );
+        }).catch(function(){});
+      } else {
+        pulseFallback(x,y,toDark);
+      }
+    });
+
+    syncUi();
   })();
   </script>
 </body>

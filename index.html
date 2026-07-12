@@ -4,6 +4,18 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="theme-color" content="#f5f7fa" />
+<script>
+/* pre-paint theme restore — runs before any CSS so there is no flash of the wrong theme */
+(function(){
+  try{
+    if(localStorage.getItem("nordane-theme")==="dark"){
+      document.documentElement.setAttribute("data-theme","dark");
+      var m=document.querySelector('meta[name="theme-color"]');
+      if(m) m.setAttribute("content","#071426");
+    }
+  }catch(e){}
+})();
+</script>
 <title>Nordane</title>
 <meta name="description" content="Nordane — a Swiss AI operator. We build and run AI systems that power real business." />
 <!-- icons -->
@@ -37,10 +49,12 @@
      set on ice paper instead of night. Palette from the brand board:
      0E1722 · 2B3A4D · 5C7FA3 · 8FB6D6 · D7E3EE · F5F7FA. */
   :root{
+    color-scheme:light;
     --bg:#f5f7fa; --ink:#0e1722; --body:#2b3a4d; --steel:#54718f;
     --acc:#5c7fa3; --acc-deep:#3d5c7e; --acc-ice:#8fb6d6; --ice:#d7e3ee;
     --line:rgba(14,23,34,0.10); --line-2:rgba(14,23,34,0.20);
-    --panel:#ffffff; --ease:cubic-bezier(0.22,1,0.36,1); --maxw:1080px; --r:18px;
+    --panel:#ffffff; --scrim-rgb:245,247,250;
+    --ease:cubic-bezier(0.22,1,0.36,1); --maxw:1080px; --r:18px;
   }
   *{ box-sizing:border-box; margin:0; padding:0; }
   html{ scroll-behavior:smooth; overscroll-behavior-y:none; }
@@ -191,7 +205,7 @@
   .massif-ridges{ position:absolute; inset:0; }
   .massif-ridges svg{ width:100%; height:100%; display:block; }
   .massif-scrim{ position:absolute; inset:0;
-    background:linear-gradient(90deg, rgba(245,247,250,0.82) 0%, rgba(245,247,250,0.45) 42%, rgba(245,247,250,0) 68%); }
+    background:linear-gradient(90deg, rgba(var(--scrim-rgb),0.82) 0%, rgba(var(--scrim-rgb),0.45) 42%, rgba(var(--scrim-rgb),0) 68%); }
   .massif-band canvas{ position:absolute; inset:0; width:100%; height:100%; }
   .massif-copy{ position:relative; z-index:2; padding:clamp(30px,5vh,56px) clamp(26px,5vw,64px);
     max-width:540px; }
@@ -239,13 +253,117 @@
     /* widen the ridgescape so the peak keeps its shape instead of squeezing to a needle */
     .massif-ridges{ overflow:hidden; }
     .massif-ridges svg{ width:230%; margin-left:-69%; }
-    .massif-scrim{ background:linear-gradient(180deg, rgba(245,247,250,0.85) 0%, rgba(245,247,250,0.6) 55%, rgba(245,247,250,0.2) 100%); }
+    .massif-scrim{ background:linear-gradient(180deg, rgba(var(--scrim-rgb),0.85) 0%, rgba(var(--scrim-rgb),0.6) 55%, rgba(var(--scrim-rgb),0.2) 100%); }
     .massif-copy{ max-width:100%; padding:34px 26px 40px; }
   }
   @media (max-width: 480px){
     h1{ font-size:2.15rem; }
     .prin-band{ grid-template-columns:1fr; }
     .prin + .prin{ border-left:0; border-top:1px solid var(--line); }
+  }
+
+  /* ==================== NIGHT MODE ====================
+     Founder palette: Midnight Navy #071426 · Deep Navy #0B1F3A · Steel Navy #18324F ·
+     Coral #FF765F / #FF8A70 / #D95745 · Ice White #F5F8FA · Cool Silver #AAB6C3.
+     Light mode is untouched: everything below is either the toggle control,
+     the transition machinery, or scoped under html[data-theme="dark"]. */
+
+  /* --- toggle — Nordic four-point North-star --- */
+  .theme-toggle{ appearance:none; -webkit-appearance:none; width:40px; height:40px; flex:0 0 auto;
+    display:inline-flex; align-items:center; justify-content:center; padding:0;
+    border:1px solid var(--line-2); border-radius:999px; background:transparent; color:var(--ink); cursor:pointer;
+    transition:border-color .3s var(--ease), color .3s var(--ease), transform .3s var(--ease); }
+  .theme-toggle:hover{ border-color:var(--acc); color:var(--acc-deep); transform:translateY(-1px); }
+  .theme-toggle:active{ transform:translateY(0); }
+  .theme-toggle .tstar{ width:18px; height:18px; display:block;
+    transition:transform .7s var(--ease), filter .5s var(--ease); }
+  .theme-toggle .tstar .core{ fill:none; stroke:currentColor; stroke-width:1.5; stroke-linejoin:round; }
+  .theme-toggle .tstar .rays{ fill:none; stroke:currentColor; stroke-width:1.1; stroke-linecap:round; }
+  .theme-toggle .tstar.pop{ animation:starPop .7s var(--ease); }
+  @keyframes starPop{ 0%{ scale:1; } 45%{ scale:1.3; } 100%{ scale:1; } } /* `scale`, not transform — composes with the rotation */
+  html[data-theme="dark"] .theme-toggle .tstar{ transform:rotate(90deg);
+    filter:drop-shadow(0 0 5px rgba(255,118,95,.55)) drop-shadow(0 0 16px rgba(255,118,95,.25)); }
+  html[data-theme="dark"] .theme-toggle .tstar .core{ fill:#ff765f; stroke:#ff765f; }
+  html[data-theme="dark"] .theme-toggle .tstar .rays{ stroke:#ff765f; }
+  html[data-theme="dark"] .theme-toggle:hover .tstar .core{ fill:#ff8a70; stroke:#ff8a70; }
+  html[data-theme="dark"] .theme-toggle:hover .tstar .rays{ stroke:#ff8a70; }
+  html[data-theme="dark"] .theme-toggle:active .tstar .core{ fill:#d95745; stroke:#d95745; }
+
+  /* --- view-transition radial reveal: old snapshot holds still underneath,
+         the new theme sweeps over it as an expanding circle (clip-path animated from JS) --- */
+  ::view-transition-old(root){ animation:none; mix-blend-mode:normal; z-index:0; }
+  ::view-transition-new(root){ animation:none; mix-blend-mode:normal; z-index:1; }
+
+  /* --- fallback pulse wave (browsers without startViewTransition) --- */
+  .theme-pulse{ position:fixed; inset:0; z-index:2147483000; pointer-events:none; }
+  .theme-pulse.out{ opacity:0; transition:opacity .3s ease; }
+  .theme-pulse .flood, .theme-pulse .ring{ position:absolute; left:var(--px); top:var(--py);
+    width:20px; height:20px; margin:-10px 0 0 -10px; border-radius:50%; transform:scale(0); }
+  .theme-pulse .flood{ background:var(--pc); animation:pulseFlood .65s cubic-bezier(0.22,1,0.36,1) forwards; }
+  .theme-pulse .ring{ border:2px solid rgba(255,118,95,.55); animation:pulseRing .62s cubic-bezier(0.22,1,0.36,1) forwards; }
+  .theme-pulse .ring.r2{ border-color:rgba(255,118,95,.3); animation-delay:.1s; }
+  @keyframes pulseFlood{ to{ transform:scale(var(--ps,150)); } }
+  @keyframes pulseRing{ 55%{ opacity:1; } to{ transform:scale(var(--ps,150)); opacity:0; } }
+
+  /* --- the dark palette --- */
+  html[data-theme="dark"]{
+    color-scheme:dark;
+    --bg:#071426; --ink:#f5f8fa; --body:#aab6c3; --steel:#8b99a8;
+    --acc:#ff765f; --acc-deep:#ff765f; --acc-ice:#8fb6d6;
+    --line:rgba(24,50,79,0.55); --line-2:rgba(24,50,79,0.95);
+    --panel:#0b1f3a; --scrim-rgb:11,31,58;
+    /* massif night scene */
+    --m-sky-0:#0a1a30; --m-sky-1:#071426;
+    --m-glow:#ff765f; --m-glow-a0:.42; --m-glow-a1:.16; --m-glow-a2:0;
+    --m-r1-0:#12263e; --m-r1-1:#102138;
+    --m-r2-0:#0f2136; --m-r2-1:#0d1d31;
+    --m-r3-0:#0d1f33; --m-r3-1:#0b1b2d;
+    --m-r4-0:#0b1a2c; --m-r4-1:#091626;
+    --m-r5-0:#21405f; --m-r5-05:#16304c; --m-r5-1:#0e2036;
+    --m-mist:#0b1d33;
+    --m-snow:#f5f8fa; --m-snow-a:.7; --m-face-a1:.2; --m-face-a2:.08;
+    --m-pole:#7e97b0;
+    --m-vmist:#c8d8e8; --m-vmist-a1:.09; --m-vmist-a2:.07;
+  }
+  html[data-theme="dark"] ::selection{ background:rgba(255,118,95,0.3); color:#f5f8fa; }
+  html[data-theme="dark"] .bg{ background:
+    radial-gradient(110% 80% at 80% -12%, rgba(255,118,95,0.07), transparent 55%),
+    radial-gradient(120% 100% at 12% 110%, rgba(24,50,79,0.45), transparent 60%),
+    linear-gradient(180deg, #081627 0%, #071426 45%, #060f1d 100%); }
+  html[data-theme="dark"] .grain{ opacity:.035; }
+  html[data-theme="dark"] .btn.primary{ background:#ff765f; border-color:#ff765f; color:#071426; }
+  html[data-theme="dark"] .btn.primary:hover{ background:#ff8a70; border-color:#ff8a70; }
+  html[data-theme="dark"] .btn.primary:active{ background:#d95745; border-color:#d95745; }
+  html[data-theme="dark"] .btn.ghost{ color:#f5f8fa; }
+  html[data-theme="dark"] .btn.ghost:hover{ border-color:#ff765f; color:#ff8a70; }
+  /* brandmark: dedicated coral render in dark mode (filters can't add opacity) */
+  .brand .brandmark-dark{ display:none; }
+  html[data-theme="dark"] .brand .brandmark-light{ display:none; }
+  html[data-theme="dark"] .brand .brandmark-dark{ display:block;
+    filter:drop-shadow(0 0 9px rgba(255,118,95,.4)); }
+
+  /* hero panorama — daylight photo graded to dusk, blended into #071426. tune here */
+  html[data-theme="dark"] .hero-bg img{ filter:brightness(.55) contrast(1.08) saturate(.82) hue-rotate(-8deg); }
+  html[data-theme="dark"] .hero-bg::after{ background:
+    linear-gradient(90deg, rgba(7,20,38,0.78) 0%, rgba(7,20,38,0.22) 45%, rgba(7,20,38,0.3) 100%),
+    linear-gradient(180deg, rgba(7,20,38,0.6) 0%, rgba(7,20,38,0.12) 48%, rgba(7,20,38,0.55) 100%); }
+
+  /* spine emblem — dedicated coral render in dark mode (like the brandmark).
+     !important so the glow outbids the emblemIn keyframe's persisted `filter:blur(0)`. */
+  .survey-frame .survey-art-dark{ display:none; }
+  html[data-theme="dark"] .survey-frame .survey-art-light{ display:none; }
+  html[data-theme="dark"] .survey-frame .survey-art-dark{ display:block;
+    filter:drop-shadow(0 0 26px rgba(255,138,112,.38)) drop-shadow(0 0 70px rgba(255,118,95,.16)) !important; }
+
+  html[data-theme="dark"] .prin-band{ box-shadow:0 18px 50px -30px rgba(0,0,0,0.7); }
+  html[data-theme="dark"] .massif-band{
+    background:linear-gradient(180deg,#0a1a30 0%,#071426 100%);
+    box-shadow:0 24px 60px -34px rgba(0,0,0,0.8); }
+
+  @media (prefers-reduced-motion: reduce){
+    .theme-toggle .tstar{ transition:none; }
+    .theme-toggle .tstar.pop{ animation:none; }
+    .theme-pulse{ display:none; }
   }
 </style>
 </head>
@@ -256,13 +374,20 @@
   <header>
     <div class="wrap top">
       <a class="brand" href="/" aria-label="Nordane">
-        <img class="brandmark" src="assets/spine-icon.png" alt="" width="115" height="255" />
+        <img class="brandmark brandmark-light" src="assets/spine-icon.png" alt="" width="115" height="255" />
+        <img class="brandmark brandmark-dark" src="assets/spine-icon-coral.png" alt="" width="115" height="255" />
         <span class="wm">N<svg class="dia" viewBox="0 0 100 100" aria-hidden="true"><path d="M50 8 92 50 50 92 8 50Z" fill="none" stroke="currentColor" stroke-width="10"/><path d="M50 36 64 50 50 64 36 50Z" fill="currentColor"/></svg>RDANE</span>
       </a>
       <nav aria-label="Primary">
         <a class="link" href="#work">What we do</a>
         <a class="link" href="consulting/">Consulting</a>
         <a class="btn ghost" href="mailto:hello@nordane.com">Get in touch</a>
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to night mode" aria-pressed="false">
+          <svg class="tstar" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path class="core" d="M12 2 L13.6 10.4 L18.8 12 L13.6 13.6 L12 22 L10.4 13.6 L5.2 12 L10.4 10.4 Z"/>
+            <path class="rays" d="M15.7 8.3l1.6-1.6M8.3 8.3L6.7 6.7M15.7 15.7l1.6 1.6M8.3 15.7l-1.6 1.6"/>
+          </svg>
+        </button>
       </nav>
     </div>
   </header>
@@ -281,7 +406,9 @@
       </div>
 
       <div class="survey-frame">
-        <img class="survey-art" src="assets/spine-emblem.png"
+        <img class="survey-art survey-art-dark" src="assets/spine-emblem-coral.png?v=2"
+             alt="" width="917" height="1314" aria-hidden="true" />
+        <img class="survey-art survey-art-light" src="assets/spine-emblem.png"
              alt="The Nordane spine emblem over faint survey geometry" width="917" height="1314" />
       </div>
     </section>
@@ -319,32 +446,34 @@
         <div class="massif-ridges" aria-hidden="true">
           <svg viewBox="0 0 1200 340" preserveAspectRatio="none">
             <defs>
+              <!-- stop colors live in style="" (presentation attributes can't parse var()) so
+                   [data-theme="dark"] can retheme the whole scene through custom properties -->
               <linearGradient id="mSky" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" stop-color="#f8fbfd"/><stop offset="1" stop-color="#e0eaf4"/>
+                <stop offset="0" style="stop-color:var(--m-sky-0,#f8fbfd)"/><stop offset="1" style="stop-color:var(--m-sky-1,#e0eaf4)"/>
               </linearGradient>
               <radialGradient id="mGlow" cx="50%" cy="50%" r="50%">
-                <stop offset="0" stop-color="#ffffff" stop-opacity=".95"/>
-                <stop offset=".55" stop-color="#ffffff" stop-opacity=".38"/>
-                <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+                <stop offset="0" style="stop-color:var(--m-glow,#ffffff);stop-opacity:var(--m-glow-a0,.95)"/>
+                <stop offset=".55" style="stop-color:var(--m-glow,#ffffff);stop-opacity:var(--m-glow-a1,.38)"/>
+                <stop offset="1" style="stop-color:var(--m-glow,#ffffff);stop-opacity:var(--m-glow-a2,0)"/>
               </radialGradient>
               <linearGradient id="mR1" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" stop-color="#f0f5fa"/><stop offset="1" stop-color="#e7eff6"/>
+                <stop offset="0" style="stop-color:var(--m-r1-0,#f0f5fa)"/><stop offset="1" style="stop-color:var(--m-r1-1,#e7eff6)"/>
               </linearGradient>
               <linearGradient id="mR2" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" stop-color="#e6eef5"/><stop offset="1" stop-color="#d9e5f0"/>
+                <stop offset="0" style="stop-color:var(--m-r2-0,#e6eef5)"/><stop offset="1" style="stop-color:var(--m-r2-1,#d9e5f0)"/>
               </linearGradient>
               <linearGradient id="mR3" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" stop-color="#d7e2ee"/><stop offset="1" stop-color="#c5d5e6"/>
+                <stop offset="0" style="stop-color:var(--m-r3-0,#d7e2ee)"/><stop offset="1" style="stop-color:var(--m-r3-1,#c5d5e6)"/>
               </linearGradient>
               <linearGradient id="mR4" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" stop-color="#c2d2e2"/><stop offset="1" stop-color="#aac1d6"/>
+                <stop offset="0" style="stop-color:var(--m-r4-0,#c2d2e2)"/><stop offset="1" style="stop-color:var(--m-r4-1,#aac1d6)"/>
               </linearGradient>
               <linearGradient id="mR5" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" stop-color="#e8eff6"/><stop offset=".18" stop-color="#a7bed4"/>
-                <stop offset="1" stop-color="#8aa9c6"/>
+                <stop offset="0" style="stop-color:var(--m-r5-0,#e8eff6)"/><stop offset=".18" style="stop-color:var(--m-r5-05,#a7bed4)"/>
+                <stop offset="1" style="stop-color:var(--m-r5-1,#8aa9c6)"/>
               </linearGradient>
               <linearGradient id="bandMist" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" stop-color="#f5f7fa" stop-opacity="0"/><stop offset="1" stop-color="#f5f7fa" stop-opacity=".9"/>
+                <stop offset="0" style="stop-color:var(--m-mist,#f5f7fa)" stop-opacity="0"/><stop offset="1" style="stop-color:var(--m-mist,#f5f7fa)" stop-opacity=".9"/>
               </linearGradient>
               <filter id="mSoft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="10"/></filter>
               <filter id="mSoft2" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="4"/></filter>
@@ -369,19 +498,19 @@
 
             <!-- the massif -->
             <polygon fill="url(#mR5)" points="0,262 70,246 150,258 230,236 300,252 380,224 440,242 520,210 585,232 650,196 700,170 745,140 778,108 806,78 838,120 868,150 900,176 960,214 1030,200 1090,228 1150,216 1200,238 1200,340 0,340"/>
-            <!-- snowlit crest + face -->
-            <polyline fill="none" stroke="#ffffff" stroke-width="2.4" stroke-opacity=".85" stroke-linejoin="round"
+            <!-- snowlit crest + face — stays icy white at night, slightly dimmed -->
+            <polyline fill="none" style="stroke:var(--m-snow,#ffffff);stroke-opacity:var(--m-snow-a,.85)" stroke-width="2.4" stroke-linejoin="round"
               points="745,140 778,108 806,78 838,120 868,150"/>
-            <polygon fill="#ffffff" opacity=".32" points="806,78 838,120 820,132 794,112 778,108"/>
-            <polygon fill="#ffffff" opacity=".14" points="778,108 806,78 806,150 762,158"/>
-            <!-- the flag -->
-            <path d="M806 78V56" stroke="#3d5c7e" stroke-width="1.6"/>
+            <polygon style="fill:var(--m-snow,#ffffff);opacity:var(--m-face-a1,.32)" points="806,78 838,120 820,132 794,112 778,108"/>
+            <polygon style="fill:var(--m-snow,#ffffff);opacity:var(--m-face-a2,.14)" points="778,108 806,78 806,150 762,158"/>
+            <!-- the flag — red with white cross in both themes; only the pole lightens at night -->
+            <path d="M806 78V56" style="stroke:var(--m-pole,#3d5c7e)" stroke-width="1.6"/>
             <path d="M806 56h15v10h-15z" fill="#da291c"/>
             <path d="M812.2 57.8h2.6v1.9h1.9v2.6h-1.9v1.9h-2.6v-1.9h-1.9v-2.6h1.9z" fill="#ffffff"/>
 
-            <!-- valley mist -->
-            <ellipse cx="380" cy="286" rx="330" ry="34" fill="#ffffff" opacity=".38" filter="url(#mSoft)"/>
-            <ellipse cx="1010" cy="296" rx="280" ry="30" fill="#ffffff" opacity=".32" filter="url(#mSoft)"/>
+            <!-- valley mist — faint navy-white at night -->
+            <ellipse cx="380" cy="286" rx="330" ry="34" style="fill:var(--m-vmist,#ffffff);opacity:var(--m-vmist-a1,.38)" filter="url(#mSoft)"/>
+            <ellipse cx="1010" cy="296" rx="280" ry="30" style="fill:var(--m-vmist,#ffffff);opacity:var(--m-vmist-a2,.32)" filter="url(#mSoft)"/>
             <rect x="0" y="266" width="1200" height="74" fill="url(#bandMist)" opacity=".85"/>
           </svg>
         </div>
@@ -510,7 +639,8 @@
     function draw(t){
       ctx.clearRect(0,0,W,H);
 
-      /* two mist banks drifting slowly along the valley floor */
+      /* two mist banks drifting slowly along the valley floor (navy-lit fog at night) */
+      var night = document.documentElement.getAttribute("data-theme") === "dark";
       for(var mi=0; mi<2; mi++){
         var my = H*(0.72 + mi*0.14);
         var mx = W*(0.55 + mi*0.18) + Math.sin(t*0.05 + mi*2.4)*W*0.07;
@@ -518,7 +648,8 @@
         ctx.save();
         ctx.translate(mx,my); ctx.scale(1,0.14);
         var m = ctx.createRadialGradient(0,0,0, 0,0,mw);
-        m.addColorStop(0,"rgba(255,255,255,0.30)"); m.addColorStop(1,"rgba(255,255,255,0)");
+        if(night){ m.addColorStop(0,"rgba(186,208,232,0.14)"); m.addColorStop(1,"rgba(186,208,232,0)"); }
+        else{ m.addColorStop(0,"rgba(255,255,255,0.30)"); m.addColorStop(1,"rgba(255,255,255,0)"); }
         ctx.fillStyle = m; ctx.beginPath(); ctx.arc(0,0,mw,0,TAU); ctx.fill();
         ctx.restore();
       }
@@ -553,6 +684,9 @@
     size();
     if(window.ResizeObserver) new ResizeObserver(size).observe(band); else window.addEventListener("resize", size);
 
+    /* under reduced motion the canvas is a single static frame — repaint it when the theme flips */
+    document.addEventListener("nordane-themechange", function(){ if(reduce) draw(0); });
+
     if(reduce){ draw(0); return; }
     if(window.IntersectionObserver){
       var io = new IntersectionObserver(function(es){
@@ -563,6 +697,80 @@
     } else {
       running = true; raf = requestAnimationFrame(loop);
     }
+  })();
+  </script>
+
+  <!-- ============ NIGHT MODE — North-star toggle + radial reveal ============
+       Primary: View Transitions API, clip-path circle expanding from the button.
+       Fallback: an expanding pulse-wave overlay. Reduced motion: instant swap. -->
+  <script>
+  (function(){
+    "use strict";
+    var KEY = "nordane-theme";
+    var root = document.documentElement;
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var btn = document.getElementById("themeToggle");
+    if(!btn) return;
+    var meta = document.querySelector('meta[name="theme-color"]');
+    var busy = false;
+
+    function isDark(){ return root.getAttribute("data-theme") === "dark"; }
+    function syncUi(){
+      var dark = isDark();
+      btn.setAttribute("aria-pressed", dark ? "true" : "false");
+      btn.setAttribute("aria-label", dark ? "Switch to day mode" : "Switch to night mode");
+      if(meta) meta.setAttribute("content", dark ? "#071426" : "#f5f7fa");
+    }
+    function apply(dark){
+      if(dark) root.setAttribute("data-theme","dark");
+      else root.removeAttribute("data-theme");
+      try{ localStorage.setItem(KEY, dark ? "dark" : "light"); }catch(e){}
+      syncUi();
+      try{ document.dispatchEvent(new CustomEvent("nordane-themechange")); }catch(e){}
+    }
+    function coverRadius(x,y){
+      var dx = Math.max(x, window.innerWidth - x), dy = Math.max(y, window.innerHeight - y);
+      return Math.hypot(dx,dy) * 1.1; /* ~1.1× the distance to the farthest corner */
+    }
+    function pulseFallback(x,y,toDark){
+      busy = true;
+      var ov = document.createElement("div");
+      ov.className = "theme-pulse";
+      ov.style.setProperty("--px", x+"px");
+      ov.style.setProperty("--py", y+"px");
+      ov.style.setProperty("--pc", toDark ? "#071426" : "#f5f7fa");
+      ov.style.setProperty("--ps", (coverRadius(x,y)/10).toFixed(2)); /* flood disc is 20px, radius 10 */
+      ov.innerHTML = '<span class="ring"></span><span class="ring r2"></span><span class="flood"></span>';
+      document.body.appendChild(ov);
+      setTimeout(function(){ apply(toDark); }, 260);            /* flip ~40% through the wave */
+      setTimeout(function(){ ov.classList.add("out"); }, 650);
+      setTimeout(function(){ if(ov.parentNode) ov.parentNode.removeChild(ov); busy = false; }, 980);
+    }
+
+    btn.addEventListener("click", function(){
+      if(busy) return;
+      var toDark = !isDark();
+      if(reduce){ apply(toDark); return; }                      /* instant, no animation */
+      var star = btn.querySelector(".tstar");
+      if(star){ star.classList.remove("pop"); void star.offsetWidth; star.classList.add("pop"); }
+      var r = btn.getBoundingClientRect();
+      var x = r.left + r.width/2, y = r.top + r.height/2;
+      if(document.startViewTransition){
+        var vt = document.startViewTransition(function(){ apply(toDark); });
+        vt.ready.then(function(){
+          root.animate(
+            { clipPath:[ "circle(0px at "+x+"px "+y+"px)",
+                         "circle("+coverRadius(x,y).toFixed(0)+"px at "+x+"px "+y+"px)" ] },
+            { duration:700, easing:"cubic-bezier(0.22,1,0.36,1)",
+              pseudoElement:"::view-transition-new(root)" }
+          );
+        }).catch(function(){});
+      } else {
+        pulseFallback(x,y,toDark);
+      }
+    });
+
+    syncUi();
   })();
   </script>
 </body>
