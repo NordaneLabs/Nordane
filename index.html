@@ -3,10 +3,9 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<meta name="theme-color" content="#0a141f" />
+<meta name="theme-color" content="#f5f7fa" />
 <title>Nordane</title>
-<meta name="description" content="Nordane — a Swiss AI operator. We build and run AI-native companies." />
-
+<meta name="description" content="Nordane — a Swiss AI operator. We build and run AI systems that power real business." />
 <!-- icons -->
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="alternate icon" href="/favicon.ico" sizes="any" />
@@ -29,144 +28,224 @@
 <meta name="twitter:title" content="Nordane" />
 <meta name="twitter:description" content="A Swiss AI operator." />
 <meta name="twitter:image" content="https://nordane.ch/assets/og.png" />
-
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <style>
+  /* ALPINE — the light direction. Same brand grammar as the live site
+     (Space Grotesk + JetBrains Mono, hairlines, mono caps labels, index rows),
+     set on ice paper instead of night. Palette from the brand board:
+     0E1722 · 2B3A4D · 5C7FA3 · 8FB6D6 · D7E3EE · F5F7FA. */
   :root{
-    --bg:#0a141f; --ink-2:#0e1b29; --snow:#f0f8fc; --mist:#bcd2df; --steel:#7e97a8;
-    --cyan:#2fcbe8; --cyan-br:#8af2ff; --cyan-deep:#0d6e87;
-    --line:rgba(179,235,246,0.13); --line-2:rgba(179,235,246,0.26);
-    --panel:rgba(190,222,237,0.04); --panel-hi:rgba(190,222,237,0.06); --lift:rgba(0,0,0,0.35);
-    --ease:cubic-bezier(0.22,1,0.36,1); --maxw:1080px;
+    --bg:#f5f7fa; --ink:#0e1722; --body:#2b3a4d; --steel:#54718f;
+    --acc:#5c7fa3; --acc-deep:#3d5c7e; --acc-ice:#8fb6d6; --ice:#d7e3ee;
+    --line:rgba(14,23,34,0.10); --line-2:rgba(14,23,34,0.20);
+    --panel:#ffffff; --ease:cubic-bezier(0.22,1,0.36,1); --maxw:1080px; --r:18px;
   }
   *{ box-sizing:border-box; margin:0; padding:0; }
   html{ scroll-behavior:smooth; overscroll-behavior-y:none; }
   body{
-    font-family:"Space Grotesk", system-ui, sans-serif; background:var(--bg); color:var(--snow);
+    font-family:"Space Grotesk", system-ui, sans-serif; background:var(--bg); color:var(--ink);
     -webkit-font-smoothing:antialiased; line-height:1.45; overflow-x:hidden; overscroll-behavior-y:none;
-    min-height:100vh; min-height:100svh; display:flex; flex-direction:column;
+    min-height:100svh; display:flex; flex-direction:column;
   }
   a{ color:inherit; text-decoration:none; }
   canvas{ display:block; }
-  ::selection{ background:rgba(47,203,232,0.28); color:var(--snow); }
-  :focus-visible{ outline:2px solid var(--cyan); outline-offset:3px; border-radius:3px; }
+  ::selection{ background:rgba(63,116,163,0.22); color:var(--ink); }
+  :focus-visible{ outline:2px solid var(--acc); outline-offset:3px; border-radius:3px; }
   .wrap{ width:100%; max-width:var(--maxw); margin:0 auto; padding:0 clamp(22px,5vw,40px); }
   .mono{ font-family:"JetBrains Mono", monospace; }
 
   .bg{ position:fixed; inset:0; z-index:0; pointer-events:none;
     background:
-      radial-gradient(110% 80% at 82% -10%, rgba(127,216,236,0.10), transparent 55%),
-      radial-gradient(120% 100% at 50% 120%, rgba(13,110,135,0.14), transparent 60%),
-      linear-gradient(180deg, #0b1a28 0%, #0a141f 45%, #091220 100%); }
-  .grain{ position:fixed; inset:-50%; z-index:1; pointer-events:none; opacity:.04;
+      radial-gradient(110% 80% at 80% -12%, rgba(143,182,214,0.18), transparent 55%),
+      radial-gradient(120% 100% at 12% 110%, rgba(92,127,163,0.07), transparent 60%),
+      linear-gradient(180deg, #f7f9fc 0%, #f5f7fa 45%, #eff4f9 100%); }
+  .grain{ position:fixed; inset:-50%; z-index:1; pointer-events:none; opacity:.05;
     background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
   header, main, footer{ position:relative; z-index:2; }
   main{ flex:1 0 auto; }
 
-  header{ padding:28px 0; position:relative; }
+  header{ padding:26px 0; position:relative; }
   header::after{ content:""; position:absolute; left:0; right:0; bottom:0; height:1px; background:var(--line);
     transform:scaleX(0); transform-origin:0 50%; animation:drawX 1.5s .25s var(--ease) forwards; }
   .top{ display:flex; align-items:center; justify-content:space-between; gap:16px; }
-  .brand{ opacity:0; animation:fadeSlide 1.2s .1s var(--ease) forwards; }
-  .loc{ opacity:0; animation:fadeSlide 1.2s .4s var(--ease) forwards; }
+  .brand{ display:flex; align-items:center; gap:12px; opacity:0; animation:fadeSlide 1.2s .1s var(--ease) forwards; }
+  .brand .brandmark{ height:32px; width:auto; display:block; }
+  .brand .wm{ font-weight:600; letter-spacing:.3em; font-size:15px; padding-left:.1em; color:var(--ink); }
+  .wm .dia{ width:.64em; height:.64em; display:inline-block; vertical-align:0; margin-right:.3em; color:var(--acc-deep); }
   @keyframes drawX{ to{ transform:scaleX(1); } }
   @keyframes fadeSlide{ from{ opacity:0; transform:translateY(-6px); } to{ opacity:1; transform:none; } }
-  .brand{ display:flex; align-items:center; gap:11px; }
-  .brand .brandmark{ height:28px; width:auto; display:block; color:var(--snow); }
-  .brand .wm{ font-weight:600; letter-spacing:.28em; font-size:16px; padding-left:.28em; color:var(--snow); }
-  .loc{ font-family:"JetBrains Mono"; font-size:11px; letter-spacing:.2em; text-transform:uppercase; color:var(--steel); }
+  nav{ display:flex; align-items:center; gap:clamp(14px,3vw,30px); opacity:0; animation:fadeSlide 1.2s .35s var(--ease) forwards; }
+  nav a.link{ font-family:"JetBrains Mono"; font-size:11px; letter-spacing:.18em; text-transform:uppercase;
+    color:var(--body); transition:color .3s var(--ease); }
+  nav a.link:hover{ color:var(--acc-deep); }
 
-  .hero{ width:100vw; margin-left:calc(50% - 50vw);
-    display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.16fr); gap:clamp(20px,3vw,48px);
-    align-items:center; min-height:94svh; padding:clamp(20px,5vh,56px) 0 clamp(40px,8vh,90px); }
-  .hero-copy{ min-width:0; padding-left:max(clamp(22px,5vw,40px), calc(50vw - 500px)); padding-right:8px; }
-  h1{ font-weight:600; font-size:clamp(2.3rem,5.6vw,4.4rem); line-height:1.03; letter-spacing:-.03em; text-wrap:balance; max-width:14ch; }
-  /* spelled out — each letter set into place like type (the C language) */
+  .btn{ font-family:"JetBrains Mono"; font-size:11px; letter-spacing:.16em; text-transform:uppercase;
+    display:inline-flex; align-items:center; gap:9px; padding:13px 22px; border-radius:999px; cursor:pointer;
+    border:1px solid var(--line-2); white-space:nowrap;
+    transition:transform .3s var(--ease), background .3s var(--ease), color .3s var(--ease), border-color .3s var(--ease), box-shadow .3s var(--ease); }
+  .btn .arr{ transition:transform .3s var(--ease); }
+  .btn.primary{ background:var(--acc-deep); color:#f6fafd; border-color:var(--acc-deep); font-weight:500; }
+  .btn.primary:hover{ transform:translateY(-2px); background:#2b3a4d; border-color:#2b3a4d; }
+  .btn.primary:hover .arr{ transform:translateX(3px); }
+  .btn.primary:active{ transform:translateY(0); }
+  .btn.ghost{ color:var(--ink); background:transparent; }
+  .btn.ghost:hover{ border-color:var(--acc); color:var(--acc-deep); transform:translateY(-2px); }
+  .btn.ghost:active{ transform:translateY(0); }
+  nav .btn{ padding:10px 18px; }
+
+  /* hero — split: copy left, spine survey right */
+  .hero{ display:grid; grid-template-columns:minmax(0,1.14fr) minmax(0,1fr); gap:clamp(20px,4vw,56px);
+    align-items:center; min-height:86svh; padding:clamp(16px,4vh,40px) 0 clamp(36px,7vh,70px); }
+  .eyebrow{ font-family:"JetBrains Mono"; font-size:11px; letter-spacing:.26em; text-transform:uppercase;
+    color:var(--acc-deep); margin-bottom:22px; }
+  h1{ font-weight:600; font-size:clamp(2.3rem,4.6vw,3.5rem); line-height:1.06; letter-spacing:-.03em; }
+  h1 .acc{ color:var(--acc); }
   h1 .w{ display:inline-block; white-space:nowrap; }
   h1 .ch{ display:inline-block; opacity:0; transform:translateY(.34em); filter:blur(5px);
     animation:chIn .8s var(--ease) forwards; }
   @keyframes chIn{ to{ opacity:1; transform:none; filter:blur(0); } }
-
+  .hero-sub{ margin-top:26px; max-width:44ch; color:var(--body); font-weight:400;
+    font-size:clamp(1rem,1.35vw,1.13rem); line-height:1.65; text-wrap:pretty; }
   .cta{ display:flex; gap:14px; flex-wrap:wrap; margin-top:36px; }
-  .btn{ font-family:"JetBrains Mono"; font-size:11px; letter-spacing:.16em; text-transform:uppercase;
-    display:inline-flex; align-items:center; gap:9px; padding:14px 22px; border-radius:999px; cursor:pointer;
-    border:1px solid var(--line-2); white-space:nowrap;
-    transition:transform .3s var(--ease), background .3s var(--ease), color .3s var(--ease), border-color .3s var(--ease); }
-  .btn .arr{ transition:transform .3s var(--ease); }
-  .btn.primary{ background:var(--cyan); color:var(--bg); border-color:var(--cyan); font-weight:500; }
-  .btn.primary:hover{ transform:translateY(-2px); }
-  .btn.primary:hover .arr{ transform:translateX(3px); }
-  .btn.ghost{ color:var(--snow); background:transparent; }
-  .btn.ghost:hover{ border-color:var(--cyan); color:var(--cyan-br); transform:translateY(-2px); }
+  .rise{ opacity:0; transform:translateY(14px); animation:rise 1.05s var(--ease) forwards; }
+  .rise.d1{ animation-delay:1.15s; }
+  .rise.d2{ animation-delay:1.35s; }
+  @keyframes rise{ to{ opacity:1; transform:none; } }
 
-  .crystal-frame{ position:relative; width:100%; height:min(88svh,860px); margin:0 auto; }
-  .crystal{ position:absolute; inset:0; width:100%; height:100%; opacity:0; transition:opacity 1.1s var(--ease); }
-  .crystal.ready{ opacity:1; }
+  /* the spine survey — the original painted emblem, multiplied onto the paper */
+  .survey-frame{ position:relative; width:100%; height:min(80svh,700px);
+    display:flex; align-items:center; justify-content:center; }
+  .survey-art{ max-width:100%; max-height:100%; width:auto; height:100%; object-fit:contain;
+    opacity:0; filter:blur(6px);
+    animation:emblemIn 1.8s .45s var(--ease) forwards; }
+  @keyframes emblemIn{ to{ opacity:1; filter:blur(0); } }
 
-  .portfolio{ padding:0 0 clamp(56px,12vh,120px); }
+  /* cinematic hero backdrop — the panorama emerges from the page bottom */
+  .hero{ position:relative; min-height:92svh; }
+  .hero-bg{ position:absolute; left:calc(50% - 50vw); bottom:0; width:100vw; height:min(38svh,360px);
+    z-index:0; pointer-events:none; overflow:hidden; }
+  .hero-copy, .survey-frame{ position:relative; z-index:1; }
+  .survey-frame{ height:min(64svh,560px); margin-bottom:14svh; }
+  .hero-bg img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 28%;
+    -webkit-mask-image:linear-gradient(180deg, transparent 2%, #000 55%);
+    mask-image:linear-gradient(180deg, transparent 2%, #000 55%);
+    transform-origin:center bottom; animation:bgDrift 46s ease-in-out infinite alternate; }
+  @keyframes bgDrift{ from{ transform:scale(1.06) translateX(-0.8%); } to{ transform:scale(1.06) translateX(0.8%); } }
+  .hero-bg::after{ content:""; position:absolute; inset:0;
+    background:linear-gradient(90deg, rgba(245,247,250,0.55) 0%, rgba(245,247,250,0) 42%),
+               linear-gradient(180deg, rgba(245,247,250,0.2) 0%, rgba(245,247,250,0) 45%, rgba(245,247,250,0.25) 100%); }
+  @media (prefers-reduced-motion: reduce){ .hero-bg img{ animation:none; transform:scale(1.06); } }
+  @media (max-width:860px){
+    .hero{ margin-bottom:38px; }
+    .hero-bg{ height:28svh; }
+    .survey-frame{ margin-bottom:19svh; }
+    .hero-bg img{ object-position:76% 28%;
+      -webkit-mask-image:linear-gradient(180deg, transparent 6%, #000 82%);
+      mask-image:linear-gradient(180deg, transparent 6%, #000 82%); }
+  }
+
+  /* what we do — index columns under a mono section label */
+  .portfolio{ padding:0 0 clamp(64px,11vh,110px); }
   .sec-label{ display:flex; align-items:baseline; justify-content:space-between; gap:16px;
     padding-bottom:14px; border-bottom:1px solid var(--line-2); margin-bottom:6px;
     font-family:"JetBrains Mono"; font-size:11px; letter-spacing:.24em; text-transform:uppercase; color:var(--steel); }
   .sec-label h2{ font:inherit; letter-spacing:inherit; color:inherit; font-weight:400; margin:0; }
 
-  /* what we do — quiet editorial index rows (the C language) */
-  .rowx{ display:grid; grid-template-columns:clamp(56px,8vw,110px) minmax(0,1fr) auto; align-items:baseline;
-    gap:clamp(16px,3vw,40px); padding:clamp(34px,5.5vh,58px) 4px; border-bottom:1px solid var(--line); }
-  .rowx .no{ font-family:"JetBrains Mono"; font-size:clamp(.85rem,1.3vw,1rem); letter-spacing:.06em;
-    color:var(--steel); transition:color .5s var(--ease); }
-  .rowx:hover .no, .rowx:focus-visible .no{ color:var(--cyan); }
-  .rowx h3{ font-size:clamp(2rem,4.9vw,3.5rem); font-weight:500; letter-spacing:-.028em; line-height:1.04;
-    display:inline-flex; align-items:baseline; gap:16px; transition:transform .55s var(--ease), color .4s var(--ease); }
-  .rowx:hover h3, .rowx:focus-visible h3{ transform:translateX(10px); color:var(--cyan-br); }
-  .rowx h3 .g{ font-size:.48em; color:var(--cyan); opacity:0; transform:translateX(-8px);
+  .pillars{ display:grid; grid-template-columns:1fr 1fr; }
+  .pillar{ padding:clamp(36px,6vh,58px) clamp(26px,4vw,48px) clamp(36px,6vh,58px) 4px; border-bottom:1px solid var(--line); }
+  .pillar + .pillar{ border-left:1px solid var(--line); padding-left:clamp(26px,4vw,48px); padding-right:4px; }
+  .pillar .no{ font-family:"JetBrains Mono"; font-size:.95rem; letter-spacing:.06em; color:var(--acc-deep);
+    display:block; margin-bottom:18px; }
+  .pillar h3{ font-size:clamp(1.9rem,3.6vw,2.7rem); font-weight:500; letter-spacing:-.028em; line-height:1.05;
+    display:inline-flex; align-items:baseline; gap:14px; transition:transform .55s var(--ease), color .4s var(--ease); }
+  .pillar h3 .g{ font-size:.5em; color:var(--acc); opacity:0; transform:translateX(-8px);
     transition:opacity .45s var(--ease), transform .45s var(--ease); }
-  .rowx:hover h3 .g, .rowx:focus-visible h3 .g{ opacity:1; transform:none; }
-  .rowx .side{ font-family:"JetBrains Mono"; font-size:10.5px; letter-spacing:.2em; text-transform:uppercase;
-    color:var(--steel); justify-self:end; }
-  .rowx p{ grid-column:2 / -1; max-width:60ch; color:var(--steel); font-weight:300;
-    font-size:clamp(.98rem,1.35vw,1.12rem); line-height:1.65; margin-top:8px; text-wrap:pretty;
-    transition:color .5s var(--ease); }
-  .rowx:hover p, .rowx:focus-visible p{ color:var(--mist); }
+  .pillar:hover h3, .pillar:focus-visible h3{ transform:translateX(8px); color:var(--acc-deep); }
+  .pillar:hover h3 .g, .pillar:focus-visible h3 .g{ opacity:1; transform:none; }
+  .pillar .tag{ font-family:"JetBrains Mono"; font-size:10.5px; letter-spacing:.2em; text-transform:uppercase;
+    color:var(--steel); display:block; margin-top:10px; }
+  .pillar p{ max-width:44ch; color:var(--body); font-weight:400; font-size:clamp(.98rem,1.3vw,1.1rem);
+    line-height:1.65; margin-top:16px; text-wrap:pretty; transition:color .5s var(--ease); }
+  .pillar:hover p{ color:var(--ink); }
+
+  /* principles — one quiet band, hairline dividers, no icons */
+  .principles{ padding:0 0 clamp(64px,11vh,110px); }
+  .prin-band{ display:grid; grid-template-columns:repeat(4,1fr); background:var(--panel);
+    border:1px solid var(--line); border-radius:var(--r); overflow:hidden;
+    box-shadow:0 18px 50px -30px rgba(44,86,121,0.25); }
+  .prin{ padding:clamp(24px,3.5vw,38px) clamp(20px,3vw,32px); }
+  .prin + .prin{ border-left:1px solid var(--line); }
+  .prin b{ font-family:"JetBrains Mono"; font-weight:500; font-size:11px; letter-spacing:.2em;
+    text-transform:uppercase; color:var(--acc-deep); display:block; margin-bottom:12px; }
+  .prin p{ color:var(--body); font-size:.95rem; line-height:1.6; text-wrap:pretty; }
+
+  /* the massif — an ice-silhouette ridgescape (graphic echo of the hero photo),
+     with the living Canvas-2D mist + snow overlay */
+  .massif{ padding:0 0 clamp(64px,11vh,110px); }
+  .massif-band{ position:relative; border-radius:var(--r); overflow:hidden;
+    aspect-ratio:3.3/1; min-height:280px; display:flex; align-items:center;
+    border:1px solid var(--line); background:linear-gradient(180deg,#f0f5fa 0%,#dfe9f2 100%);
+    box-shadow:0 24px 60px -34px rgba(43,58,77,0.35); }
+  .massif-ridges{ position:absolute; inset:0; }
+  .massif-ridges svg{ width:100%; height:100%; display:block; }
+  .massif-scrim{ position:absolute; inset:0;
+    background:linear-gradient(90deg, rgba(245,247,250,0.82) 0%, rgba(245,247,250,0.45) 42%, rgba(245,247,250,0) 68%); }
+  .massif-band canvas{ position:absolute; inset:0; width:100%; height:100%; }
+  .massif-copy{ position:relative; z-index:2; padding:clamp(30px,5vh,56px) clamp(26px,5vw,64px);
+    max-width:540px; }
+  .massif-copy h2{ font-size:clamp(1.6rem,3.2vw,2.4rem); font-weight:600; letter-spacing:-.025em;
+    line-height:1.14; text-wrap:balance; }
+  .massif-copy h2 .acc{ color:var(--acc-deep); }
+  .massif-copy .cta{ margin-top:26px; }
 
   footer{ border-top:1px solid var(--line); padding:30px 0 50px; flex-shrink:0; }
   .foot{ display:flex; align-items:center; justify-content:space-between; gap:18px; flex-wrap:wrap;
     font-family:"JetBrains Mono"; font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--steel); }
   .foot a{ transition:color .3s var(--ease); text-decoration:underline; text-decoration-color:var(--line-2); text-underline-offset:3px; }
-  .foot a:hover{ color:var(--cyan-br); text-decoration-color:currentColor; }
+  .foot a:hover{ color:var(--acc-deep); text-decoration-color:currentColor; }
 
-  .rise{ opacity:0; transform:translateY(14px); animation:rise 1.05s var(--ease) forwards; }
-  .rise.d1{ animation-delay:1.35s; }   /* buttons arrive once the headline has been set */
-  @keyframes rise{ to{ opacity:1; transform:none; } }
-
-  /* scroll choreography — sections fall into place as they enter the viewport */
+  /* scroll choreography — sections settle into place */
   .rv{ opacity:0; transform:translateY(18px); transition:opacity 1.05s var(--ease), transform 1.05s var(--ease); }
   .rv.in{ opacity:1; transform:none; }
   .sec-label.rv{ border-bottom-color:transparent; position:relative; }
   .sec-label.rv::after{ content:""; position:absolute; left:0; right:0; bottom:-1px; height:1px;
     background:var(--line-2); transform:scaleX(0); transform-origin:0 50%; transition:transform 1.1s var(--ease) .1s; }
   .sec-label.rv.in::after{ transform:scaleX(1); }
+
   @media (prefers-reduced-motion: reduce){
-    .rise, .brand, .loc{ animation:none; opacity:1; transform:none; }
+    .rise, .brand, nav{ animation:none; opacity:1; transform:none; }
     header::after{ animation:none; transform:scaleX(1); }
     h1 .ch{ animation:none; opacity:1; transform:none; filter:none; }
     .rv{ opacity:1; transform:none; transition:none; }
     .sec-label.rv::after{ transform:scaleX(1); transition:none; }
+    .survey-art{ animation:none; opacity:1; filter:none; }
   }
 
-  @media (max-width: 820px){
-    .hero{ width:auto; margin-left:0; grid-template-columns:1fr; gap:26px; min-height:auto; padding-top:84px; }
-    .hero-copy{ padding-left:0; padding-right:0; }
-    .crystal-frame{ width:min(80vw,380px); height:auto; aspect-ratio:1/1; max-width:none; margin:8px auto 0; order:2; }
+  @media (max-width: 860px){
+    .hero{ grid-template-columns:1fr; gap:10px; min-height:auto; padding-top:56px; }
+    .survey-frame{ width:min(64vw,300px); height:auto; aspect-ratio:917/1314; margin:18px auto 0; order:2; }
+    .survey-art{ height:auto; width:100%; }
+    .prin-band{ grid-template-columns:1fr 1fr; }
+    .prin:nth-child(3), .prin:nth-child(4){ border-top:1px solid var(--line); }
+    .prin:nth-child(3){ border-left:0; }
   }
-  @media (max-width: 760px){
-    .rowx{ grid-template-columns:44px minmax(0,1fr); }
-    .rowx .side{ display:none; }
-    .rowx h3{ font-size:clamp(1.8rem,8.5vw,2.5rem); }
+  @media (max-width: 700px){
+    nav a.link{ display:none; }
+    .pillars{ grid-template-columns:1fr; }
+    .pillar + .pillar{ border-left:0; padding-left:4px; }
+    .massif-band{ aspect-ratio:auto; min-height:240px; }
+    /* widen the ridgescape so the peak keeps its shape instead of squeezing to a needle */
+    .massif-ridges{ overflow:hidden; }
+    .massif-ridges svg{ width:230%; margin-left:-69%; }
+    .massif-scrim{ background:linear-gradient(180deg, rgba(245,247,250,0.85) 0%, rgba(245,247,250,0.6) 55%, rgba(245,247,250,0.2) 100%); }
+    .massif-copy{ max-width:100%; padding:34px 26px 40px; }
   }
   @media (max-width: 480px){
-    h1{ font-size:2.1rem; max-width:10ch; }   /* wraps like desktop, never edge-to-edge */
+    h1{ font-size:2.15rem; }
+    .prin-band{ grid-template-columns:1fr; }
+    .prin + .prin{ border-left:0; border-top:1px solid var(--line); }
   }
 </style>
 </head>
@@ -177,52 +256,144 @@
   <header>
     <div class="wrap top">
       <a class="brand" href="/" aria-label="Nordane">
-        <svg class="brandmark" viewBox="0 0 64 64" aria-hidden="true">
-          <g fill="currentColor">
-            <polygon points="32,7 36,15 32,18 28,15"/>
-            <polygon points="29,17 35,17 34,40 32,45 30,40"/>
-            <polygon points="30,42 32,47 30,55 28.4,49"/>
-            <polygon points="34,42 32,47 34,55 35.6,49"/>
-            <polygon points="30,20 6,34 14,33 30,27"/>
-            <polygon points="30,28 10,41 19,39 30,34"/>
-            <polygon points="34,20 58,34 50,33 34,27"/>
-            <polygon points="34,28 54,41 45,39 34,34"/>
-          </g>
-        </svg>
-        <span class="wm">NORDANE</span>
+        <img class="brandmark" src="assets/spine-icon.png" alt="" width="115" height="255" />
+        <span class="wm">N<svg class="dia" viewBox="0 0 100 100" aria-hidden="true"><path d="M50 8 92 50 50 92 8 50Z" fill="none" stroke="currentColor" stroke-width="10"/><path d="M50 36 64 50 50 64 36 50Z" fill="currentColor"/></svg>RDANE</span>
       </a>
-      <span class="loc">CH</span>
+      <nav aria-label="Primary">
+        <a class="link" href="#work">What we do</a>
+        <a class="link" href="consulting/">Consulting</a>
+        <a class="btn ghost" href="mailto:hello@nordane.com">Get in touch</a>
+      </nav>
     </div>
   </header>
 
   <main class="wrap">
     <section class="hero">
+      <div class="hero-bg" aria-hidden="true"><img src="assets/mountain.png" alt="" /></div>
       <div class="hero-copy">
-        <h1 id="spell">A Swiss AI operator.</h1>
-        <div class="cta rise d1">
+        <p class="eyebrow rise">A Swiss AI operator</p>
+        <h1 id="spell">AI systems<br>built to <span class="acc">operate.</span></h1>
+        <p class="hero-sub rise d1">We build and run AI systems that power real business, with live data, automation, and results.</p>
+        <div class="cta rise d2">
           <a class="btn primary" href="#work">What we do <span class="arr">→</span></a>
           <a class="btn ghost" href="mailto:hello@nordane.com">Get in touch</a>
         </div>
       </div>
-      <div class="crystal-frame"><canvas class="crystal"></canvas></div>
+
+      <div class="survey-frame">
+        <img class="survey-art" src="assets/spine-emblem.png"
+             alt="The Nordane spine emblem over faint survey geometry" width="917" height="1314" />
+      </div>
     </section>
 
     <section class="portfolio" id="work">
       <div class="sec-label rv"><h2>What we do</h2><span>Switzerland</span></div>
 
-      <a class="rowx rv" href="https://okam.no" target="_blank" rel="noopener">
-        <span class="no">01</span>
-        <h3>Okam <span class="g">↗</span></h3>
-        <span class="side">Flagship · Live</span>
-        <p>Restaurant commerce, run on our own agent stack — ordering, kasse, booking, AI marketing on live data.</p>
-      </a>
+      <div class="pillars">
+        <a class="pillar rv" href="https://okam.no" target="_blank" rel="noopener">
+          <span class="no">01</span>
+          <h3>Okam <span class="g">↗</span></h3>
+          <span class="tag">Flagship · Live</span>
+          <p>Restaurant commerce, run on our own agent stack: ordering, kasse, booking, AI marketing on live data.</p>
+        </a>
+        <a class="pillar rv" href="consulting/">
+          <span class="no">02</span>
+          <h3>Consulting <span class="g">→</span></h3>
+          <span class="tag">Practice</span>
+          <p>AI systems built inside your company, by operators, not advisors.</p>
+        </a>
+      </div>
+    </section>
 
-      <a class="rowx rv" href="/consulting/">
-        <span class="no">02</span>
-        <h3>Consulting <span class="g">→</span></h3>
-        <span class="side">Practice</span>
-        <p>AI systems built inside your company — by operators, not advisors.</p>
-      </a>
+    <section class="principles">
+      <div class="prin-band rv">
+        <div class="prin"><b>AI-native</b><p>Systems that perceive, decide, learn, and act.</p></div>
+        <div class="prin"><b>Operator-led</b><p>Built for production realities, not slide decks.</p></div>
+        <div class="prin"><b>Measurable</b><p>Live data. Clear outcomes. No guesswork.</p></div>
+        <div class="prin"><b>Swiss-grade</b><p>Secure, precise, and intentionally engineered.</p></div>
+      </div>
+    </section>
+
+    <section class="massif">
+      <div class="massif-band rv">
+        <div class="massif-ridges" aria-hidden="true">
+          <svg viewBox="0 0 1200 340" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="mSky" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#f8fbfd"/><stop offset="1" stop-color="#e0eaf4"/>
+              </linearGradient>
+              <radialGradient id="mGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0" stop-color="#ffffff" stop-opacity=".95"/>
+                <stop offset=".55" stop-color="#ffffff" stop-opacity=".38"/>
+                <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+              </radialGradient>
+              <linearGradient id="mR1" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#f0f5fa"/><stop offset="1" stop-color="#e7eff6"/>
+              </linearGradient>
+              <linearGradient id="mR2" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#e6eef5"/><stop offset="1" stop-color="#d9e5f0"/>
+              </linearGradient>
+              <linearGradient id="mR3" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#d7e2ee"/><stop offset="1" stop-color="#c5d5e6"/>
+              </linearGradient>
+              <linearGradient id="mR4" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#c2d2e2"/><stop offset="1" stop-color="#aac1d6"/>
+              </linearGradient>
+              <linearGradient id="mR5" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#e8eff6"/><stop offset=".18" stop-color="#a7bed4"/>
+                <stop offset="1" stop-color="#8aa9c6"/>
+              </linearGradient>
+              <linearGradient id="bandMist" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stop-color="#f5f7fa" stop-opacity="0"/><stop offset="1" stop-color="#f5f7fa" stop-opacity=".9"/>
+              </linearGradient>
+              <filter id="mSoft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="10"/></filter>
+              <filter id="mSoft2" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="4"/></filter>
+            </defs>
+
+            <rect x="0" y="0" width="1200" height="340" fill="url(#mSky)"/>
+
+            <!-- far ranges, aerial perspective -->
+            <polygon fill="url(#mR1)" points="0,146 150,130 300,142 450,124 600,138 750,120 900,136 1050,118 1200,134 1200,340 0,340"/>
+            <rect x="0" y="112" width="1200" height="90" fill="url(#bandMist)" opacity=".65"/>
+            <polygon fill="url(#mR2)" points="0,168 120,150 240,162 360,140 480,156 600,136 720,152 840,132 960,150 1080,130 1200,148 1200,340 0,340"/>
+            <rect x="0" y="140" width="1200" height="95" fill="url(#bandMist)" opacity=".55"/>
+
+            <!-- alpenglow behind the massif -->
+            <ellipse cx="806" cy="128" rx="270" ry="150" fill="url(#mGlow)" filter="url(#mSoft)"/>
+            <ellipse cx="806" cy="110" rx="110" ry="80" fill="url(#mGlow)" filter="url(#mSoft2)"/>
+
+            <polygon fill="url(#mR3)" points="0,196 80,176 160,190 240,162 330,182 420,156 505,176 590,150 670,170 760,148 850,168 940,144 1020,162 1100,142 1200,166 1200,340 0,340"/>
+            <rect x="0" y="170" width="1200" height="100" fill="url(#bandMist)" opacity=".5"/>
+            <polygon fill="url(#mR4)" points="0,232 90,206 180,222 260,172 300,150 345,178 420,208 500,188 560,206 640,190 720,206 790,196 860,208 930,186 990,168 1030,158 1080,182 1140,206 1200,196 1200,340 0,340"/>
+            <rect x="0" y="205" width="1200" height="105" fill="url(#bandMist)" opacity=".5"/>
+
+            <!-- the massif -->
+            <polygon fill="url(#mR5)" points="0,262 70,246 150,258 230,236 300,252 380,224 440,242 520,210 585,232 650,196 700,170 745,140 778,108 806,78 838,120 868,150 900,176 960,214 1030,200 1090,228 1150,216 1200,238 1200,340 0,340"/>
+            <!-- snowlit crest + face -->
+            <polyline fill="none" stroke="#ffffff" stroke-width="2.4" stroke-opacity=".85" stroke-linejoin="round"
+              points="745,140 778,108 806,78 838,120 868,150"/>
+            <polygon fill="#ffffff" opacity=".32" points="806,78 838,120 820,132 794,112 778,108"/>
+            <polygon fill="#ffffff" opacity=".14" points="778,108 806,78 806,150 762,158"/>
+            <!-- the flag -->
+            <path d="M806 78V56" stroke="#3d5c7e" stroke-width="1.6"/>
+            <path d="M806 56h15v10h-15z" fill="#da291c"/>
+            <path d="M812.2 57.8h2.6v1.9h1.9v2.6h-1.9v1.9h-2.6v-1.9h-1.9v-2.6h1.9z" fill="#ffffff"/>
+
+            <!-- valley mist -->
+            <ellipse cx="380" cy="286" rx="330" ry="34" fill="#ffffff" opacity=".38" filter="url(#mSoft)"/>
+            <ellipse cx="1010" cy="296" rx="280" ry="30" fill="#ffffff" opacity=".32" filter="url(#mSoft)"/>
+            <rect x="0" y="266" width="1200" height="74" fill="url(#bandMist)" opacity=".85"/>
+          </svg>
+        </div>
+        <div class="massif-scrim" aria-hidden="true"></div>
+        <canvas id="ridge" aria-hidden="true"></canvas>
+        <div class="massif-copy">
+          <h2>We are a Swiss AI operator.<br>Let&rsquo;s build <span class="acc">what&rsquo;s next.</span></h2>
+          <div class="cta">
+            <a class="btn primary" href="mailto:hello@nordane.com">Get in touch <span class="arr">→</span></a>
+          </div>
+        </div>
+      </div>
     </section>
   </main>
 
@@ -235,34 +406,48 @@
   </footer>
 
   <script>
-  /* scroll choreography — reveal .rv elements as they enter, staggered per batch */
   (function(){
     "use strict";
     var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-    /* spell out the headline — each letter set into place like type */
+    /* spell out the headline, letter by letter, keeping the accent span intact */
     var h = document.getElementById("spell");
     if(h && !reduce){
-      var words = h.textContent.split(" ");
-      h.textContent = "";
-      var idx = 0, base = 0.5, step = 0.032;
-      words.forEach(function(word, wi){
-        var w = document.createElement("span"); w.className = "w";
-        for(var i=0;i<word.length;i++){
-          var c = document.createElement("span"); c.className = "ch";
-          c.textContent = word[i];
-          c.style.animationDelay = (base + idx*step).toFixed(3) + "s";
-          w.appendChild(c); idx++;
+      var base = 0.5, step = 0.03, idx = 0;
+      function spellNode(node, parent, accent){
+        if(node.nodeType === 3){
+          var words = node.textContent.split(" ");
+          words.forEach(function(word, wi){
+            if(word.length){
+              var w = document.createElement("span"); w.className = "w";
+              for(var i=0;i<word.length;i++){
+                var c = document.createElement("span"); c.className = "ch";
+                c.textContent = word[i];
+                c.style.animationDelay = (base + idx*step).toFixed(3) + "s";
+                w.appendChild(c); idx++;
+              }
+              parent.appendChild(w);
+            }
+            if(wi < words.length-1){ parent.appendChild(document.createTextNode(" ")); idx++; }
+          });
+        } else if(node.nodeType === 1 && node.nodeName === "BR"){
+          parent.appendChild(document.createElement("br"));
+        } else if(node.nodeType === 1){
+          var el = document.createElement("span");
+          el.className = node.className;
+          parent.appendChild(el);
+          Array.prototype.slice.call(node.childNodes).forEach(function(ch){ spellNode(ch, el, true); });
         }
-        h.appendChild(w);
-        if(wi < words.length-1){ h.appendChild(document.createTextNode(" ")); idx++; }
-      });
+      }
+      var kids = Array.prototype.slice.call(h.childNodes);
+      h.textContent = "";
+      kids.forEach(function(node){ spellNode(node, h, false); });
     }
 
+    /* scroll choreography */
     var els = Array.prototype.slice.call(document.querySelectorAll(".rv"));
     if(!("IntersectionObserver" in window)){ els.forEach(function(e){ e.classList.add("in"); }); return; }
-    var pending = [];
-    var flushT = 0;
+    var pending = [], flushT = 0;
     var io = new IntersectionObserver(function(entries){
       entries.forEach(function(en){
         if(!en.isIntersecting) return;
@@ -283,287 +468,99 @@
   })();
   </script>
 
-  <!-- ============ NORDANE · RAVEN — SOLID FACETED MARK · VORTEX ASSEMBLY ============
-       Final-package preview: the untouched v2 faceted mark; entrance = VORTEX — the
-       facet shards spiral in from a swirl around the centre, tumbling as they condense,
-       lock with a bloom flash, then HOLD forever (light shimmer + breathing bloom).
-       One-time on load; replays on scroll-back-into-view. Hybrid palette: cyan UI,
-       ICE glow on the raven. Canvas-2D, zero deps, fully autonomous (no cursor). -->
+  <!-- ============ THE MASSIF — Canvas-2D atmosphere overlay ============
+       Hand-built, zero deps. The photograph carries the scene; the canvas
+       adds a slow mist drift and sparse snow so the band feels alive.
+       Autonomous (no cursor input). Static under reduced motion. -->
   <script>
   (function(){
     "use strict";
-
-    var canvas = document.querySelector(".crystal");
-    if (!canvas) return;
-    var frame  = canvas.parentElement;
-    if (!frame) return;
+    var canvas = document.getElementById("ridge");
+    if(!canvas) return;
+    var band = canvas.parentElement;
     var ctx = canvas.getContext("2d");
-    if (!ctx) return;
+    if(!ctx) return;
 
-    var TAU = Math.PI * 2;
-    var rnd = function(a,b){ return a + Math.random()*(b-a); };
-    var clamp01 = function(x){ return x<0?0:x>1?1:x; };
-    var easeOut = function(x){ x = clamp01(x); return 1 - Math.pow(1-x, 3); };
-    var easeInOut = function(x){ x = clamp01(x); return x<0.5 ? 2*x*x : 1 - Math.pow(-2*x+2, 2)/2; };
-    function mix(a,b,t){ return [a[0]+(b[0]-a[0])*t, a[1]+(b[1]-a[1])*t, a[2]+(b[2]-a[2])*t]; }
-    function rgb(c,a){ return "rgba("+(c[0]|0)+","+(c[1]|0)+","+(c[2]|0)+","+(a===undefined?1:a).toFixed(3)+")"; }
+    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    var TAU = Math.PI*2;
+    var W=0,H=0,dpr=1;
 
-    /* Hybrid palette: crystal facets, ICE rim + bloom (UI stays cyan via CSS) */
-    var TH = {
-      lit:[240,248,252], litHi:[255,255,255], shadow:[60,98,118], deep:[12,26,38],
-      glint:[210,244,255], rim:[127,216,236], bloom:[104,196,222]
-    };
-    var PALE=[190,220,235], ICEP=[138,242,255];
-
-    /* ---- VERBATIM v2 logo polygons (viewBox 0..64) ---- */
-    var CX_ART=32, CY_ART=31, HALF=26;
-    function nx(x){ return (x-CX_ART)/HALF; }
-    function ny(y){ return (y-CY_ART)/HALF; }
-    var HEAD = [[32,7],[36,15],[32,19],[28,15]];
-    var BODY = [[29.4,17],[32,21],[34.6,17],[34,40],[32,45],[30,40]];
-    var TAILL= [[30,42],[32,47],[30,55],[28.4,49]];
-    var TAILR= [[34,42],[32,47],[34,55],[35.6,49]];
-    var WL1  = [[30,20],[6,34],[14,33],[30,27]];
-    var WL2  = [[30,28],[10,41],[19,39],[30,34]];
-    var WR1  = [[34,20],[58,34],[50,33],[34,27]];
-    var WR2  = [[34,28],[54,41],[45,39],[34,34]];
-
-    var FACETS = [];
-    function P3(x,y,z){ return [nx(x), ny(y), z]; }
-    function facetPoly(poly, lift, sub){
-      sub = sub || 1;
-      var rim = [];
-      for(var i=0;i<poly.length;i++){
-        var a=poly[i], b=poly[(i+1)%poly.length];
-        for(var s=0;s<sub;s++){ var tt=s/sub; rim.push([ a[0]+(b[0]-a[0])*tt, a[1]+(b[1]-a[1])*tt ]); }
-      }
-      var cx=0, cy=0;
-      for(i=0;i<poly.length;i++){ cx+=poly[i][0]; cy+=poly[i][1]; }
-      cx/=poly.length; cy/=poly.length;
-      var apex = P3(cx, cy, lift);
-      for(i=0;i<rim.length;i++){
-        var p=rim[i], q=rim[(i+1)%rim.length];
-        FACETS.push({ v:[ apex, P3(p[0],p[1],0), P3(q[0],q[1],0) ] });
+    var FLAKES = [];
+    function seedFlakes(){
+      FLAKES.length = 0;
+      var n = Math.round(W/26);
+      for(var i=0;i<n;i++){
+        FLAKES.push({ x:Math.random()*W, y:Math.random()*H, r:0.6+Math.random()*1.2,
+          vx:-(4+Math.random()*7), vy:6+Math.random()*9, a:0.16+Math.random()*0.26,
+          ph:Math.random()*TAU });
       }
     }
-    facetPoly(HEAD, 0.26, 1);
-    facetPoly(BODY, 0.12, 2);
-    facetPoly(TAILL,0.10, 1);
-    facetPoly(TAILR,0.10, 1);
-    facetPoly(WL1,  0.17, 2);
-    facetPoly(WL2,  0.15, 2);
-    facetPoly(WR1,  0.17, 2);
-    facetPoly(WR2,  0.15, 2);
 
-    var NF = FACETS.length;
-    var order = FACETS.map(function(_,k){ return k; });
-
-    /* ---- vortex set-up: spiral pose per facet, build order core -> tips ---- */
-    var maxDist = 0.0001;
-    for(var fi=0; fi<NF; fi++){
-      var f = FACETS[fi];
-      var cx2=0, cy2=0, cz2=0;
-      f.v.forEach(function(p){ cx2+=p[0]; cy2+=p[1]; cz2+=p[2]; });
-      f.cen = [cx2/f.v.length, cy2/f.v.length, cz2/f.v.length];
-      f.dist = Math.hypot(f.cen[0], f.cen[1], f.cen[2]);
-      if(f.dist > maxDist) maxDist = f.dist;
-    }
-    for(fi=0; fi<NF; fi++){
-      f = FACETS[fi];
-      f.order = f.dist / maxDist;
-      f.ang0  = Math.atan2(f.cen[1], f.cen[0]);
-      f.rad0  = Math.hypot(f.cen[0], f.cen[1]);
-      f.swirl = rnd(1.6, 2.8) * (Math.random()<0.5 ? -1 : 1);
-      f.spin  = rnd(-1,1) * 2.4;
-      f._proj = []; f._cx=0; f._cy=0; f._le=0;
-    }
-
-    /* ---- sizing (DPR-aware) — full-bleed hero scale ---- */
-    var isMobile = Math.min(window.innerWidth, window.innerHeight) < 760;
-    var W=0,H=0,CXp=0,CYp=0,R=0,dpr=1,Rcur=0;
     function size(){
-      var w = frame.clientWidth, h = frame.clientHeight; if(!w||!h) return;
-      dpr = Math.min(window.devicePixelRatio||1, isMobile?1.6:2);
-      canvas.width  = Math.max(1,(w*dpr)|0); canvas.height = Math.max(1,(h*dpr)|0);
-      canvas.style.width = w+"px"; canvas.style.height = h+"px"; ctx.setTransform(dpr,0,0,dpr,0,0);
-      W=w; H=h; CXp=w/2; CYp=h*0.47;
-      R = Math.min(w*0.47, h*0.46);
-    }
-    size();
-    if(window.ResizeObserver) new ResizeObserver(size).observe(frame); else window.addEventListener("resize", size);
-
-    /* ---- key + rim light (view space) ---- */
-    var LIGHT = (function(){ var l=[-0.55,-0.62,0.56], m=Math.hypot(l[0],l[1],l[2]); return [l[0]/m,l[1]/m,l[2]/m]; })();
-    var RIM   = (function(){ var l=[0.60,0.42,-0.30], m=Math.hypot(l[0],l[1],l[2]); return [l[0]/m,l[1]/m,l[2]/m]; })();
-    function sub(a,b){ return [a[0]-b[0],a[1]-b[1],a[2]-b[2]]; }
-    function cross(a,b){ return [a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]]; }
-    function normLen(v){ var m=Math.hypot(v[0],v[1],v[2])||1; return [v[0]/m,v[1]/m,v[2]/m]; }
-
-    /* ---- one-time vortex, then hold the clean mark forever ---- */
-    var raf=0, running=true, revealed=false, t0=0, last=0, PERSP=3.6;
-    var ROTY=-0.050, ROTX=-0.025;
-    var INTRO_S=3.0, SPREAD=0.6, introT=0, wasOut=false;
-    var rv=[[0,0,0],[0,0,0],[0,0,0],[0,0,0]];
-    var av=[[0,0,0],[0,0,0],[0,0,0],[0,0,0]];
-    function rotPoint(p, cyA,syA,cxA,sxA, out){
-      var hx=p[0], hy=p[1], hz=p[2];
-      var x1 =  hx*cyA + hz*syA;
-      var z1 = -hx*syA + hz*cyA;
-      var y1 =  hy*cxA - z1*sxA;
-      var z2 =  hy*sxA + z1*cxA;
-      out[0]=x1; out[1]=y1; out[2]=z2;
+      var w = band.clientWidth, h = band.clientHeight; if(!w||!h) return;
+      dpr = Math.min(window.devicePixelRatio||1, 2);
+      canvas.width = Math.max(1,(w*dpr)|0); canvas.height = Math.max(1,(h*dpr)|0);
+      ctx.setTransform(dpr,0,0,dpr,0,0);
+      W=w; H=h; seedFlakes();
+      if(reduce) draw(0);
     }
 
+    function draw(t){
+      ctx.clearRect(0,0,W,H);
+
+      /* two mist banks drifting slowly along the valley floor */
+      for(var mi=0; mi<2; mi++){
+        var my = H*(0.72 + mi*0.14);
+        var mx = W*(0.55 + mi*0.18) + Math.sin(t*0.05 + mi*2.4)*W*0.07;
+        var mw = W*0.42;
+        ctx.save();
+        ctx.translate(mx,my); ctx.scale(1,0.14);
+        var m = ctx.createRadialGradient(0,0,0, 0,0,mw);
+        m.addColorStop(0,"rgba(255,255,255,0.30)"); m.addColorStop(1,"rgba(255,255,255,0)");
+        ctx.fillStyle = m; ctx.beginPath(); ctx.arc(0,0,mw,0,TAU); ctx.fill();
+        ctx.restore();
+      }
+
+      /* sparse snow */
+      ctx.fillStyle = "#ffffff";
+      for(var i=0;i<FLAKES.length;i++){
+        var f = FLAKES[i];
+        var fx = f.x + Math.sin(t*0.4 + f.ph)*6;
+        ctx.globalAlpha = f.a;
+        ctx.beginPath(); ctx.arc(fx, f.y, f.r, 0, TAU); ctx.fill();
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    var raf=0, running=false, t0=0;
     function loop(now){
       if(!running){ raf=0; return; }
       raf = requestAnimationFrame(loop);
-      if(!t0) t0=now; if(!last) last=now;
-      var t  = (now-t0)/1000;
-      var dt = Math.min(0.05, (now-last)/1000); last=now;
-
-      introT = Math.min(1, introT + dt/INTRO_S);
-      var asm = easeInOut(introT);
-      Rcur = R * (0.62 + 0.38*asm);
-
-      var lx = LIGHT[0] + Math.sin(t*0.13)*0.085;
-      var ly = LIGHT[1] + Math.cos(t*0.097 + 0.7)*0.070;
-      var lz = LIGHT[2] + Math.sin(t*0.11 + 1.3)*0.030;
-      var lm = Math.hypot(lx,ly,lz)||1; lx/=lm; ly/=lm; lz/=lm;
-      var bloomBreath = 0.5 + 0.5*Math.sin(t*0.085 + 0.4);
-
-      var cyA=Math.cos(ROTY), syA=Math.sin(ROTY), cxA=Math.cos(ROTX), sxA=Math.sin(ROTX);
-
-      ctx.clearRect(0,0,W,H);
-
-      /* THE STAGE (no mirror) — a studio, not a glow: corners fall away, light
-         rises faintly from behind-below, a pool of contact light + hairline
-         horizon ground the mark. The room fades up with the assembly and the
-         floor light flashes as the vortex locks. */
-      var flash = Math.max(0, 1 - Math.abs(asm - 0.90)/0.10);
-      var env = 0.25 + 0.75*asm;
-      var floorY = CYp + R*1.02;
-      /* light pools on the ice — every shape is a radial ellipse sized to end
-         INSIDE the canvas, so the light can never read as a rectangle and no
-         edge masks are needed */
-      var bottomRoom = Math.max(12, H - floorY - 6);
-      ctx.globalCompositeOperation = "lighter";
-      /* wide soft floor wash */
-      var glowR = Math.min(CXp*0.94, R*1.75);
-      var kY = Math.min(0.30, bottomRoom/glowR);
-      var swA = (0.10*(0.85 + 0.30*bloomBreath) + flash*0.12) * env;
-      ctx.save();
-      ctx.translate(CXp, floorY);
-      ctx.scale(1, kY);
-      var sw = ctx.createRadialGradient(0, 0, 0, 0, 0, glowR);
-      sw.addColorStop(0, rgb(PALE, swA));
-      sw.addColorStop(0.55, rgb(PALE, swA*0.35));
-      sw.addColorStop(1, rgb(PALE, 0));
-      ctx.fillStyle = sw; ctx.beginPath(); ctx.arc(0, 0, glowR, 0, TAU); ctx.fill();
-      ctx.restore();
-      /* hot contact pool */
-      var poolR = Math.min(R*0.95, CXp*0.88);
-      var kY2 = Math.min(0.15, bottomRoom/poolR);
-      var poolA = (0.12*(0.85 + 0.30*bloomBreath) + flash*0.22) * env;
-      ctx.save();
-      ctx.translate(CXp, floorY + 2);
-      ctx.scale(1, kY2);
-      var pool = ctx.createRadialGradient(0, 0, 0, 0, 0, poolR);
-      pool.addColorStop(0, rgb(ICEP, poolA));
-      pool.addColorStop(1, rgb(ICEP, 0));
-      ctx.fillStyle = pool; ctx.beginPath(); ctx.arc(0, 0, poolR, 0, TAU); ctx.fill();
-      ctx.restore();
-      ctx.globalCompositeOperation = "source-over";
-      /* hairline horizon — soft-ended, contained */
-      var hw = Math.min(R*1.55, CXp*0.90);
-      var hz = ctx.createLinearGradient(CXp - hw, 0, CXp + hw, 0);
-      hz.addColorStop(0, "rgba(179,235,246,0)");
-      hz.addColorStop(0.5, "rgba(179,235,246," + (0.13*env).toFixed(3) + ")");
-      hz.addColorStop(1, "rgba(179,235,246,0)");
-      ctx.fillStyle = hz;
-      ctx.fillRect(CXp - hw, floorY, hw*2, 1);
-
-      /* VORTEX: each shard spirals in from a swirl around the centre — tumbling,
-         small and glassy — then blends onto its home facet and solidifies. */
-      for(var fi2=0; fi2<NF; fi2++){
-        var f = FACETS[fi2];
-        var le = easeOut(clamp01(asm*(1+SPREAD) - f.order*SPREAD)); f._le = le;
-        var dcx, dcy, dcz, sc=1, ca=1, sa=0;
-        if(le < 1){
-          var angv = f.ang0 + f.swirl*(1-le);
-          var radv = f.rad0*(1 + 1.7*(1-le));
-          dcx = f.cen[0]*le + Math.cos(angv)*radv*(1-le);
-          dcy = f.cen[1]*le + Math.sin(angv)*radv*(1-le);
-          dcz = f.cen[2] + (1-le)*0.45;
-          sc  = 0.45 + 0.55*le;
-          var angT = f.spin*(1-le)*0.6;
-          ca = Math.cos(angT); sa = Math.sin(angT);
-        } else { dcx=f.cen[0]; dcy=f.cen[1]; dcz=f.cen[2]; }
-        var v = f.v, n = v.length;
-        for(var k=0;k<n;k++){
-          var rx = v[k][0]-f.cen[0], ry = v[k][1]-f.cen[1], rz = v[k][2]-f.cen[2];
-          var rx1 = rx*ca - ry*sa, ry1 = rx*sa + ry*ca;
-          av[k][0] = dcx + rx1*sc; av[k][1] = dcy + ry1*sc; av[k][2] = dcz + rz*sc;
-        }
-        var sx=0, sy=0, zsum=0;
-        f._proj.length = 0;
-        for(k=0;k<n;k++){
-          rotPoint(av[k], cyA,syA,cxA,sxA, rv[k]);
-          var sp = PERSP/(PERSP - rv[k][2]);
-          var px = CXp + rv[k][0]*Rcur*sp, py = CYp + rv[k][1]*Rcur*sp;
-          f._proj.push([px,py]); sx+=px; sy+=py; zsum+=rv[k][2];
-        }
-        f._cx = sx/n; f._cy = sy/n; f._z = zsum/n;
-        var nrm = normLen(cross(sub(rv[1],rv[0]), sub(rv[2],rv[0])));
-        if(nrm[2] < 0){ nrm[0]=-nrm[0]; nrm[1]=-nrm[1]; nrm[2]=-nrm[2]; }
-        f._lam = nrm[0]*lx + nrm[1]*ly + nrm[2]*lz;
-        f._rim = clamp01(nrm[0]*RIM[0] + nrm[1]*RIM[1] + nrm[2]*RIM[2]);
-        f._facing = nrm[2];
+      if(!t0) t0=now;
+      var t = (now-t0)/1000;
+      var dt = 1/60;
+      for(var i=0;i<FLAKES.length;i++){
+        var f=FLAKES[i];
+        f.x += f.vx*dt; f.y += f.vy*dt;
+        if(f.y > H+4){ f.y=-4; f.x=Math.random()*W; }
+        if(f.x < -4){ f.x = W+4; }
       }
-
-      order.sort(function(a,b){ return FACETS[a]._z - FACETS[b]._z; });
-
-      for(var oi=0; oi<NF; oi++){
-        var fc = FACETS[order[oi]], pr = fc._proj, lam = fc._lam, le2 = fc._le;
-        var keyLit = clamp01(lam);
-        var shade  = 0.10 + 0.90*Math.pow(keyLit, 0.78);
-        var rimLift = fc._rim * (1 - keyLit) * 0.22;
-        var col, base = mix(TH.deep, TH.shadow, 0.50);
-        col = mix(base, TH.lit, shade);
-        if(shade > 0.80) col = mix(col, TH.litHi, (shade-0.80)/0.20*0.55);
-        if(keyLit < 0.45) col = mix(col, TH.shadow, (0.45-keyLit)*0.55);
-        if(rimLift > 0) col = mix(col, TH.rim, rimLift);
-        var fa = Math.pow(le2, 1.4);
-        if(fa <= 0.005) continue;
-        ctx.fillStyle = rgb(col, fa);
-        ctx.beginPath();
-        ctx.moveTo(pr[0][0], pr[0][1]);
-        for(var pp=1; pp<pr.length; pp++) ctx.lineTo(pr[pp][0], pr[pp][1]);
-        ctx.closePath();
-        ctx.fill();
-        var spec = Math.pow(clamp01(keyLit), 6) * clamp01(fc._facing) * 0.5 * fa;
-        if(spec > 0.012){
-          ctx.globalCompositeOperation = "lighter";
-          ctx.fillStyle = rgb(TH.glint, spec); ctx.fill();
-          ctx.globalCompositeOperation = "source-over";
-        }
-        ctx.lineWidth = 0.6;
-        ctx.strokeStyle = rgb(TH.deep, 0.24*fa);
-        ctx.stroke();
-      }
-
-      if(!revealed){ revealed=true; canvas.classList.add("ready"); }
+      draw(t);
     }
 
+    size();
+    if(window.ResizeObserver) new ResizeObserver(size).observe(band); else window.addEventListener("resize", size);
+
+    if(reduce){ draw(0); return; }
     if(window.IntersectionObserver){
       var io = new IntersectionObserver(function(es){
-        var vis = es[0].isIntersecting;
-        if(vis){ if(wasOut){ introT=0; wasOut=false; } } else { wasOut=true; }
-        running = vis;
-        if(running && !raf){ last=0; raf=requestAnimationFrame(loop); }
+        running = es[0].isIntersecting;
+        if(running && !raf) raf = requestAnimationFrame(loop);
       }, { threshold:0 });
-      io.observe(frame);
+      io.observe(band);
+    } else {
+      running = true; raf = requestAnimationFrame(loop);
     }
-    raf = requestAnimationFrame(loop);
   })();
   </script>
 </body>
