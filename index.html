@@ -18,7 +18,8 @@
 </script>
 <title>Nordane</title>
 <meta name="description" content="Nordane is a Swiss AI studio. We help businesses scale into the agentic era with native apps, platforms, AI agents and the infrastructure underneath. Our flagship is Okam." />
-<link rel="icon" href="/favicon.ico" sizes="any" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg?v=4" />
+<link rel="icon" href="/favicon.ico?v=4" sizes="any" />
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png?v=4" />
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=4" />
 <meta property="og:type" content="website" />
@@ -83,8 +84,8 @@
   .topbar { position:sticky; top:0; z-index:10; background:color-mix(in srgb,var(--bg) 82%,transparent); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border-bottom:1px solid var(--line); }
   .nav { display:flex; align-items:center; justify-content:space-between; height:72px; gap:20px; }
   .brand { display:inline-flex; align-items:center; gap:12px; }
-  .brand .tile { width:34px; height:34px; border-radius:9px; background:#05080d; display:grid; place-items:center; }
-  .brand .tile img { width:24px; height:24px; }
+  .brand .brand-tile { width:34px; height:34px; border-radius:9px; background:#05080d; display:grid; place-items:center; }
+  .brand .brand-tile img { width:24px; height:24px; }
   .word { font-weight:600; letter-spacing:.32em; font-size:15px; color:var(--ink); }
   .nav ul { display:flex; gap:32px; list-style:none; margin:0; padding:0; }
   .nav li a { font:500 11px "JetBrains Mono",monospace; letter-spacing:.2em; text-transform:uppercase; color:var(--body); }
@@ -121,23 +122,54 @@
   .proof { list-style:none; padding:0; margin:14px 0 0; display:grid; gap:8px; font-size:14.5px; }
   .proof li { padding-left:16px; position:relative; }
   .proof li::before { content:""; position:absolute; left:0; top:.65em; width:6px; height:6px; border-radius:1px; background:var(--bullet); transform:rotate(45deg); }
-  .caps { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
-  .caps .card { padding:28px; }
-  .caps .n { font:500 12px "JetBrains Mono",monospace; color:var(--acc); }
-  .caps h3 { margin-top:12px; }
+  /* What Nordane does: twelve tiles around a live agent demo */
+  .bento { display:grid; grid-template-columns:repeat(4,1fr); grid-auto-rows:minmax(168px,auto); gap:16px; }
+  .core { grid-column:2 / span 2; grid-row:2 / span 2; position:relative; overflow:hidden; border-radius:24px; background:#05080d; color:#e8eef5; padding:22px 24px; display:flex; flex-direction:column; isolation:isolate; box-shadow:0 40px 80px -40px rgba(5,8,13,.55); }
+  html[data-theme="dark"] .core { box-shadow:0 0 0 1px #1a2333, 0 40px 90px -30px rgba(255,118,95,.18); }
+  .core-field { position:absolute; inset:0; width:100%; height:100%; z-index:-1; }
+  .core-head { display:flex; align-items:center; justify-content:space-between; }
+  .core-head .mono { color:#ff9a82; }
+  .core-logo { width:52px; height:52px; border-radius:14px; display:grid; place-items:center; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); }
+  .core-logo img { width:36px; height:36px; animation:breathe 5s ease-in-out infinite; }
+  @keyframes breathe { 50% { transform:scale(1.06); filter:drop-shadow(0 0 14px rgba(255,138,112,.45)); } }
+  .chat { flex:1; display:flex; flex-direction:column; justify-content:flex-end; gap:10px; margin-top:16px; min-height:250px; overflow:hidden; mask-image:linear-gradient(transparent,#000 22%); -webkit-mask-image:linear-gradient(transparent,#000 22%); }
+  .msg { max-width:86%; padding:10px 14px; border-radius:16px; font-size:14.5px; line-height:1.45; animation:pop .45s cubic-bezier(.2,.8,.2,1) both; }
+  .msg.you { align-self:flex-end; background:#1b2636; border-bottom-right-radius:5px; }
+  .msg.ai { align-self:flex-start; background:linear-gradient(135deg,rgba(255,118,95,.16),rgba(166,227,251,.12)); border:1px solid rgba(255,255,255,.08); border-bottom-left-radius:5px; }
+  .msg.tool { align-self:flex-start; background:none; padding:2px 0; font:500 11px "JetBrains Mono",monospace; letter-spacing:.06em; color:#a6e3fb; }
+  .msg.tool b { color:#ff9a82; font-weight:500; }
+  .msg .approve { display:inline-block; margin-top:8px; padding:5px 12px; border-radius:999px; background:#ff765f; color:#071426; font:500 11px "JetBrains Mono",monospace; letter-spacing:.12em; text-transform:uppercase; }
+  .msg .approve.done { background:#2c7a57; color:#fff; }
+  .typing { align-self:flex-start; display:flex; gap:4px; padding:12px 14px; border-radius:16px; background:rgba(255,255,255,.05); animation:pop .3s both; }
+  .typing i { width:6px; height:6px; border-radius:50%; background:#c9d4e0; animation:blink 1s infinite; }
+  .typing i:nth-child(2) { animation-delay:.15s; } .typing i:nth-child(3) { animation-delay:.3s; }
+  @keyframes blink { 50% { opacity:.25; } }
+  @keyframes pop { from { opacity:0; transform:translateY(8px) scale(.98); } }
+  .tile { position:relative; background:var(--surface); border:1px solid var(--line); border-radius:20px; padding:18px 20px; display:flex; flex-direction:column; transition:transform .35s cubic-bezier(.2,.8,.2,1), border-color .35s, box-shadow .35s, background-color .35s; }
+  .tile .num { font:500 12px "JetBrains Mono",monospace; color:var(--muted); }
+  .tile .ico { margin-top:auto; width:26px; height:26px; color:var(--ink); }
+  .tile .ico svg { width:26px; height:26px; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+  .tile h3 { font-size:17px; margin-top:10px; }
+  .tile p { font-size:13.5px; color:var(--muted); margin-top:3px; }
+  .tile:hover { transform:translateY(-3px); border-color:var(--line-strong); }
+  .tile.lit { border-color:#ff765f; box-shadow:0 0 0 1px #ff765f, 0 18px 40px -22px rgba(255,118,95,.6); transform:translateY(-3px); }
+  .tile.lit .ico { color:#ff765f; }
+  .tile.lit .num { color:#ff765f; }
+  .reveal .tile, .reveal .core { opacity:0; transform:translateY(18px); }
+  .reveal.in .tile, .reveal.in .core { opacity:1; transform:none; transition:opacity .7s cubic-bezier(.2,.8,.2,1), transform .7s cubic-bezier(.2,.8,.2,1), border-color .35s, box-shadow .35s; transition-delay:calc(var(--i,0) * 55ms); }
 
-  /* Okam band */
-  .okam { background:var(--band); color:var(--band-ink); }
-  .okam h2 { color:#f5f8fa; margin-top:12px; }
-  .okam .mono { color:#ff9a82; }
-  .okam .grid { display:grid; grid-template-columns:1.25fr 1fr; gap:56px; align-items:center; }
-  .okam .shot { border-radius:16px; overflow:hidden; border:1px solid var(--band-line); box-shadow:0 30px 60px -30px rgba(0,0,0,.6); }
-  .okam .lede { color:#aab6c3; margin:16px 0 22px; font-size:18px; }
-  .okam .proof { color:#d7e3ee; }
-  .okam .proof li::before { background:#ff765f; }
-  .chips { display:flex; flex-wrap:wrap; gap:8px; margin-top:24px; }
-  .chips span { font:500 11px "JetBrains Mono",monospace; letter-spacing:.08em; border:1px solid var(--band-line); border-radius:999px; padding:6px 12px; color:#d7e3ee; }
-  .okam .btn { margin-top:28px; background:#ff765f; color:#071426; }
+  /* Okam: just the mark and a link */
+  .okam { background:var(--band); color:var(--band-ink); padding:72px 0; }
+  .okam-row { display:flex; align-items:center; gap:40px; }
+  .okam-mark { display:flex; align-items:center; gap:16px; flex-shrink:0; }
+  .okam-mark svg { width:76px; height:76px; transition:transform .5s cubic-bezier(.2,.8,.2,1); }
+  .okam-mark:hover svg { transform:rotate(-6deg) scale(1.05); }
+  .okam-mark span { font-weight:700; font-size:40px; letter-spacing:-.04em; color:#F6F3EC; }
+  .okam-copy { flex:1; }
+  .okam-copy .mono { color:#ff9a82; }
+  .okam-copy h2 { color:#f5f8fa; font-size:clamp(24px,2.6vw,32px); margin:8px 0 6px; }
+  .okam-copy p { color:#aab6c3; }
+  .okam .btn { background:#ff765f; color:#071426; }
 
   /* How we work */
   .steps { display:grid; grid-template-columns:repeat(3,1fr); border:1px solid var(--line); border-radius:20px; background:var(--surface); overflow:hidden; }
@@ -161,8 +193,9 @@
 
   @media (max-width:960px) {
     .nav ul { display:none; }
-    .caps { grid-template-columns:1fr 1fr; }
-    .okam .grid { grid-template-columns:1fr; gap:36px; }
+    .bento { grid-template-columns:repeat(2,1fr); }
+    .core { grid-column:1 / -1; grid-row:auto; order:-1; }
+    .okam-row { flex-wrap:wrap; }
     .section-head { flex-direction:column; align-items:flex-start; gap:12px; }
   }
   @media (max-width:700px) {
@@ -171,24 +204,26 @@
     .hero { padding:72px 0 240px; background-size:auto 100%; background-position:80% bottom; }
     .hero::before { background:linear-gradient(180deg,color-mix(in srgb,var(--bg) 92%,transparent) 30%,color-mix(in srgb,var(--bg) 20%,transparent) 70%,transparent); }
     .lede { font-size:17px; }
-    .where, .caps, .steps { grid-template-columns:1fr; }
+    .where, .steps { grid-template-columns:1fr; }
+    .bento { grid-auto-rows:minmax(140px,auto); gap:12px; }
+    .chat { min-height:290px; }
     .where > div, .steps > div { border-right:none; border-bottom:1px solid var(--line); padding:24px 22px; }
     .where > div:last-child, .steps > div:last-child { border-bottom:none; }
     .section { padding:68px 0; }
     .close { padding:80px 0; }
     .foot .row { flex-direction:column; align-items:flex-start; }
   }
-  @media (prefers-reduced-motion:reduce) { * { transition:none !important; } }
+  @media (prefers-reduced-motion:reduce) { * { transition:none !important; animation:none !important; } .reveal .tile, .reveal .core { opacity:1; transform:none; } }
 </style>
 </head>
 <body>
 <header class="topbar">
   <div class="wrap">
     <nav class="nav" aria-label="Main">
-      <a class="brand" href="/" aria-label="Nordane home"><span class="tile"><img src="/assets/nordane-n.png" alt="" width="24" height="24" /></span><span class="word">NORDANE</span></a>
+      <a class="brand" href="/" aria-label="Nordane home"><span class="brand-tile"><img src="/assets/nordane-n.png" alt="" width="24" height="24" /></span><span class="word">NORDANE</span></a>
       <ul>
         <li><a href="#okam">Okam</a></li>
-        <li><a href="#build">What we build</a></li>
+        <li><a href="#build">What we do</a></li>
         <li><a href="#how">How we work</a></li>
       </ul>
       <div class="nav-end">
@@ -205,7 +240,7 @@
       <div class="mono">Swiss AI studio · Switzerland &amp; Norway</div>
       <h1>We help businesses scale into the <span class="accent">agentic</span> era.</h1>
       <p class="lede">We design, build and run the software behind it: native apps, platforms, AI agents and the infrastructure underneath. Our flagship, Okam, runs restaurants in Norway every day.</p>
-      <div class="cta"><a class="btn primary" href="#build">What we build →</a><a class="btn ghost" href="#okam">See Okam</a></div>
+      <div class="cta"><a class="btn primary" href="#build">What we do →</a><a class="btn ghost" href="#okam">See Okam</a></div>
     </div>
   </section>
 
@@ -217,35 +252,37 @@
 
   <section class="section" id="build">
     <div class="wrap">
-      <div class="section-head"><div><div class="mono">What we build</div><h2>Six things we ship, end to end.</h2></div><p>Every item here is running code we built and operate, not a slide.</p></div>
-      <div class="caps">
-        <div class="card"><span class="n">01</span><h3>Native iOS &amp; tablet apps</h3><span class="tag">iPad · iPhone · Android</span>
-          <ul class="proof"><li>An iPad till with receipt printing, card terminals and offline mode</li><li>A kitchen display for iOS and Android</li><li>A native back-office app shipped through TestFlight</li></ul></div>
-        <div class="card"><span class="n">02</span><h3>Web platforms &amp; SaaS</h3><span class="tag">Multi-tenant</span>
-          <ul class="proof"><li>A wealth-analytics platform: screener, backtests, risk and reporting</li><li>A restaurant back office in three languages</li><li>Fast marketing sites at the edge</li></ul></div>
-        <div class="card"><span class="n">03</span><h3>AI agents &amp; assistants</h3><span class="tag">Agentic</span>
-          <ul class="proof"><li>Assistants that act on the business, with the owner approving each change</li><li>Measured on 1,500+ test conversations before release</li><li>Client data pseudonymised before it reaches a model</li></ul></div>
-        <div class="card"><span class="n">04</span><h3>Software factories</h3><span class="tag">Multi-agent</span>
-          <ul class="proof"><li>Agent teams that turn a staff problem report into a tested fix</li><li>Independent verifier and evaluator agents before anything merges</li><li>Straight through to the next app build</li></ul></div>
-        <div class="card"><span class="n">05</span><h3>Infrastructure</h3><span class="tag">Swiss-hosted</span>
-          <ul class="proof"><li>Swiss-region cloud landing zone written as code</li><li>Each client isolated in its own environment</li><li>Monitoring, secrets and budgets built in from day one</li></ul></div>
-        <div class="card"><span class="n">06</span><h3>Payments &amp; compliance</h3><span class="tag">Integrations</span>
-          <ul class="proof"><li>7+ payment, delivery and accounting integrations</li><li>Norwegian fiscal till rules and Swiss VAT</li><li>Market-data pipelines for financial platforms</li></ul></div>
+      <div class="section-head"><div><div class="mono">What Nordane does</div><h2>Everything an agentic business runs on.</h2></div><p>We build the whole stack and stay with you after launch: the infrastructure, the agents, the chat, the connections into your systems, and the support.</p></div>
+      <div class="bento reveal">
+        <div class="tile t1" data-k="infra"><span class="num">01</span><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><path d="M7 7h.01M7 17h.01"/></svg></span><h3>Infrastructure</h3><p>Swiss-hosted, built to scale</p></div>
+        <div class="tile t2" data-k="agents"><span class="num">02</span><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 4v4M9 13h.01M15 13h.01M9.5 16.5h5"/></svg></span><h3>AI agents</h3><p>Software that does the work</p></div>
+        <div class="tile t3" data-k="chat"><span class="num">03</span><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg></span><h3>The chat</h3><p>Assistants people actually talk to</p></div>
+        <div class="tile t4" data-k="mcp"><span class="num">04</span><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3v5M16 3v5M6 8h12v3a6 6 0 0 1-12 0zM12 17v4"/></svg></span><h3>MCP</h3><p>Your systems, open to AI</p></div>
+        <div class="core" aria-label="Demo: a Nordane agent at work">
+          <canvas class="core-field" aria-hidden="true"></canvas>
+          <div class="core-head"><span class="core-logo"><img src="/assets/nordane-n.png" alt="" width="40" height="40" /></span><span class="mono">Live demo</span></div>
+          <div class="chat" aria-live="polite"></div>
+        </div>
+        <div class="tile t5" data-k="apps"><span class="num">05</span><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 18h2"/></svg></span><h3>Apps</h3><p>iPhone, iPad and web</p></div>
+        <div class="tile t6" data-k="data"><span class="num">06</span><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 5-6"/></svg></span><h3>Live data</h3><p>One source of truth</p></div>
+        <div class="tile t7" data-k="security"><span class="num">07</span><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg></span><h3>Privacy</h3><p>Your data stays yours</p></div>
+        <div class="tile t8" data-k="auto"><span class="num">08</span><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"/><path d="M18 3v4h-4M6 21v-4h4"/></svg></span><h3>Automation</h3><p>Routine work, handled</p></div>
+        <div class="tile t9" data-k="integr"><span class="num">09</span><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7H6a4 4 0 0 0 0 8h3M15 7h3a4 4 0 0 1 0 8h-3M8 11h8"/></svg></span><h3>Integrations</h3><p>Payments, accounting, delivery</p></div>
+        <div class="tile t10" data-k="support"><span class="num">10</span><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13v-1a8 8 0 0 1 16 0v1"/><rect x="3" y="13" width="4" height="6" rx="1.5"/><rect x="17" y="13" width="4" height="6" rx="1.5"/></svg></span><h3>Support</h3><p>We run it with you</p></div>
+        <div class="tile t11" data-k="scale"><span class="num">11</span><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h16M7 20v-5M12 20V9M17 20V4"/></svg></span><h3>Scale</h3><p>Grows without a rebuild</p></div>
+        <div class="tile t12" data-k="evals"><span class="num">12</span><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r=".6"/></svg></span><h3>Tested</h3><p>Measured before it ships</p></div>
       </div>
     </div>
   </section>
 
-  <section class="section okam" id="okam">
-    <div class="wrap grid">
-      <div class="shot"><img src="/assets/okam-backoffice.jpg" alt="Okam back office: today's orders, guests and sales" width="1440" height="878" loading="lazy" /></div>
-      <div>
-        <div class="mono">Flagship · Okam</div>
-        <h2>The operating system for restaurants.</h2>
-        <p class="lede">Till, kitchen, online ordering, staff and marketing in one system, with an assistant that can do the work for the owner.</p>
-        <ul class="proof"><li>iPad till and kitchen display</li><li>Online ordering and delivery apps in one queue</li><li>Shift planning and punch clock</li><li>AI marketing that drafts and posts for the restaurant</li></ul>
-        <div class="chips"><span>Wolt</span><span>Foodora</span><span>Vipps</span><span>Stripe</span><span>TWINT</span><span>Tripletex</span><span>Fiken</span></div>
-        <a class="btn" href="https://okam.no" target="_blank" rel="noopener">Visit okam.no ↗</a>
-      </div>
+  <section class="okam" id="okam">
+    <div class="wrap okam-row">
+      <a class="okam-mark" href="https://okam.no" target="_blank" rel="noopener" aria-label="Okam">
+        <svg viewBox="-8 -8 116 116" aria-hidden="true"><path fill="#F6F3EC" d="M0 0H100V100H70A46 46 0 0 0 24 54L24 100H0Z"/><path fill="#E2712B" d="M12 54H24V100H12Z"/></svg>
+        <span>okam</span>
+      </a>
+      <div class="okam-copy"><div class="mono">Our flagship</div><h2>Okam, the operating system for restaurants.</h2><p>Built on the same stack. Live in Norway, coming to Switzerland.</p></div>
+      <a class="btn" href="https://okam.no" target="_blank" rel="noopener">Visit okam.no ↗</a>
     </div>
   </section>
 
@@ -267,7 +304,7 @@
 
 <footer class="foot">
   <div class="wrap row">
-    <a class="brand" href="/" aria-label="Nordane home"><span class="tile"><img src="/assets/nordane-n.png" alt="" width="24" height="24" /></span><span class="word">NORDANE</span></a>
+    <a class="brand" href="/" aria-label="Nordane home"><span class="brand-tile"><img src="/assets/nordane-n.png" alt="" width="24" height="24" /></span><span class="word">NORDANE</span></a>
     <span class="place">Nordane GmbH · Teufen, Switzerland · <a href="mailto:info@nordane.ch">info@nordane.ch</a> · © 2026</span>
     <div class="socials">
       <a href="https://www.linkedin.com/company/nordane/" target="_blank" rel="noopener" aria-label="Nordane on LinkedIn"><svg viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9.75h4V21H3V9.75Zm6.5 0h3.8v1.6h.06c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.77 2.65 4.77 6.1V21h-4v-4.9c0-1.17-.02-2.68-1.63-2.68-1.64 0-1.89 1.28-1.89 2.6V21h-4V9.75Z"/></svg></a>
@@ -290,6 +327,68 @@
       sync();
     });
     sync();
+  })();
+</script>
+<script>
+  // What Nordane does: tiles rise in on scroll, then a scripted agent conversation loops in the core
+  // and lights up the tiles it uses. Everything pauses while the section is off screen.
+  (function(){
+    var bento = document.querySelector('.bento'); if (!bento) return;
+    var chat = bento.querySelector('.chat'), tiles = {}, reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    bento.querySelectorAll('.tile, .core').forEach(function(el, i){ el.style.setProperty('--i', i); if (el.dataset.k) tiles[el.dataset.k] = el; });
+
+    var script = [
+      ['you', 'How did the weekend go?'],
+      ['tool', 'sales.read', ['mcp','data']],
+      ['ai', 'CHF 18,420 in sales, up 12% on last weekend. Saturday evening was the busiest.', ['agents','chat']],
+      ['you', 'Plan staff for next Saturday.'],
+      ['tool', 'schedule.draft', ['mcp','auto']],
+      ['ai', 'Draft ready: two extra people from 18:00 to 22:00.', ['agents'], 'approve'],
+      ['you', 'Where does our data live?'],
+      ['ai', 'In Switzerland. Every action is logged and only runs with your approval.', ['infra','security']]
+    ];
+    var timer = null, step = 0, visible = false;
+    function light(keys){ Object.keys(tiles).forEach(function(k){ tiles[k].classList.toggle('lit', !!keys && keys.indexOf(k) > -1); }); }
+    function add(cls, html){ var d = document.createElement('div'); d.className = 'msg ' + cls; d.innerHTML = html; chat.appendChild(d); while (chat.children.length > 7) chat.removeChild(chat.firstChild); return d; }
+    function later(fn, ms){ timer = setTimeout(function(){ if (visible) fn(); else timer = null; }, ms); }
+    function next(){
+      if (step >= script.length) { later(function(){ chat.innerHTML = ''; light(null); step = 0; next(); }, 2600); return; }
+      var line = script[step++], kind = line[0];
+      if (kind === 'you') { light(null); add('you', line[1]); later(next, 900); }
+      else if (kind === 'tool') { light(line[2]); add('tool', '↳ <b>MCP</b> · ' + line[1]); later(next, 800); }
+      else {
+        var dots = add('typing', '<i></i><i></i><i></i>'); dots.className = 'typing';
+        later(function(){
+          dots.remove(); light(line[2]);
+          var m = add('ai', line[1] + (line[3] ? '<br><span class="approve">Approve</span>' : ''));
+          if (line[3]) later(function(){ var b = m.querySelector('.approve'); b.textContent = 'Approved ✓'; b.classList.add('done'); light(['apps','auto']); later(next, 1600); }, 1500);
+          else later(next, 2200);
+        }, 1100);
+      }
+    }
+    function start(){ if (!timer) next(); }
+
+    // Faint drifting constellation behind the chat, drawn on a small canvas.
+    var cv = bento.querySelector('.core-field'), ctx = cv.getContext('2d'), pts = [], raf = 0;
+    function size(){ var r = cv.getBoundingClientRect(), dpr = Math.min(devicePixelRatio || 1, 2); cv.width = r.width * dpr; cv.height = r.height * dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
+      pts = []; for (var i = 0; i < 42; i++) pts.push({ x:Math.random()*r.width, y:Math.random()*r.height, vx:(Math.random()-.5)*.18, vy:(Math.random()-.5)*.18 }); }
+    function draw(){
+      var w = cv.clientWidth, h = cv.clientHeight; ctx.clearRect(0,0,w,h);
+      for (var i = 0; i < pts.length; i++) { var a = pts[i]; a.x += a.vx; a.y += a.vy; if (a.x < 0 || a.x > w) a.vx *= -1; if (a.y < 0 || a.y > h) a.vy *= -1;
+        for (var j = i + 1; j < pts.length; j++) { var b = pts[j], dx = a.x - b.x, dy = a.y - b.y, d = dx*dx + dy*dy;
+          if (d < 9000) { ctx.strokeStyle = 'rgba(166,227,251,' + (0.12 * (1 - d/9000)) + ')'; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); } }
+        ctx.fillStyle = i % 5 ? 'rgba(201,212,224,.35)' : 'rgba(255,138,112,.7)'; ctx.fillRect(a.x - 1, a.y - 1, 2, 2); }
+      if (visible) raf = requestAnimationFrame(draw);
+    }
+    size(); addEventListener('resize', size);
+
+    new IntersectionObserver(function(entries){
+      entries.forEach(function(e){
+        visible = e.isIntersecting;
+        if (visible) { bento.classList.add('in'); if (!reduce) { start(); cancelAnimationFrame(raf); draw(); } else draw(); }
+      });
+    }, { threshold: 0.2 }).observe(bento);
+    if (reduce) { visible = true; script.forEach(function(l){ if (l[0] !== 'tool') add(l[0], l[1]); }); visible = false; step = script.length + 1; }
   })();
 </script>
 </body>
