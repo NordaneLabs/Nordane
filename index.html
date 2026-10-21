@@ -11,766 +11,286 @@
     if(localStorage.getItem("nordane-theme")==="dark"){
       document.documentElement.setAttribute("data-theme","dark");
       var m=document.querySelector('meta[name="theme-color"]');
-      if(m) m.setAttribute("content","#071426");
+      if(m) m.setAttribute("content","#05080d");
     }
   }catch(e){}
 })();
 </script>
 <title>Nordane</title>
-<meta name="description" content="Nordane — a Swiss AI software company. We build and run the AI platform behind real hospitality businesses." />
-<!-- icons -->
-<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-<link rel="alternate icon" href="/favicon.ico" sizes="any" />
-<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png" />
-<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
-
-<!-- Open Graph / social link preview -->
+<meta name="description" content="Nordane is a Swiss AI studio. We help businesses scale into the agentic era with native apps, platforms, AI agents and the infrastructure underneath. Our flagship is Okam." />
+<link rel="icon" href="/favicon.ico" sizes="any" />
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png?v=4" />
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=4" />
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Nordane" />
 <meta property="og:title" content="Nordane" />
-<meta property="og:description" content="The operating system for hospitality, ready for the agentic era." />
+<meta property="og:description" content="Helping businesses scale into the agentic era. Swiss AI studio, makers of Okam." />
 <meta property="og:url" content="https://nordane.ch/" />
-<meta property="og:image" content="https://nordane.ch/assets/og.png?v=2" />
-<meta property="og:image:secure_url" content="https://nordane.ch/assets/og.png?v=2" />
+<meta property="og:image" content="https://nordane.ch/assets/og.png?v=3" />
+<meta property="og:image:secure_url" content="https://nordane.ch/assets/og.png?v=3" />
 <meta property="og:image:type" content="image/png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:image:alt" content="Nordane — the operating system for hospitality" />
+<meta property="og:image:alt" content="Nordane — Swiss Alps at dusk with the Nordane mark" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@Nordane_ch" />
 <meta name="twitter:title" content="Nordane" />
-<meta name="twitter:description" content="The operating system for hospitality, ready for the agentic era." />
-<meta name="twitter:image" content="https://nordane.ch/assets/og.png?v=2" />
+<meta name="twitter:description" content="Helping businesses scale into the agentic era. Swiss AI studio, makers of Okam." />
+<meta name="twitter:image" content="https://nordane.ch/assets/og.png?v=3" />
+<link rel="preload" as="image" href="/assets/banner-day.jpg" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 <style>
-  /* ALPINE — the light direction. Same brand grammar as the live site
-     (Space Grotesk + JetBrains Mono, hairlines, mono caps labels, index rows),
-     set on ice paper instead of night. Palette from the brand board:
-     0E1722 · 2B3A4D · 5C7FA3 · 8FB6D6 · D7E3EE · F5F7FA. */
-  :root{
-    color-scheme:light;
-    --bg:#f5f7fa; --ink:#0e1722; --body:#2b3a4d; --steel:#54718f;
-    --acc:#5c7fa3; --acc-deep:#3d5c7e; --acc-ice:#8fb6d6; --ice:#d7e3ee;
-    --line:rgba(14,23,34,0.10); --line-2:rgba(14,23,34,0.20);
-    --panel:#ffffff; --scrim-rgb:245,247,250;
-    --ease:cubic-bezier(0.22,1,0.36,1); --maxw:1080px; --r:18px;
+  /* Light (default): soft daylight. Dark: the dusk banner on near-black. Same layout, swapped tokens. */
+  :root {
+    --bg:#f5f7fa; --surface:#fff; --surface-2:#fafbfd; --ink:#0e1722; --body:#2b3a4d; --muted:#6a7b8f;
+    --line:#dde5ee; --line-strong:#c9d4e0; --acc:#5c7fa3; --acc-deep:#3d5c7e; --tag-bg:#e8eef5; --tag-ink:#3d5c7e;
+    --bullet:#5c7fa3; --eyebrow:#5c7fa3; --btn-bg:#3d5c7e; --btn-ink:#fff;
+    --band:#071426; --band-ink:#c9d4e0; --band-line:#18324f;
+    --hero-img:url(/assets/banner-day.jpg); --hero-wash:linear-gradient(90deg,rgba(245,247,250,.94),rgba(245,247,250,.6) 55%,rgba(245,247,250,0));
+    --hero-ink:#0e1722; --hero-body:#2b3a4d; --hero-eyebrow:#5c7fa3;
+    --accent-text:linear-gradient(90deg,#ff6a4d,#5c7fa3);
   }
-  *{ box-sizing:border-box; margin:0; padding:0; }
-  html{ scroll-behavior:smooth; overscroll-behavior-y:none; }
-  body{
-    font-family:"Space Grotesk", system-ui, sans-serif; background:var(--bg); color:var(--ink);
-    -webkit-font-smoothing:antialiased; line-height:1.45; overflow-x:hidden; overscroll-behavior-y:none;
-    min-height:100svh; display:flex; flex-direction:column;
+  html[data-theme="dark"] {
+    --bg:#05080d; --surface:#0b111b; --surface-2:#0a0f17; --ink:#f5f8fa; --body:#c9d4e0; --muted:#8796a8;
+    --line:#1a2333; --line-strong:#2a3647; --acc:#ff9a82; --acc-deep:#ff765f; --tag-bg:#14202f; --tag-ink:#a6e3fb;
+    --bullet:#ff765f; --eyebrow:#ff9a82; --btn-bg:#ff765f; --btn-ink:#071426;
+    --band:#0a1422; --band-ink:#c9d4e0; --band-line:#1a2a40;
+    --hero-img:url(/assets/banner-night.jpg); --hero-wash:linear-gradient(90deg,rgba(5,8,13,.85),rgba(5,8,13,.3) 60%,rgba(5,8,13,0));
+    --hero-ink:#f5f8fa; --hero-body:#c9d4e0; --hero-eyebrow:#ff9a82;
+    --accent-text:linear-gradient(90deg,#ff7a5c,#ffd2c6 55%,#a6e3fb);
   }
-  a{ color:inherit; text-decoration:none; }
-  canvas{ display:block; }
-  ::selection{ background:rgba(63,116,163,0.22); color:var(--ink); }
-  :focus-visible{ outline:2px solid var(--acc); outline-offset:3px; border-radius:3px; }
-  .wrap{ width:100%; max-width:var(--maxw); margin:0 auto; padding:0 clamp(22px,5vw,40px); }
-  .mono{ font-family:"JetBrains Mono", monospace; }
+  * { box-sizing:border-box; }
+  html, body { margin:0; overscroll-behavior-y:none; }
+  body { background:var(--bg); color:var(--body); font:16px/1.6 "Space Grotesk",system-ui,sans-serif; -webkit-font-smoothing:antialiased; transition:background-color .4s, color .4s; }
+  a { color:inherit; text-decoration:none; }
+  img { display:block; max-width:100%; height:auto; }
+  .wrap { max-width:1180px; margin:0 auto; padding:0 40px; }
+  .mono { font:500 11px/1.4 "JetBrains Mono",monospace; letter-spacing:.22em; text-transform:uppercase; color:var(--eyebrow); }
+  h1, h2, h3 { color:var(--ink); font-weight:600; letter-spacing:-.025em; margin:0; }
+  h1 { font-size:clamp(40px,6vw,64px); line-height:1.03; }
+  h2 { font-size:clamp(30px,4vw,40px); line-height:1.1; }
+  h3 { font-size:20px; line-height:1.25; letter-spacing:-.01em; }
+  p { margin:0; }
+  .accent { background:var(--accent-text); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .lede { font-size:19px; max-width:600px; }
+  .btn { display:inline-flex; align-items:center; gap:10px; height:44px; padding:0 22px; border-radius:999px; font:500 11px "JetBrains Mono",monospace; letter-spacing:.2em; text-transform:uppercase; white-space:nowrap; }
+  .btn.primary { background:var(--btn-bg); color:var(--btn-ink); }
+  .btn.ghost { border:1px solid var(--line-strong); color:var(--ink); background:color-mix(in srgb,var(--surface) 60%,transparent); }
 
-  .bg{ position:fixed; inset:0; z-index:0; pointer-events:none;
-    background:
-      radial-gradient(110% 80% at 80% -12%, rgba(143,182,214,0.18), transparent 55%),
-      radial-gradient(120% 100% at 12% 110%, rgba(92,127,163,0.07), transparent 60%),
-      linear-gradient(180deg, #f7f9fc 0%, #f5f7fa 45%, #eff4f9 100%); }
-  .grain{ position:fixed; inset:-50%; z-index:1; pointer-events:none; opacity:.05;
-    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
-  header, main, footer{ position:relative; z-index:2; }
-  main{ flex:1 0 auto; }
+  /* Header */
+  .topbar { position:sticky; top:0; z-index:10; background:color-mix(in srgb,var(--bg) 82%,transparent); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border-bottom:1px solid var(--line); }
+  .nav { display:flex; align-items:center; justify-content:space-between; height:72px; gap:20px; }
+  .brand { display:inline-flex; align-items:center; gap:12px; }
+  .brand .tile { width:34px; height:34px; border-radius:9px; background:#05080d; display:grid; place-items:center; }
+  .brand .tile img { width:24px; height:24px; }
+  .word { font-weight:600; letter-spacing:.32em; font-size:15px; color:var(--ink); }
+  .nav ul { display:flex; gap:32px; list-style:none; margin:0; padding:0; }
+  .nav li a { font:500 11px "JetBrains Mono",monospace; letter-spacing:.2em; text-transform:uppercase; color:var(--body); }
+  .nav li a:hover { color:var(--ink); }
+  .nav-end { display:flex; align-items:center; gap:12px; }
+  .mode { width:40px; height:40px; border-radius:50%; border:1px solid var(--line-strong); background:transparent; display:grid; place-items:center; cursor:pointer; color:var(--ink); padding:0; }
+  html[data-theme="dark"] .mode { color:#ff765f; }
+  .mode svg { width:16px; height:16px; fill:currentColor; transition:transform .5s cubic-bezier(.2,.8,.2,1); }
+  html[data-theme="dark"] .mode svg { transform:rotate(90deg); }
 
-  header{ padding:26px 0; position:relative; }
-  header::after{ content:""; position:absolute; left:0; right:0; bottom:0; height:1px; background:var(--line);
-    transform:scaleX(0); transform-origin:0 50%; animation:drawX 1.5s .25s var(--ease) forwards; }
-  .top{ display:flex; align-items:center; justify-content:space-between; gap:16px; }
-  .brand{ display:flex; align-items:center; gap:12px; opacity:0; animation:fadeSlide 1.2s .1s var(--ease) forwards; }
-  .brand .brandmark{ height:32px; width:auto; display:block; }
-  .brand .wm{ font-weight:600; letter-spacing:.3em; font-size:15px; padding-left:.1em; color:var(--ink); }
-  .wm .dia{ width:.64em; height:.64em; display:inline-block; vertical-align:0; margin-right:.3em; color:var(--acc-deep); }
-  @keyframes drawX{ to{ transform:scaleX(1); } }
-  @keyframes fadeSlide{ from{ opacity:0; transform:translateY(-6px); } to{ opacity:1; transform:none; } }
-  nav{ display:flex; align-items:center; gap:clamp(14px,3vw,30px); opacity:0; animation:fadeSlide 1.2s .35s var(--ease) forwards; }
-  nav a.link{ font-family:"JetBrains Mono"; font-size:11px; letter-spacing:.18em; text-transform:uppercase;
-    color:var(--body); transition:color .3s var(--ease); }
-  nav a.link:hover{ color:var(--acc-deep); }
+  /* Hero on the banner */
+  .hero { position:relative; overflow:hidden; padding:120px 0 330px; background:var(--hero-img) center bottom / cover no-repeat, var(--bg); }
+  .hero::before { content:""; position:absolute; inset:0; background:var(--hero-wash); }
+  .hero .wrap { position:relative; }
+  .hero .mono { color:var(--hero-eyebrow); }
+  .hero h1 { color:var(--hero-ink); max-width:820px; margin:18px 0 22px; }
+  .hero .lede { color:var(--hero-body); }
+  .hero .cta { display:flex; flex-wrap:wrap; gap:12px; margin-top:34px; }
 
-  .btn{ font-family:"JetBrains Mono"; font-size:11px; letter-spacing:.16em; text-transform:uppercase;
-    display:inline-flex; align-items:center; gap:9px; padding:13px 22px; border-radius:999px; cursor:pointer;
-    border:1px solid var(--line-2); white-space:nowrap;
-    transition:transform .3s var(--ease), background .3s var(--ease), color .3s var(--ease), border-color .3s var(--ease), box-shadow .3s var(--ease); }
-  .btn .arr{ transition:transform .3s var(--ease); }
-  .btn.primary{ background:var(--acc-deep); color:#f6fafd; border-color:var(--acc-deep); font-weight:500; }
-  .btn.primary:hover{ transform:translateY(-2px); background:#2b3a4d; border-color:#2b3a4d; }
-  .btn.primary:hover .arr{ transform:translateX(3px); }
-  .btn.primary:active{ transform:translateY(0); }
-  .btn.ghost{ color:var(--ink); background:transparent; }
-  .btn.ghost:hover{ border-color:var(--acc); color:var(--acc-deep); transform:translateY(-2px); }
-  .btn.ghost:active{ transform:translateY(0); }
-  nav .btn{ padding:10px 18px; }
+  /* Where we are */
+  .where { display:grid; grid-template-columns:repeat(3,1fr); border-bottom:1px solid var(--line); background:var(--surface); }
+  .where > div { padding:30px 40px; border-right:1px solid var(--line); }
+  .where > div:last-child { border-right:none; }
+  .where h3 { margin:10px 0 6px; }
+  .where p { color:var(--muted); font-size:14.5px; }
 
-  /* hero — split: copy left, spine survey right */
-  .hero{ display:grid; grid-template-columns:minmax(0,1.14fr) minmax(0,1fr); gap:clamp(20px,4vw,56px);
-    align-items:center; min-height:86svh; padding:clamp(16px,4vh,40px) 0 clamp(36px,7vh,70px); }
-  .eyebrow{ font-family:"JetBrains Mono"; font-size:11px; letter-spacing:.26em; text-transform:uppercase;
-    color:var(--acc-deep); margin-bottom:22px; }
-  h1{ font-weight:600; font-size:clamp(2.3rem,4.6vw,3.5rem); line-height:1.06; letter-spacing:-.03em; }
-  h1 .acc{ color:var(--acc); }
-  h1 .w{ display:inline-block; white-space:nowrap; }
-  h1 .ch{ display:inline-block; opacity:0; transform:translateY(.34em); filter:blur(5px);
-    animation:chIn .8s var(--ease) forwards; }
-  @keyframes chIn{ to{ opacity:1; transform:none; filter:blur(0); } }
-  .hero-sub{ margin-top:26px; max-width:44ch; color:var(--body); font-weight:400;
-    font-size:clamp(1rem,1.35vw,1.13rem); line-height:1.65; text-wrap:pretty; }
-  .cta{ display:flex; gap:14px; flex-wrap:wrap; margin-top:36px; }
-  .rise{ opacity:0; transform:translateY(14px); animation:rise 1.05s var(--ease) forwards; }
-  .rise.d1{ animation-delay:1.15s; }
-  .rise.d2{ animation-delay:1.35s; }
-  @keyframes rise{ to{ opacity:1; transform:none; } }
+  /* Sections */
+  .section { padding:96px 0; }
+  .section-head { display:flex; justify-content:space-between; align-items:end; gap:40px; margin-bottom:44px; }
+  .section-head h2 { margin-top:12px; }
+  .section-head p { max-width:440px; color:var(--muted); }
+  .card { background:var(--surface); border:1px solid var(--line); border-radius:20px; }
+  .tag { display:inline-block; margin-top:8px; font:500 10px "JetBrains Mono",monospace; letter-spacing:.16em; text-transform:uppercase; color:var(--tag-ink); background:var(--tag-bg); border-radius:999px; padding:5px 10px; }
+  .proof { list-style:none; padding:0; margin:14px 0 0; display:grid; gap:8px; font-size:14.5px; }
+  .proof li { padding-left:16px; position:relative; }
+  .proof li::before { content:""; position:absolute; left:0; top:.65em; width:6px; height:6px; border-radius:1px; background:var(--bullet); transform:rotate(45deg); }
+  .caps { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+  .caps .card { padding:28px; }
+  .caps .n { font:500 12px "JetBrains Mono",monospace; color:var(--acc); }
+  .caps h3 { margin-top:12px; }
 
-  /* the spine survey — the original painted emblem, multiplied onto the paper */
-  .survey-frame{ position:relative; width:100%; height:min(80svh,700px);
-    display:flex; align-items:center; justify-content:center; }
-  .survey-art{ max-width:100%; max-height:100%; width:auto; height:100%; object-fit:contain;
-    opacity:0; filter:blur(6px);
-    animation:emblemIn 1.8s .45s var(--ease) forwards; }
-  @keyframes emblemIn{ to{ opacity:1; filter:blur(0); } }
+  /* Okam band */
+  .okam { background:var(--band); color:var(--band-ink); }
+  .okam h2 { color:#f5f8fa; margin-top:12px; }
+  .okam .mono { color:#ff9a82; }
+  .okam .grid { display:grid; grid-template-columns:1.25fr 1fr; gap:56px; align-items:center; }
+  .okam .shot { border-radius:16px; overflow:hidden; border:1px solid var(--band-line); box-shadow:0 30px 60px -30px rgba(0,0,0,.6); }
+  .okam .lede { color:#aab6c3; margin:16px 0 22px; font-size:18px; }
+  .okam .proof { color:#d7e3ee; }
+  .okam .proof li::before { background:#ff765f; }
+  .chips { display:flex; flex-wrap:wrap; gap:8px; margin-top:24px; }
+  .chips span { font:500 11px "JetBrains Mono",monospace; letter-spacing:.08em; border:1px solid var(--band-line); border-radius:999px; padding:6px 12px; color:#d7e3ee; }
+  .okam .btn { margin-top:28px; background:#ff765f; color:#071426; }
 
-  /* cinematic hero backdrop — the panorama emerges from the page bottom */
-  .hero{ position:relative; min-height:92svh; margin-bottom:clamp(36px,5vh,52px); }
-  .hero-bg{ position:absolute; left:calc(50% - 50vw); bottom:0; width:100vw; height:min(38svh,360px);
-    z-index:0; pointer-events:none; overflow:hidden; }
-  .hero-copy, .survey-frame{ position:relative; z-index:1; }
-  .survey-frame{ height:min(64svh,560px); margin-bottom:14svh; }
-  .hero-bg img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 28%;
-    -webkit-mask-image:linear-gradient(180deg, transparent 2%, #000 55%);
-    mask-image:linear-gradient(180deg, transparent 2%, #000 55%);
-    transform-origin:center bottom; animation:bgDrift 46s ease-in-out infinite alternate; }
-  @keyframes bgDrift{ from{ transform:scale(1.06) translateX(-0.8%); } to{ transform:scale(1.06) translateX(0.8%); } }
-  .hero-bg::after{ content:""; position:absolute; inset:0;
-    background:linear-gradient(90deg, rgba(245,247,250,0.55) 0%, rgba(245,247,250,0) 42%),
-               linear-gradient(180deg, rgba(245,247,250,0.2) 0%, rgba(245,247,250,0) 45%, rgba(245,247,250,0.25) 100%); }
-  @media (prefers-reduced-motion: reduce){ .hero-bg img{ animation:none; transform:scale(1.06); } }
-  @media (max-width:860px){
-    .hero{ margin-bottom:38px; }
-    .hero-bg{ height:26svh; }
-    .hero-bg img{ object-position:40% 28%;
-      -webkit-mask-image:linear-gradient(180deg, transparent 0%, #000 24%);
-      mask-image:linear-gradient(180deg, transparent 0%, #000 24%); }
+  /* How we work */
+  .steps { display:grid; grid-template-columns:repeat(3,1fr); border:1px solid var(--line); border-radius:20px; background:var(--surface); overflow:hidden; }
+  .steps > div { padding:32px; border-right:1px solid var(--line); }
+  .steps > div:last-child { border-right:none; }
+  .steps h3 { margin:10px 0 8px; font-size:26px; }
+  .steps p { color:var(--muted); font-size:15px; }
+
+  .close { text-align:center; padding:110px 0; }
+  .close h2 { font-size:clamp(32px,4.4vw,48px); margin:16px auto 28px; max-width:760px; }
+
+  /* Footer */
+  .foot { border-top:1px solid var(--line); padding:40px 0 48px; }
+  .foot .row { display:flex; justify-content:space-between; align-items:center; gap:24px; flex-wrap:wrap; }
+  .foot .place { font:500 11px "JetBrains Mono",monospace; letter-spacing:.18em; text-transform:uppercase; color:var(--muted); }
+  .foot .place a { border-bottom:1px solid var(--line-strong); }
+  .socials { display:flex; gap:10px; }
+  .socials a { width:40px; height:40px; border-radius:50%; border:1px solid var(--line); display:grid; place-items:center; color:var(--ink); background:var(--surface); }
+  .socials a:hover { border-color:var(--line-strong); }
+  .socials svg { width:17px; height:17px; fill:currentColor; }
+
+  @media (max-width:960px) {
+    .nav ul { display:none; }
+    .caps { grid-template-columns:1fr 1fr; }
+    .okam .grid { grid-template-columns:1fr; gap:36px; }
+    .section-head { flex-direction:column; align-items:flex-start; gap:12px; }
   }
-
-  /* what we do — index columns under a mono section label */
-  .portfolio{ padding:0 0 clamp(64px,11vh,110px); }
-  .sec-label{ display:flex; align-items:baseline; justify-content:space-between; gap:16px;
-    padding-bottom:14px; border-bottom:1px solid var(--line-2); margin-bottom:6px;
-    font-family:"JetBrains Mono"; font-size:11px; letter-spacing:.24em; text-transform:uppercase; color:var(--steel); }
-  .sec-label h2{ font:inherit; letter-spacing:inherit; color:inherit; font-weight:400; margin:0; }
-
-  .pillars{ display:grid; grid-template-columns:1fr 1fr; }
-  .pillar{ padding:clamp(36px,6vh,58px) clamp(26px,4vw,48px) clamp(36px,6vh,58px) 4px; border-bottom:1px solid var(--line); }
-  .pillar + .pillar{ border-left:1px solid var(--line); padding-left:clamp(26px,4vw,48px); padding-right:4px; }
-  .pillar .no{ font-family:"JetBrains Mono"; font-size:.95rem; letter-spacing:.06em; color:var(--acc-deep);
-    display:block; margin-bottom:18px; }
-  .pillar h3{ font-size:clamp(1.9rem,3.6vw,2.7rem); font-weight:500; letter-spacing:-.028em; line-height:1.05;
-    display:inline-flex; align-items:baseline; gap:14px; transition:transform .55s var(--ease), color .4s var(--ease); }
-  .pillar h3 .g{ font-size:.5em; color:var(--acc); opacity:0; transform:translateX(-8px);
-    transition:opacity .45s var(--ease), transform .45s var(--ease); }
-  .pillar:hover h3, .pillar:focus-visible h3{ transform:translateX(8px); color:var(--acc-deep); }
-  .pillar:hover h3 .g, .pillar:focus-visible h3 .g{ opacity:1; transform:none; }
-  .pillar .tag{ font-family:"JetBrains Mono"; font-size:10.5px; letter-spacing:.2em; text-transform:uppercase;
-    color:var(--steel); display:block; margin-top:10px; }
-  .pillar p{ max-width:44ch; color:var(--body); font-weight:400; font-size:clamp(.98rem,1.3vw,1.1rem);
-    line-height:1.65; margin-top:16px; text-wrap:pretty; transition:color .5s var(--ease); }
-  .pillar:hover p{ color:var(--ink); }
-
-  /* principles — one quiet band, hairline dividers, no icons */
-  .principles{ padding:0 0 clamp(64px,11vh,110px); }
-  .prin-band{ display:grid; grid-template-columns:repeat(4,1fr); background:var(--panel);
-    border:1px solid var(--line); border-radius:var(--r); overflow:hidden;
-    box-shadow:0 18px 50px -30px rgba(44,86,121,0.25); }
-  .prin{ padding:clamp(24px,3.5vw,38px) clamp(20px,3vw,32px); }
-  .prin + .prin{ border-left:1px solid var(--line); }
-  .prin b{ font-family:"JetBrains Mono"; font-weight:500; font-size:11px; letter-spacing:.2em;
-    text-transform:uppercase; color:var(--acc-deep); display:block; margin-bottom:12px; }
-  .prin p{ color:var(--body); font-size:.95rem; line-height:1.6; text-wrap:pretty; }
-
-  /* the massif — an ice-silhouette ridgescape (graphic echo of the hero photo),
-     with the living Canvas-2D mist + snow overlay */
-  .massif{ padding:0 0 clamp(64px,11vh,110px); }
-  .massif-band{ position:relative; border-radius:var(--r); overflow:hidden;
-    aspect-ratio:3.3/1; min-height:280px; display:flex; align-items:center;
-    border:1px solid var(--line); background:linear-gradient(180deg,#f0f5fa 0%,#dfe9f2 100%);
-    box-shadow:0 24px 60px -34px rgba(43,58,77,0.35); }
-  .massif-ridges{ position:absolute; inset:0; }
-  .massif-ridges svg{ width:100%; height:100%; display:block; }
-  .massif-scrim{ position:absolute; inset:0;
-    background:linear-gradient(90deg, rgba(var(--scrim-rgb),0.82) 0%, rgba(var(--scrim-rgb),0.45) 42%, rgba(var(--scrim-rgb),0) 68%); }
-  .massif-band canvas{ position:absolute; inset:0; width:100%; height:100%; }
-  .massif-copy{ position:relative; z-index:2; padding:clamp(30px,5vh,56px) clamp(26px,5vw,64px);
-    max-width:540px; }
-  .massif-copy h2{ font-size:clamp(1.6rem,3.2vw,2.4rem); font-weight:600; letter-spacing:-.025em;
-    line-height:1.14; text-wrap:balance; }
-  .massif-copy h2 .acc{ color:var(--acc-deep); }
-  .massif-copy .cta{ margin-top:26px; }
-
-  footer{ border-top:1px solid var(--line); padding:30px 0 50px; flex-shrink:0; }
-  .foot{ display:flex; align-items:center; justify-content:space-between; gap:18px; flex-wrap:wrap;
-    font-family:"JetBrains Mono"; font-size:11px; letter-spacing:.16em; text-transform:uppercase; color:var(--steel); }
-  .foot a{ transition:color .3s var(--ease); text-decoration:underline; text-decoration-color:var(--line-2); text-underline-offset:3px; }
-  .foot a:hover{ color:var(--acc-deep); text-decoration-color:currentColor; }
-
-  /* scroll choreography — sections settle into place */
-  .rv{ opacity:0; transform:translateY(18px); transition:opacity 1.05s var(--ease), transform 1.05s var(--ease); }
-  .rv.in{ opacity:1; transform:none; }
-  .sec-label.rv{ border-bottom-color:transparent; position:relative; }
-  .sec-label.rv::after{ content:""; position:absolute; left:0; right:0; bottom:-1px; height:1px;
-    background:var(--line-2); transform:scaleX(0); transform-origin:0 50%; transition:transform 1.1s var(--ease) .1s; }
-  .sec-label.rv.in::after{ transform:scaleX(1); }
-
-  @media (prefers-reduced-motion: reduce){
-    .rise, .brand, nav{ animation:none; opacity:1; transform:none; }
-    header::after{ animation:none; transform:scaleX(1); }
-    h1 .ch{ animation:none; opacity:1; transform:none; filter:none; }
-    .rv{ opacity:1; transform:none; transition:none; }
-    .sec-label.rv::after{ transform:scaleX(1); transition:none; }
-    .survey-art{ animation:none; opacity:1; filter:none; }
+  @media (max-width:700px) {
+    .wrap { padding:0 22px; }
+    .nav .btn.ghost { display:none; }
+    .hero { padding:72px 0 240px; background-size:auto 100%; background-position:80% bottom; }
+    .hero::before { background:linear-gradient(180deg,color-mix(in srgb,var(--bg) 92%,transparent) 30%,color-mix(in srgb,var(--bg) 20%,transparent) 70%,transparent); }
+    .lede { font-size:17px; }
+    .where, .caps, .steps { grid-template-columns:1fr; }
+    .where > div, .steps > div { border-right:none; border-bottom:1px solid var(--line); padding:24px 22px; }
+    .where > div:last-child, .steps > div:last-child { border-bottom:none; }
+    .section { padding:68px 0; }
+    .close { padding:80px 0; }
+    .foot .row { flex-direction:column; align-items:flex-start; }
   }
-
-  @media (max-width: 860px){
-    .hero{ grid-template-columns:1fr; gap:10px; min-height:auto; padding-top:56px; }
-    /* keep the emblem clear of the 26svh mountain backdrop pinned to the hero bottom */
-    .survey-frame{ width:min(54vw,250px); height:auto; aspect-ratio:917/1314; margin:18px auto 20svh; order:2; }
-    .survey-art{ height:auto; width:100%; }
-    .prin-band{ grid-template-columns:1fr 1fr; }
-    .prin:nth-child(3), .prin:nth-child(4){ border-top:1px solid var(--line); }
-    .prin:nth-child(3){ border-left:0; }
-  }
-  @media (max-width: 700px){
-    nav a.link{ display:none; }
-    .pillars{ grid-template-columns:1fr; }
-    .pillar + .pillar{ border-left:0; padding-left:4px; }
-    .massif-band{ aspect-ratio:auto; min-height:240px; }
-    /* widen the ridgescape so the peak keeps its shape instead of squeezing to a needle */
-    .massif-ridges{ overflow:hidden; }
-    .massif-ridges svg{ width:230%; margin-left:-69%; }
-    .massif-scrim{ background:linear-gradient(180deg, rgba(var(--scrim-rgb),0.85) 0%, rgba(var(--scrim-rgb),0.6) 55%, rgba(var(--scrim-rgb),0.2) 100%); }
-    .massif-copy{ max-width:100%; padding:34px 26px 40px; }
-  }
-  @media (max-width: 480px){
-    h1{ font-size:2.15rem; }
-    .prin-band{ grid-template-columns:1fr; }
-    .prin + .prin{ border-left:0; border-top:1px solid var(--line); }
-  }
-
-  /* ==================== NIGHT MODE ====================
-     Founder palette: Midnight Navy #071426 · Deep Navy #0B1F3A · Steel Navy #18324F ·
-     Coral #FF765F / #FF8A70 / #D95745 · Ice White #F5F8FA · Cool Silver #AAB6C3.
-     Light mode is untouched: everything below is either the toggle control,
-     the transition machinery, or scoped under html[data-theme="dark"]. */
-
-  /* --- toggle — Nordic four-point North-star --- */
-  .theme-toggle{ appearance:none; -webkit-appearance:none; width:40px; height:40px; flex:0 0 auto;
-    display:inline-flex; align-items:center; justify-content:center; padding:0;
-    border:1px solid var(--line-2); border-radius:999px; background:transparent; color:var(--ink); cursor:pointer;
-    transition:border-color .3s var(--ease), color .3s var(--ease), transform .3s var(--ease); }
-  .theme-toggle:hover{ border-color:var(--acc); color:var(--acc-deep); transform:translateY(-1px); }
-  .theme-toggle:active{ transform:translateY(0); }
-  .theme-toggle .tstar{ width:18px; height:18px; display:block;
-    transition:transform .7s var(--ease), filter .5s var(--ease); }
-  .theme-toggle .tstar .core{ fill:none; stroke:currentColor; stroke-width:1.5; stroke-linejoin:round; }
-  .theme-toggle .tstar .rays{ fill:none; stroke:currentColor; stroke-width:1.1; stroke-linecap:round; }
-  .theme-toggle .tstar.pop{ animation:starPop .7s var(--ease); }
-  @keyframes starPop{ 0%{ scale:1; } 45%{ scale:1.3; } 100%{ scale:1; } } /* `scale`, not transform — composes with the rotation */
-  html[data-theme="dark"] .theme-toggle .tstar{ transform:rotate(90deg);
-    filter:drop-shadow(0 0 5px rgba(255,118,95,.55)) drop-shadow(0 0 16px rgba(255,118,95,.25)); }
-  html[data-theme="dark"] .theme-toggle .tstar .core{ fill:#ff765f; stroke:#ff765f; }
-  html[data-theme="dark"] .theme-toggle .tstar .rays{ stroke:#ff765f; }
-  html[data-theme="dark"] .theme-toggle:hover .tstar .core{ fill:#ff8a70; stroke:#ff8a70; }
-  html[data-theme="dark"] .theme-toggle:hover .tstar .rays{ stroke:#ff8a70; }
-  html[data-theme="dark"] .theme-toggle:active .tstar .core{ fill:#d95745; stroke:#d95745; }
-
-  /* --- view-transition radial reveal: old snapshot holds still underneath,
-         the new theme sweeps over it as an expanding circle (clip-path animated from JS) --- */
-  ::view-transition-old(root){ animation:none; mix-blend-mode:normal; z-index:0; }
-  ::view-transition-new(root){ animation:none; mix-blend-mode:normal; z-index:1; }
-
-  /* --- fallback pulse wave (browsers without startViewTransition) --- */
-  .theme-pulse{ position:fixed; inset:0; z-index:2147483000; pointer-events:none; }
-  .theme-pulse.out{ opacity:0; transition:opacity .3s ease; }
-  .theme-pulse .flood, .theme-pulse .ring{ position:absolute; left:var(--px); top:var(--py);
-    width:20px; height:20px; margin:-10px 0 0 -10px; border-radius:50%; transform:scale(0); }
-  .theme-pulse .flood{ background:var(--pc); animation:pulseFlood .65s cubic-bezier(0.22,1,0.36,1) forwards; }
-  .theme-pulse .ring{ border:2px solid rgba(255,118,95,.55); animation:pulseRing .62s cubic-bezier(0.22,1,0.36,1) forwards; }
-  .theme-pulse .ring.r2{ border-color:rgba(255,118,95,.3); animation-delay:.1s; }
-  @keyframes pulseFlood{ to{ transform:scale(var(--ps,150)); } }
-  @keyframes pulseRing{ 55%{ opacity:1; } to{ transform:scale(var(--ps,150)); opacity:0; } }
-
-  /* --- the dark palette --- */
-  html[data-theme="dark"]{
-    color-scheme:dark;
-    --bg:#071426; --ink:#f5f8fa; --body:#aab6c3; --steel:#8b99a8;
-    --acc:#ff765f; --acc-deep:#ff765f; --acc-ice:#8fb6d6;
-    --line:rgba(24,50,79,0.55); --line-2:rgba(24,50,79,0.95);
-    --panel:#0b1f3a; --scrim-rgb:11,31,58;
-    /* massif night scene */
-    --m-sky-0:#0a1a30; --m-sky-1:#071426;
-    --m-glow:#ff765f; --m-glow-a0:.42; --m-glow-a1:.16; --m-glow-a2:0;
-    --m-r1-0:#12263e; --m-r1-1:#102138;
-    --m-r2-0:#0f2136; --m-r2-1:#0d1d31;
-    --m-r3-0:#0d1f33; --m-r3-1:#0b1b2d;
-    --m-r4-0:#0b1a2c; --m-r4-1:#091626;
-    --m-r5-0:#21405f; --m-r5-05:#16304c; --m-r5-1:#0e2036;
-    --m-mist:#0b1d33;
-    --m-snow:#f5f8fa; --m-snow-a:.7; --m-face-a1:.2; --m-face-a2:.08;
-    --m-pole:#7e97b0;
-    --m-vmist:#c8d8e8; --m-vmist-a1:.09; --m-vmist-a2:.07;
-  }
-  html[data-theme="dark"] ::selection{ background:rgba(255,118,95,0.3); color:#f5f8fa; }
-  html[data-theme="dark"] .bg{ background:
-    radial-gradient(110% 80% at 80% -12%, rgba(255,118,95,0.07), transparent 55%),
-    radial-gradient(120% 100% at 12% 110%, rgba(24,50,79,0.45), transparent 60%),
-    linear-gradient(180deg, #081627 0%, #071426 45%, #060f1d 100%); }
-  html[data-theme="dark"] .grain{ opacity:.035; }
-  html[data-theme="dark"] .btn.primary{ background:#ff765f; border-color:#ff765f; color:#071426; }
-  html[data-theme="dark"] .btn.primary:hover{ background:#ff8a70; border-color:#ff8a70; }
-  html[data-theme="dark"] .btn.primary:active{ background:#d95745; border-color:#d95745; }
-  html[data-theme="dark"] .btn.ghost{ color:#f5f8fa; }
-  html[data-theme="dark"] .btn.ghost:hover{ border-color:#ff765f; color:#ff8a70; }
-  /* brandmark: dedicated coral render in dark mode (filters can't add opacity) */
-  .brand .brandmark-dark{ display:none; }
-  html[data-theme="dark"] .brand .brandmark-light{ display:none; }
-  html[data-theme="dark"] .brand .brandmark-dark{ display:block;
-    filter:drop-shadow(0 0 9px rgba(255,118,95,.4)); }
-
-  /* hero panorama — daylight photo graded to dusk, blended into #071426. tune here */
-  html[data-theme="dark"] .hero-bg img{ filter:brightness(.55) contrast(1.08) saturate(.82) hue-rotate(-8deg); }
-  html[data-theme="dark"] .hero-bg::after{ background:
-    linear-gradient(90deg, rgba(7,20,38,0.78) 0%, rgba(7,20,38,0.22) 45%, rgba(7,20,38,0.3) 100%),
-    linear-gradient(180deg, rgba(7,20,38,0.6) 0%, rgba(7,20,38,0.12) 48%, rgba(7,20,38,0.55) 100%); }
-
-  /* spine emblem — dedicated coral render in dark mode (like the brandmark).
-     !important so the glow outbids the emblemIn keyframe's persisted `filter:blur(0)`. */
-  .survey-frame .survey-art-dark{ display:none; }
-  html[data-theme="dark"] .survey-frame .survey-art-light{ display:none; }
-  html[data-theme="dark"] .survey-frame .survey-art-dark{ display:block;
-    filter:drop-shadow(0 0 26px rgba(255,138,112,.38)) drop-shadow(0 0 70px rgba(255,118,95,.16)) !important; }
-
-  html[data-theme="dark"] .prin-band{ box-shadow:0 18px 50px -30px rgba(0,0,0,0.7); }
-  html[data-theme="dark"] .massif-band{
-    background:linear-gradient(180deg,#0a1a30 0%,#071426 100%);
-    box-shadow:0 24px 60px -34px rgba(0,0,0,0.8); }
-
-  @media (prefers-reduced-motion: reduce){
-    .theme-toggle .tstar{ transition:none; }
-    .theme-toggle .tstar.pop{ animation:none; }
-    .theme-pulse{ display:none; }
-  }
+  @media (prefers-reduced-motion:reduce) { * { transition:none !important; } }
 </style>
 </head>
 <body>
-  <div class="bg" aria-hidden="true"></div>
-  <div class="grain" aria-hidden="true"></div>
-
-  <header>
-    <div class="wrap top">
-      <a class="brand" href="/" aria-label="Nordane">
-        <img class="brandmark brandmark-light" src="assets/spine-icon.png" alt="" width="115" height="255" />
-        <img class="brandmark brandmark-dark" src="assets/spine-icon-coral.png" alt="" width="115" height="255" />
-        <span class="wm">N<svg class="dia" viewBox="0 0 100 100" aria-hidden="true"><path d="M50 8 92 50 50 92 8 50Z" fill="none" stroke="currentColor" stroke-width="10"/><path d="M50 36 64 50 50 64 36 50Z" fill="currentColor"/></svg>RDANE</span>
-      </a>
-      <nav aria-label="Primary">
-        <a class="link" href="#work">What we do</a>
+<header class="topbar">
+  <div class="wrap">
+    <nav class="nav" aria-label="Main">
+      <a class="brand" href="/" aria-label="Nordane home"><span class="tile"><img src="/assets/nordane-n.png" alt="" width="24" height="24" /></span><span class="word">NORDANE</span></a>
+      <ul>
+        <li><a href="#okam">Okam</a></li>
+        <li><a href="#build">What we build</a></li>
+        <li><a href="#how">How we work</a></li>
+      </ul>
+      <div class="nav-end">
         <a class="btn ghost" href="mailto:info@nordane.ch">Get in touch</a>
-        <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to night mode" aria-pressed="false">
-          <svg class="tstar" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <path class="core" d="M12 2 L13.6 10.4 L18.8 12 L13.6 13.6 L12 22 L10.4 13.6 L5.2 12 L10.4 10.4 Z"/>
-            <path class="rays" d="M15.7 8.3l1.6-1.6M8.3 8.3L6.7 6.7M15.7 15.7l1.6 1.6M8.3 15.7l-1.6 1.6"/>
-          </svg>
-        </button>
-      </nav>
+        <button class="mode" type="button" id="mode" aria-label="Switch to dark mode"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5 13.6 10.4 22.5 12 13.6 13.6 12 22.5 10.4 13.6 1.5 12 10.4 10.4Z"/></svg></button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <div class="mono">Swiss AI studio · Switzerland &amp; Norway</div>
+      <h1>We help businesses scale into the <span class="accent">agentic</span> era.</h1>
+      <p class="lede">We design, build and run the software behind it: native apps, platforms, AI agents and the infrastructure underneath. Our flagship, Okam, runs restaurants in Norway every day.</p>
+      <div class="cta"><a class="btn primary" href="#build">What we build →</a><a class="btn ghost" href="#okam">See Okam</a></div>
     </div>
-  </header>
+  </section>
 
-  <main class="wrap">
-    <section class="hero">
-      <div class="hero-bg" aria-hidden="true"><img src="assets/mountain.png" alt="" /></div>
-      <div class="hero-copy">
-        <p class="eyebrow rise">A Swiss AI operator</p>
-        <h1 id="spell">AI systems<br>built to <span class="acc">operate.</span></h1>
-        <p class="hero-sub rise d1">We build and run AI systems that power real business, with live data, automation, and results.</p>
-        <div class="cta rise d2">
-          <a class="btn primary" href="#work">What we do <span class="arr">→</span></a>
-          <a class="btn ghost" href="mailto:info@nordane.ch">Get in touch</a>
-        </div>
+  <div class="where">
+    <div><span class="mono">Switzerland</span><h3>Company &amp; engineering</h3><p>Nordane is incorporated and run from Appenzell. Swiss-hosted infrastructure for clients who need their data to stay here.</p></div>
+    <div><span class="mono">Norway</span><h3>Okam, in daily service</h3><p>Restaurants in Norway take orders, run the till and plan staff on Okam.</p></div>
+    <div><span class="mono">Next</span><h3>Okam for Switzerland</h3><p>CHF, Swiss VAT and TWINT are built in. The Swiss launch is in preparation.</p></div>
+  </div>
+
+  <section class="section" id="build">
+    <div class="wrap">
+      <div class="section-head"><div><div class="mono">What we build</div><h2>Six things we ship, end to end.</h2></div><p>Every item here is running code we built and operate, not a slide.</p></div>
+      <div class="caps">
+        <div class="card"><span class="n">01</span><h3>Native iOS &amp; tablet apps</h3><span class="tag">iPad · iPhone · Android</span>
+          <ul class="proof"><li>An iPad till with receipt printing, card terminals and offline mode</li><li>A kitchen display for iOS and Android</li><li>A native back-office app shipped through TestFlight</li></ul></div>
+        <div class="card"><span class="n">02</span><h3>Web platforms &amp; SaaS</h3><span class="tag">Multi-tenant</span>
+          <ul class="proof"><li>A wealth-analytics platform: screener, backtests, risk and reporting</li><li>A restaurant back office in three languages</li><li>Fast marketing sites at the edge</li></ul></div>
+        <div class="card"><span class="n">03</span><h3>AI agents &amp; assistants</h3><span class="tag">Agentic</span>
+          <ul class="proof"><li>Assistants that act on the business, with the owner approving each change</li><li>Measured on 1,500+ test conversations before release</li><li>Client data pseudonymised before it reaches a model</li></ul></div>
+        <div class="card"><span class="n">04</span><h3>Software factories</h3><span class="tag">Multi-agent</span>
+          <ul class="proof"><li>Agent teams that turn a staff problem report into a tested fix</li><li>Independent verifier and evaluator agents before anything merges</li><li>Straight through to the next app build</li></ul></div>
+        <div class="card"><span class="n">05</span><h3>Infrastructure</h3><span class="tag">Swiss-hosted</span>
+          <ul class="proof"><li>Swiss-region cloud landing zone written as code</li><li>Each client isolated in its own environment</li><li>Monitoring, secrets and budgets built in from day one</li></ul></div>
+        <div class="card"><span class="n">06</span><h3>Payments &amp; compliance</h3><span class="tag">Integrations</span>
+          <ul class="proof"><li>7+ payment, delivery and accounting integrations</li><li>Norwegian fiscal till rules and Swiss VAT</li><li>Market-data pipelines for financial platforms</li></ul></div>
       </div>
-
-      <div class="survey-frame">
-        <img class="survey-art survey-art-dark" src="assets/spine-emblem-coral.png?v=2"
-             alt="" width="917" height="1314" aria-hidden="true" />
-        <img class="survey-art survey-art-light" src="assets/spine-emblem.png"
-             alt="The Nordane spine emblem over faint survey geometry" width="917" height="1314" />
-      </div>
-    </section>
-
-    <section class="portfolio" id="work">
-      <div class="sec-label rv"><h2>What we do</h2><span>Switzerland</span></div>
-
-      <div class="pillars">
-        <div class="pillar rv">
-          <span class="no">01</span>
-          <h3>Platform</h3>
-          <span class="tag">Our product · In build</span>
-          <p>The AI layer for hospitality: agents that read live sales data, run marketing, answer staff and take work off the back office. Built and owned in Switzerland.</p>
-        </div>
-        <a class="pillar rv" href="https://okam.no" target="_blank" rel="noopener">
-          <span class="no">02</span>
-          <h3>Okam <span class="g">↗</span></h3>
-          <span class="tag">Proving ground · Live</span>
-          <p>Restaurant commerce in Norway: ordering, kasse, booking and AI marketing on live data. Where the platform meets real service.</p>
-        </a>
-      </div>
-    </section>
-
-    <section class="principles">
-      <div class="prin-band rv">
-        <div class="prin"><b>AI-native</b><p>Systems that perceive, decide, learn, and act.</p></div>
-        <div class="prin"><b>Operator-led</b><p>Built for production realities, not slide decks.</p></div>
-        <div class="prin"><b>Measurable</b><p>Live data. Clear outcomes. No guesswork.</p></div>
-        <div class="prin"><b>Swiss-grade</b><p>Secure, precise, and intentionally engineered.</p></div>
-      </div>
-    </section>
-
-    <section class="massif">
-      <div class="massif-band rv">
-        <div class="massif-ridges" aria-hidden="true">
-          <svg viewBox="0 0 1200 340" preserveAspectRatio="none">
-            <defs>
-              <!-- stop colors live in style="" (presentation attributes can't parse var()) so
-                   [data-theme="dark"] can retheme the whole scene through custom properties -->
-              <linearGradient id="mSky" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" style="stop-color:var(--m-sky-0,#f8fbfd)"/><stop offset="1" style="stop-color:var(--m-sky-1,#e0eaf4)"/>
-              </linearGradient>
-              <radialGradient id="mGlow" cx="50%" cy="50%" r="50%">
-                <stop offset="0" style="stop-color:var(--m-glow,#ffffff);stop-opacity:var(--m-glow-a0,.95)"/>
-                <stop offset=".55" style="stop-color:var(--m-glow,#ffffff);stop-opacity:var(--m-glow-a1,.38)"/>
-                <stop offset="1" style="stop-color:var(--m-glow,#ffffff);stop-opacity:var(--m-glow-a2,0)"/>
-              </radialGradient>
-              <linearGradient id="mR1" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" style="stop-color:var(--m-r1-0,#f0f5fa)"/><stop offset="1" style="stop-color:var(--m-r1-1,#e7eff6)"/>
-              </linearGradient>
-              <linearGradient id="mR2" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" style="stop-color:var(--m-r2-0,#e6eef5)"/><stop offset="1" style="stop-color:var(--m-r2-1,#d9e5f0)"/>
-              </linearGradient>
-              <linearGradient id="mR3" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" style="stop-color:var(--m-r3-0,#d7e2ee)"/><stop offset="1" style="stop-color:var(--m-r3-1,#c5d5e6)"/>
-              </linearGradient>
-              <linearGradient id="mR4" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" style="stop-color:var(--m-r4-0,#c2d2e2)"/><stop offset="1" style="stop-color:var(--m-r4-1,#aac1d6)"/>
-              </linearGradient>
-              <linearGradient id="mR5" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" style="stop-color:var(--m-r5-0,#e8eff6)"/><stop offset=".18" style="stop-color:var(--m-r5-05,#a7bed4)"/>
-                <stop offset="1" style="stop-color:var(--m-r5-1,#8aa9c6)"/>
-              </linearGradient>
-              <linearGradient id="bandMist" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" style="stop-color:var(--m-mist,#f5f7fa)" stop-opacity="0"/><stop offset="1" style="stop-color:var(--m-mist,#f5f7fa)" stop-opacity=".9"/>
-              </linearGradient>
-              <filter id="mSoft" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="10"/></filter>
-              <filter id="mSoft2" x="-40%" y="-40%" width="180%" height="180%"><feGaussianBlur stdDeviation="4"/></filter>
-            </defs>
-
-            <rect x="0" y="0" width="1200" height="340" fill="url(#mSky)"/>
-
-            <!-- far ranges, aerial perspective -->
-            <polygon fill="url(#mR1)" points="0,146 150,130 300,142 450,124 600,138 750,120 900,136 1050,118 1200,134 1200,340 0,340"/>
-            <rect x="0" y="112" width="1200" height="90" fill="url(#bandMist)" opacity=".65"/>
-            <polygon fill="url(#mR2)" points="0,168 120,150 240,162 360,140 480,156 600,136 720,152 840,132 960,150 1080,130 1200,148 1200,340 0,340"/>
-            <rect x="0" y="140" width="1200" height="95" fill="url(#bandMist)" opacity=".55"/>
-
-            <!-- alpenglow behind the massif -->
-            <ellipse cx="806" cy="128" rx="270" ry="150" fill="url(#mGlow)" filter="url(#mSoft)"/>
-            <ellipse cx="806" cy="110" rx="110" ry="80" fill="url(#mGlow)" filter="url(#mSoft2)"/>
-
-            <polygon fill="url(#mR3)" points="0,196 80,176 160,190 240,162 330,182 420,156 505,176 590,150 670,170 760,148 850,168 940,144 1020,162 1100,142 1200,166 1200,340 0,340"/>
-            <rect x="0" y="170" width="1200" height="100" fill="url(#bandMist)" opacity=".5"/>
-            <polygon fill="url(#mR4)" points="0,232 90,206 180,222 260,172 300,150 345,178 420,208 500,188 560,206 640,190 720,206 790,196 860,208 930,186 990,168 1030,158 1080,182 1140,206 1200,196 1200,340 0,340"/>
-            <rect x="0" y="205" width="1200" height="105" fill="url(#bandMist)" opacity=".5"/>
-
-            <!-- the massif -->
-            <polygon fill="url(#mR5)" points="0,262 70,246 150,258 230,236 300,252 380,224 440,242 520,210 585,232 650,196 700,170 745,140 778,108 806,78 838,120 868,150 900,176 960,214 1030,200 1090,228 1150,216 1200,238 1200,340 0,340"/>
-            <!-- snowlit crest + face — stays icy white at night, slightly dimmed -->
-            <polyline fill="none" style="stroke:var(--m-snow,#ffffff);stroke-opacity:var(--m-snow-a,.85)" stroke-width="2.4" stroke-linejoin="round"
-              points="745,140 778,108 806,78 838,120 868,150"/>
-            <polygon style="fill:var(--m-snow,#ffffff);opacity:var(--m-face-a1,.32)" points="806,78 838,120 820,132 794,112 778,108"/>
-            <polygon style="fill:var(--m-snow,#ffffff);opacity:var(--m-face-a2,.14)" points="778,108 806,78 806,150 762,158"/>
-            <!-- the flag — red with white cross in both themes; only the pole lightens at night -->
-            <path d="M806 78V56" style="stroke:var(--m-pole,#3d5c7e)" stroke-width="1.6"/>
-            <path d="M806 56h15v10h-15z" fill="#da291c"/>
-            <path d="M812.2 57.8h2.6v1.9h1.9v2.6h-1.9v1.9h-2.6v-1.9h-1.9v-2.6h1.9z" fill="#ffffff"/>
-
-            <!-- valley mist — faint navy-white at night -->
-            <ellipse cx="380" cy="286" rx="330" ry="34" style="fill:var(--m-vmist,#ffffff);opacity:var(--m-vmist-a1,.38)" filter="url(#mSoft)"/>
-            <ellipse cx="1010" cy="296" rx="280" ry="30" style="fill:var(--m-vmist,#ffffff);opacity:var(--m-vmist-a2,.32)" filter="url(#mSoft)"/>
-            <rect x="0" y="266" width="1200" height="74" fill="url(#bandMist)" opacity=".85"/>
-          </svg>
-        </div>
-        <div class="massif-scrim" aria-hidden="true"></div>
-        <canvas id="ridge" aria-hidden="true"></canvas>
-        <div class="massif-copy">
-          <h2>We are a Swiss AI operator.<br>Let&rsquo;s build <span class="acc">what&rsquo;s next.</span></h2>
-          <div class="cta">
-            <a class="btn primary" href="mailto:info@nordane.ch">Get in touch <span class="arr">→</span></a>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="wrap foot">
-      <span>Nordane · Switzerland</span>
-      <a href="mailto:info@nordane.ch">info@nordane.ch</a>
-      <span>© 2026</span>
     </div>
-  </footer>
+  </section>
 
-  <script>
+  <section class="section okam" id="okam">
+    <div class="wrap grid">
+      <div class="shot"><img src="/assets/okam-backoffice.jpg" alt="Okam back office: today's orders, guests and sales" width="1440" height="878" loading="lazy" /></div>
+      <div>
+        <div class="mono">Flagship · Okam</div>
+        <h2>The operating system for restaurants.</h2>
+        <p class="lede">Till, kitchen, online ordering, staff and marketing in one system, with an assistant that can do the work for the owner.</p>
+        <ul class="proof"><li>iPad till and kitchen display</li><li>Online ordering and delivery apps in one queue</li><li>Shift planning and punch clock</li><li>AI marketing that drafts and posts for the restaurant</li></ul>
+        <div class="chips"><span>Wolt</span><span>Foodora</span><span>Vipps</span><span>Stripe</span><span>TWINT</span><span>Tripletex</span><span>Fiken</span></div>
+        <a class="btn" href="https://okam.no" target="_blank" rel="noopener">Visit okam.no ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="how">
+    <div class="wrap">
+      <div class="section-head"><div><div class="mono">How we work</div><h2>Build it. Run it. Scale it.</h2></div></div>
+      <div class="steps">
+        <div><span class="mono">01</span><h3>Build</h3><p>A small senior team ships the first working version in weeks, on your data.</p></div>
+        <div><span class="mono">02</span><h3>Operate</h3><p>Agents take the routine work; people approve what matters. We keep it running.</p></div>
+        <div><span class="mono">03</span><h3>Scale</h3><p>The same system grows to more sites, markets and users without a rebuild.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="close">
+    <div class="wrap"><div class="mono">Nordane</div><h2>Ready for the agentic era? Let’s build what’s next.</h2><a class="btn primary" href="mailto:info@nordane.ch">info@nordane.ch →</a></div>
+  </section>
+</main>
+
+<footer class="foot">
+  <div class="wrap row">
+    <a class="brand" href="/" aria-label="Nordane home"><span class="tile"><img src="/assets/nordane-n.png" alt="" width="24" height="24" /></span><span class="word">NORDANE</span></a>
+    <span class="place">Nordane GmbH · Teufen, Switzerland · <a href="mailto:info@nordane.ch">info@nordane.ch</a> · © 2026</span>
+    <div class="socials">
+      <a href="https://www.linkedin.com/company/nordane/" target="_blank" rel="noopener" aria-label="Nordane on LinkedIn"><svg viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9.75h4V21H3V9.75Zm6.5 0h3.8v1.6h.06c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.77 2.65 4.77 6.1V21h-4v-4.9c0-1.17-.02-2.68-1.63-2.68-1.64 0-1.89 1.28-1.89 2.6V21h-4V9.75Z"/></svg></a>
+      <a href="https://x.com/Nordane_ch" target="_blank" rel="noopener" aria-label="Nordane on X"><svg viewBox="0 0 24 24"><path d="M17.75 3h3.07l-6.7 7.66L22 21h-6.17l-4.83-6.32L5.47 21H2.4l7.17-8.2L2 3h6.33l4.37 5.78L17.75 3Zm-1.08 16.2h1.7L7.4 4.73H5.58L16.67 19.2Z"/></svg></a>
+      <a href="https://www.facebook.com/profile.php?id=61595439659661" target="_blank" rel="noopener" aria-label="Nordane on Facebook"><svg viewBox="0 0 24 24"><path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5.02 3.66 9.18 8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.52 1.49-3.91 3.78-3.91 1.1 0 2.24.2 2.24.2v2.47h-1.26c-1.24 0-1.63.78-1.63 1.57v1.88h2.78l-.44 2.91h-2.34V22c4.78-.76 8.44-4.92 8.44-9.94Z"/></svg></a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Light/dark toggle. The choice is remembered under the same key the pre-paint script reads.
   (function(){
-    "use strict";
-    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    /* spell out the headline, letter by letter, keeping the accent span intact */
-    var h = document.getElementById("spell");
-    if(h && !reduce){
-      var base = 0.5, step = 0.03, idx = 0;
-      function spellNode(node, parent, accent){
-        if(node.nodeType === 3){
-          var words = node.textContent.split(" ");
-          words.forEach(function(word, wi){
-            if(word.length){
-              var w = document.createElement("span"); w.className = "w";
-              for(var i=0;i<word.length;i++){
-                var c = document.createElement("span"); c.className = "ch";
-                c.textContent = word[i];
-                c.style.animationDelay = (base + idx*step).toFixed(3) + "s";
-                w.appendChild(c); idx++;
-              }
-              parent.appendChild(w);
-            }
-            if(wi < words.length-1){ parent.appendChild(document.createTextNode(" ")); idx++; }
-          });
-        } else if(node.nodeType === 1 && node.nodeName === "BR"){
-          parent.appendChild(document.createElement("br"));
-        } else if(node.nodeType === 1){
-          var el = document.createElement("span");
-          el.className = node.className;
-          parent.appendChild(el);
-          Array.prototype.slice.call(node.childNodes).forEach(function(ch){ spellNode(ch, el, true); });
-        }
-      }
-      var kids = Array.prototype.slice.call(h.childNodes);
-      h.textContent = "";
-      kids.forEach(function(node){ spellNode(node, h, false); });
-    }
-
-    /* scroll choreography */
-    var els = Array.prototype.slice.call(document.querySelectorAll(".rv"));
-    if(!("IntersectionObserver" in window)){ els.forEach(function(e){ e.classList.add("in"); }); return; }
-    var pending = [], flushT = 0;
-    var io = new IntersectionObserver(function(entries){
-      entries.forEach(function(en){
-        if(!en.isIntersecting) return;
-        io.unobserve(en.target);
-        pending.push(en.target);
-      });
-      if(pending.length && !flushT){
-        flushT = setTimeout(function(){
-          pending.forEach(function(el, i){
-            el.style.transitionDelay = (i*90)+"ms";
-            el.classList.add("in");
-          });
-          pending = []; flushT = 0;
-        }, 40);
-      }
-    }, { threshold:0.12, rootMargin:"0px 0px 14% 0px" });
-    els.forEach(function(e){ io.observe(e); });
-    /* watchdog: if anything was missed (fast scroll, odd viewport), reveal it */
-    setTimeout(function(){ els.forEach(function(e){ if(!e.classList.contains("in")) e.classList.add("in"); }); }, 9000);
-  })();
-  </script>
-
-  <!-- ============ THE MASSIF — Canvas-2D atmosphere overlay ============
-       Hand-built, zero deps. The photograph carries the scene; the canvas
-       adds a slow mist drift and sparse snow so the band feels alive.
-       Autonomous (no cursor input). Static under reduced motion. -->
-  <script>
-  (function(){
-    "use strict";
-    var canvas = document.getElementById("ridge");
-    if(!canvas) return;
-    var band = canvas.parentElement;
-    var ctx = canvas.getContext("2d");
-    if(!ctx) return;
-
-    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    var TAU = Math.PI*2;
-    var W=0,H=0,dpr=1;
-
-    var FLAKES = [];
-    function seedFlakes(){
-      FLAKES.length = 0;
-      var n = Math.round(W/26);
-      for(var i=0;i<n;i++){
-        FLAKES.push({ x:Math.random()*W, y:Math.random()*H, r:0.6+Math.random()*1.2,
-          vx:-(4+Math.random()*7), vy:6+Math.random()*9, a:0.16+Math.random()*0.26,
-          ph:Math.random()*TAU });
-      }
-    }
-
-    function size(){
-      var w = band.clientWidth, h = band.clientHeight; if(!w||!h) return;
-      dpr = Math.min(window.devicePixelRatio||1, 2);
-      canvas.width = Math.max(1,(w*dpr)|0); canvas.height = Math.max(1,(h*dpr)|0);
-      ctx.setTransform(dpr,0,0,dpr,0,0);
-      W=w; H=h; seedFlakes();
-      if(reduce) draw(0);
-    }
-
-    function draw(t){
-      ctx.clearRect(0,0,W,H);
-
-      /* two mist banks drifting slowly along the valley floor (navy-lit fog at night) */
-      var night = document.documentElement.getAttribute("data-theme") === "dark";
-      for(var mi=0; mi<2; mi++){
-        var my = H*(0.72 + mi*0.14);
-        var mx = W*(0.55 + mi*0.18) + Math.sin(t*0.05 + mi*2.4)*W*0.07;
-        var mw = W*0.42;
-        ctx.save();
-        ctx.translate(mx,my); ctx.scale(1,0.14);
-        var m = ctx.createRadialGradient(0,0,0, 0,0,mw);
-        if(night){ m.addColorStop(0,"rgba(186,208,232,0.14)"); m.addColorStop(1,"rgba(186,208,232,0)"); }
-        else{ m.addColorStop(0,"rgba(255,255,255,0.30)"); m.addColorStop(1,"rgba(255,255,255,0)"); }
-        ctx.fillStyle = m; ctx.beginPath(); ctx.arc(0,0,mw,0,TAU); ctx.fill();
-        ctx.restore();
-      }
-
-      /* sparse snow */
-      ctx.fillStyle = "#ffffff";
-      for(var i=0;i<FLAKES.length;i++){
-        var f = FLAKES[i];
-        var fx = f.x + Math.sin(t*0.4 + f.ph)*6;
-        ctx.globalAlpha = f.a;
-        ctx.beginPath(); ctx.arc(fx, f.y, f.r, 0, TAU); ctx.fill();
-      }
-      ctx.globalAlpha = 1;
-    }
-
-    var raf=0, running=false, t0=0;
-    function loop(now){
-      if(!running){ raf=0; return; }
-      raf = requestAnimationFrame(loop);
-      if(!t0) t0=now;
-      var t = (now-t0)/1000;
-      var dt = 1/60;
-      for(var i=0;i<FLAKES.length;i++){
-        var f=FLAKES[i];
-        f.x += f.vx*dt; f.y += f.vy*dt;
-        if(f.y > H+4){ f.y=-4; f.x=Math.random()*W; }
-        if(f.x < -4){ f.x = W+4; }
-      }
-      draw(t);
-    }
-
-    size();
-    if(window.ResizeObserver) new ResizeObserver(size).observe(band); else window.addEventListener("resize", size);
-
-    /* under reduced motion the canvas is a single static frame — repaint it when the theme flips */
-    document.addEventListener("nordane-themechange", function(){ if(reduce) draw(0); });
-
-    if(reduce){ draw(0); return; }
-    if(window.IntersectionObserver){
-      var io = new IntersectionObserver(function(es){
-        running = es[0].isIntersecting;
-        if(running && !raf) raf = requestAnimationFrame(loop);
-      }, { threshold:0 });
-      io.observe(band);
-    } else {
-      running = true; raf = requestAnimationFrame(loop);
-    }
-  })();
-  </script>
-
-  <!-- ============ NIGHT MODE — North-star toggle + radial reveal ============
-       Primary: View Transitions API, clip-path circle expanding from the button.
-       Fallback: an expanding pulse-wave overlay. Reduced motion: instant swap. -->
-  <script>
-  (function(){
-    "use strict";
-    var KEY = "nordane-theme";
-    var root = document.documentElement;
-    var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    var btn = document.getElementById("themeToggle");
-    if(!btn) return;
-    var meta = document.querySelector('meta[name="theme-color"]');
-    var busy = false;
-
-    function isDark(){ return root.getAttribute("data-theme") === "dark"; }
-    function syncUi(){
-      var dark = isDark();
-      btn.setAttribute("aria-pressed", dark ? "true" : "false");
-      btn.setAttribute("aria-label", dark ? "Switch to day mode" : "Switch to night mode");
-      if(meta) meta.setAttribute("content", dark ? "#071426" : "#f5f7fa");
-    }
-    function apply(dark){
-      if(dark) root.setAttribute("data-theme","dark");
-      else root.removeAttribute("data-theme");
-      try{ localStorage.setItem(KEY, dark ? "dark" : "light"); }catch(e){}
-      syncUi();
-      try{ document.dispatchEvent(new CustomEvent("nordane-themechange")); }catch(e){}
-    }
-    function coverRadius(x,y){
-      var dx = Math.max(x, window.innerWidth - x), dy = Math.max(y, window.innerHeight - y);
-      return Math.hypot(dx,dy) * 1.1; /* ~1.1× the distance to the farthest corner */
-    }
-    function pulseFallback(x,y,toDark){
-      busy = true;
-      var ov = document.createElement("div");
-      ov.className = "theme-pulse";
-      ov.style.setProperty("--px", x+"px");
-      ov.style.setProperty("--py", y+"px");
-      ov.style.setProperty("--pc", toDark ? "#071426" : "#f5f7fa");
-      ov.style.setProperty("--ps", (coverRadius(x,y)/10).toFixed(2)); /* flood disc is 20px, radius 10 */
-      ov.innerHTML = '<span class="ring"></span><span class="ring r2"></span><span class="flood"></span>';
-      document.body.appendChild(ov);
-      setTimeout(function(){ apply(toDark); }, 260);            /* flip ~40% through the wave */
-      setTimeout(function(){ ov.classList.add("out"); }, 650);
-      setTimeout(function(){ if(ov.parentNode) ov.parentNode.removeChild(ov); busy = false; }, 980);
-    }
-
-    btn.addEventListener("click", function(){
-      if(busy) return;
-      var toDark = !isDark();
-      if(reduce){ apply(toDark); return; }                      /* instant, no animation */
-      var star = btn.querySelector(".tstar");
-      if(star){ star.classList.remove("pop"); void star.offsetWidth; star.classList.add("pop"); }
-      var r = btn.getBoundingClientRect();
-      var x = r.left + r.width/2, y = r.top + r.height/2;
-      if(document.startViewTransition){
-        var vt = document.startViewTransition(function(){ apply(toDark); });
-        vt.ready.then(function(){
-          root.animate(
-            { clipPath:[ "circle(0px at "+x+"px "+y+"px)",
-                         "circle("+coverRadius(x,y).toFixed(0)+"px at "+x+"px "+y+"px)" ] },
-            { duration:700, easing:"cubic-bezier(0.22,1,0.36,1)",
-              pseudoElement:"::view-transition-new(root)" }
-          );
-        }).catch(function(){});
-      } else {
-        pulseFallback(x,y,toDark);
-      }
+    var root = document.documentElement, btn = document.getElementById('mode'), meta = document.querySelector('meta[name="theme-color"]');
+    var dark = new Image(); dark.src = '/assets/banner-night.jpg';
+    function sync(){ var d = root.getAttribute('data-theme') === 'dark'; btn.setAttribute('aria-label', d ? 'Switch to light mode' : 'Switch to dark mode'); meta.setAttribute('content', d ? '#05080d' : '#f5f7fa'); }
+    btn.addEventListener('click', function(){
+      var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      if (next === 'dark') root.setAttribute('data-theme','dark'); else root.removeAttribute('data-theme');
+      try { localStorage.setItem('nordane-theme', next); } catch(e) {}
+      sync();
     });
-
-    syncUi();
+    sync();
   })();
-  </script>
+</script>
 </body>
 </html>
