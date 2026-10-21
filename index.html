@@ -38,7 +38,6 @@
 <meta name="twitter:title" content="Nordane" />
 <meta name="twitter:description" content="Helping businesses scale into the agentic era. Swiss AI studio, makers of Okam." />
 <meta name="twitter:image" content="https://nordane.ch/assets/og.png?v=3" />
-<link rel="preload" as="image" href="/assets/banner-day.jpg" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -84,8 +83,9 @@
   .topbar { position:sticky; top:0; z-index:10; background:color-mix(in srgb,var(--bg) 82%,transparent); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px); border-bottom:1px solid var(--line); }
   .nav { display:flex; align-items:center; justify-content:space-between; height:72px; gap:20px; }
   .brand { display:inline-flex; align-items:center; gap:12px; }
-  .brand .brand-tile { width:34px; height:34px; border-radius:9px; background:#05080d; display:grid; place-items:center; }
-  .brand .brand-tile img { width:24px; height:24px; }
+  .brand-mark img { width:34px; height:34px; }
+  .brand-mark .for-dark, html[data-theme="dark"] .brand-mark .for-light { display:none; }
+  html[data-theme="dark"] .brand-mark .for-dark { display:block; }
   .word { font-weight:600; letter-spacing:.32em; font-size:15px; color:var(--ink); }
   .nav ul { display:flex; gap:32px; list-style:none; margin:0; padding:0; }
   .nav li a { font:500 11px "JetBrains Mono",monospace; letter-spacing:.2em; text-transform:uppercase; color:var(--body); }
@@ -123,16 +123,19 @@
   .proof li { padding-left:16px; position:relative; }
   .proof li::before { content:""; position:absolute; left:0; top:.65em; width:6px; height:6px; border-radius:1px; background:var(--bullet); transform:rotate(45deg); }
   /* What Nordane does: twelve tiles around a live agent demo */
-  .bento { display:grid; grid-template-columns:repeat(4,1fr); grid-auto-rows:minmax(168px,auto); gap:16px; }
+  .bento { display:grid; grid-template-columns:repeat(4,1fr); grid-template-rows:repeat(4,176px); gap:16px; }
   .core { grid-column:2 / span 2; grid-row:2 / span 2; position:relative; overflow:hidden; border-radius:24px; background:#05080d; color:#e8eef5; padding:22px 24px; display:flex; flex-direction:column; isolation:isolate; box-shadow:0 40px 80px -40px rgba(5,8,13,.55); }
   html[data-theme="dark"] .core { box-shadow:0 0 0 1px #1a2333, 0 40px 90px -30px rgba(255,118,95,.18); }
-  .core-field { position:absolute; inset:0; width:100%; height:100%; z-index:-1; }
   .core-head { display:flex; align-items:center; justify-content:space-between; }
   .core-head .mono { color:#ff9a82; }
   .core-logo { width:52px; height:52px; border-radius:14px; display:grid; place-items:center; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); }
   .core-logo img { width:36px; height:36px; animation:breathe 5s ease-in-out infinite; }
   @keyframes breathe { 50% { transform:scale(1.06); filter:drop-shadow(0 0 14px rgba(255,138,112,.45)); } }
-  .chat { flex:1; display:flex; flex-direction:column; justify-content:flex-end; gap:10px; margin-top:16px; min-height:250px; overflow:hidden; mask-image:linear-gradient(transparent,#000 22%); -webkit-mask-image:linear-gradient(transparent,#000 22%); }
+  .demo-meta { display:flex; flex-direction:column; align-items:flex-end; gap:6px; text-align:right; }
+  .demo-label { font-size:13px; color:#c9d4e0; max-width:300px; }
+  .demo-label.swap { animation:pop .5s cubic-bezier(.2,.8,.2,1) both; }
+  .chat.fade { opacity:0; transition:opacity .4s; }
+  .chat { flex:1 1 0; display:flex; flex-direction:column; justify-content:flex-end; gap:10px; margin-top:16px; min-height:0; overflow:hidden; mask-image:linear-gradient(transparent,#000 22%); -webkit-mask-image:linear-gradient(transparent,#000 22%); }
   .msg { max-width:86%; padding:10px 14px; border-radius:16px; font-size:14.5px; line-height:1.45; animation:pop .45s cubic-bezier(.2,.8,.2,1) both; }
   .msg.you { align-self:flex-end; background:#1b2636; border-bottom-right-radius:5px; }
   .msg.ai { align-self:flex-start; background:linear-gradient(135deg,rgba(255,118,95,.16),rgba(166,227,251,.12)); border:1px solid rgba(255,255,255,.08); border-bottom-left-radius:5px; }
@@ -151,7 +154,11 @@
   .tile .ico svg { width:26px; height:26px; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
   .tile h3 { font-size:17px; margin-top:10px; }
   .tile p { font-size:13.5px; color:var(--muted); margin-top:3px; }
+  .tile { cursor:pointer; }
   .tile:hover { transform:translateY(-3px); border-color:var(--line-strong); }
+  .tile:focus-visible { outline:2px solid #ff765f; outline-offset:3px; }
+  .tile.active { background:color-mix(in srgb,#ff765f 9%,var(--surface)); border-color:#ff765f; }
+  .tile.active h3 { color:#ff765f; }
   .tile.lit { border-color:#ff765f; box-shadow:0 0 0 1px #ff765f, 0 18px 40px -22px rgba(255,118,95,.6); transform:translateY(-3px); }
   .tile.lit .ico { color:#ff765f; }
   .tile.lit .num { color:#ff765f; }
@@ -171,12 +178,23 @@
   .okam-copy p { color:#aab6c3; }
   .okam .btn { background:#ff765f; color:#071426; }
 
-  /* How we work */
-  .steps { display:grid; grid-template-columns:repeat(3,1fr); border:1px solid var(--line); border-radius:20px; background:var(--surface); overflow:hidden; }
-  .steps > div { padding:32px; border-right:1px solid var(--line); }
-  .steps > div:last-child { border-right:none; }
-  .steps h3 { margin:10px 0 8px; font-size:26px; }
-  .steps p { color:var(--muted); font-size:15px; }
+  /* How we work: a timeline that draws in, phase by phase */
+  .tl-when { display:inline-block; font:500 10.5px "JetBrains Mono",monospace; letter-spacing:.16em; text-transform:uppercase; color:var(--tag-ink); background:var(--tag-bg); border-radius:999px; padding:5px 10px; }
+  .how ul { list-style:none; padding:0; margin:16px 0 0; display:grid; gap:8px; font-size:14.5px; }
+  .how ul li { padding-left:18px; position:relative; }
+  .how ul li::before { content:""; position:absolute; left:0; top:.6em; width:8px; height:2px; background:var(--bullet); }
+  .how h3 { font-size:28px; margin:14px 0 8px; }
+  .how p { color:var(--muted); }
+
+  .how { position:relative; }
+  .tl-track { position:absolute; left:28px; right:28px; top:27px; height:2px; background:var(--line); }
+  .tl-fill { position:absolute; inset:0; transform-origin:left; transform:scaleX(0); background:linear-gradient(90deg,#ff765f,#5c7fa3); transition:transform 1.6s cubic-bezier(.2,.8,.2,1) .2s; }
+  .tl-steps { display:grid; grid-template-columns:repeat(3,1fr); gap:40px; position:relative; }
+  .tl-node { width:56px; height:56px; border-radius:50%; display:grid; place-items:center; background:var(--bg); border:2px solid var(--line); font:500 13px "JetBrains Mono",monospace; color:var(--muted); margin-bottom:22px; transition:border-color .4s, color .4s, box-shadow .4s; }
+  .in .tl-fill { transform:scaleX(1); }
+  .in .tl-step .tl-node { border-color:#ff765f; color:var(--ink); box-shadow:0 0 0 6px color-mix(in srgb,#ff765f 14%,transparent); }
+  .in .tl-step:nth-child(1) .tl-node { transition-delay:.2s; } .in .tl-step:nth-child(2) .tl-node { transition-delay:.9s; } .in .tl-step:nth-child(3) .tl-node { transition-delay:1.6s; }
+
 
   .close { text-align:center; padding:110px 0; }
   .close h2 { font-size:clamp(32px,4.4vw,48px); margin:16px auto 28px; max-width:760px; }
@@ -193,7 +211,9 @@
 
   @media (max-width:960px) {
     .nav ul { display:none; }
-    .bento { grid-template-columns:repeat(2,1fr); }
+    .bento { grid-template-columns:repeat(2,1fr); grid-template-rows:none; grid-auto-rows:auto; }
+    .tile { min-height:168px; }
+    .core { height:440px; }
     .core { grid-column:1 / -1; grid-row:auto; order:-1; }
     .okam-row { flex-wrap:wrap; }
     .section-head { flex-direction:column; align-items:flex-start; gap:12px; }
@@ -204,11 +224,18 @@
     .hero { padding:72px 0 240px; background-size:auto 100%; background-position:80% bottom; }
     .hero::before { background:linear-gradient(180deg,color-mix(in srgb,var(--bg) 92%,transparent) 30%,color-mix(in srgb,var(--bg) 20%,transparent) 70%,transparent); }
     .lede { font-size:17px; }
-    .where, .steps { grid-template-columns:1fr; }
-    .bento { grid-auto-rows:minmax(140px,auto); gap:12px; }
-    .chat { min-height:290px; }
-    .where > div, .steps > div { border-right:none; border-bottom:1px solid var(--line); padding:24px 22px; }
-    .where > div:last-child, .steps > div:last-child { border-bottom:none; }
+    .where { grid-template-columns:1fr; }
+    .tl-steps { grid-template-columns:1fr; gap:28px; }
+    .tl-track { left:27px; right:auto; top:28px; bottom:28px; width:2px; height:auto; }
+    .tl-fill { transform-origin:top; transform:scaleY(0); }
+    .in .tl-fill { transform:scaleY(1); }
+    .tl-step { padding-left:76px; position:relative; }
+    .tl-node { position:absolute; left:0; top:0; }
+    .bento { gap:12px; }
+    .tile { min-height:150px; }
+    .core { height:460px; }
+    .where > div { border-right:none; border-bottom:1px solid var(--line); padding:24px 22px; }
+    .where > div:last-child { border-bottom:none; }
     .section { padding:68px 0; }
     .close { padding:80px 0; }
     .foot .row { flex-direction:column; align-items:flex-start; }
@@ -220,9 +247,8 @@
 <header class="topbar">
   <div class="wrap">
     <nav class="nav" aria-label="Main">
-      <a class="brand" href="/" aria-label="Nordane home"><span class="brand-tile"><img src="/assets/nordane-n.png" alt="" width="24" height="24" /></span><span class="word">NORDANE</span></a>
+      <a class="brand" href="/" aria-label="Nordane home"><span class="brand-mark"><img class="for-light" src="/assets/nordane-n-light.png" alt="" width="34" height="34" /><img class="for-dark" src="/assets/nordane-n-dark.png" alt="" width="34" height="34" /></span><span class="word">NORDANE</span></a>
       <ul>
-        <li><a href="#okam">Okam</a></li>
         <li><a href="#build">What we do</a></li>
         <li><a href="#how">How we work</a></li>
       </ul>
@@ -247,7 +273,7 @@
   <div class="where">
     <div><span class="mono">Switzerland</span><h3>Company &amp; engineering</h3><p>Nordane is incorporated and run from Appenzell. Swiss-hosted infrastructure for clients who need their data to stay here.</p></div>
     <div><span class="mono">Norway</span><h3>Okam, in daily service</h3><p>Restaurants in Norway take orders, run the till and plan staff on Okam.</p></div>
-    <div><span class="mono">Next</span><h3>Okam for Switzerland</h3><p>CHF, Swiss VAT and TWINT are built in. The Swiss launch is in preparation.</p></div>
+    <div><span class="mono">Your business</span><h3>The same stack, for you</h3><p>We build and run the same infrastructure, agents and apps for other companies.</p></div>
   </div>
 
   <section class="section" id="build">
@@ -259,8 +285,7 @@
         <div class="tile t3" data-k="chat"><span class="num">03</span><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg></span><h3>The chat</h3><p>Assistants people actually talk to</p></div>
         <div class="tile t4" data-k="mcp"><span class="num">04</span><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3v5M16 3v5M6 8h12v3a6 6 0 0 1-12 0zM12 17v4"/></svg></span><h3>MCP</h3><p>Your systems, open to AI</p></div>
         <div class="core" aria-label="Demo: a Nordane agent at work">
-          <canvas class="core-field" aria-hidden="true"></canvas>
-          <div class="core-head"><span class="core-logo"><img src="/assets/nordane-n.png" alt="" width="40" height="40" /></span><span class="mono">Live demo</span></div>
+          <div class="core-head"><span class="core-logo"><img src="/assets/nordane-n.png" alt="" width="40" height="40" /></span><span class="demo-meta"><span class="mono">Live demo</span><span class="demo-label"></span></span></div>
           <div class="chat" aria-live="polite"></div>
         </div>
         <div class="tile t5" data-k="apps"><span class="num">05</span><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 18h2"/></svg></span><h3>Apps</h3><p>iPhone, iPad and web</p></div>
@@ -281,18 +306,21 @@
         <svg viewBox="-8 -8 116 116" aria-hidden="true"><path fill="#F6F3EC" d="M0 0H100V100H70A46 46 0 0 0 24 54L24 100H0Z"/><path fill="#E2712B" d="M12 54H24V100H12Z"/></svg>
         <span>okam</span>
       </a>
-      <div class="okam-copy"><div class="mono">Our flagship</div><h2>Okam, the operating system for restaurants.</h2><p>Built on the same stack. Live in Norway, coming to Switzerland.</p></div>
+      <div class="okam-copy"><div class="mono">Our flagship</div><h2>Okam, the operating system for restaurants.</h2><p>Built on the same stack. In daily service in Norway.</p></div>
       <a class="btn" href="https://okam.no" target="_blank" rel="noopener">Visit okam.no ↗</a>
     </div>
   </section>
 
   <section class="section" id="how">
     <div class="wrap">
-      <div class="section-head"><div><div class="mono">How we work</div><h2>Build it. Run it. Scale it.</h2></div></div>
-      <div class="steps">
-        <div><span class="mono">01</span><h3>Build</h3><p>A small senior team ships the first working version in weeks, on your data.</p></div>
-        <div><span class="mono">02</span><h3>Operate</h3><p>Agents take the routine work; people approve what matters. We keep it running.</p></div>
-        <div><span class="mono">03</span><h3>Scale</h3><p>The same system grows to more sites, markets and users without a rebuild.</p></div>
+      <div class="section-head"><div><div class="mono">How we work</div><h2>Build it. Run it. Scale it.</h2></div><p>One team from the first workshop to the hundredth site. You always know what happens next.</p></div>
+      <div class="how reveal-how">
+        <div class="tl-track"><span class="tl-fill"></span></div>
+        <div class="tl-steps">
+          <div class="tl-step"><span class="tl-node"><span>01</span></span><span class="tl-when">Weeks 1–6</span><h3>Build</h3><p>We start on your data, not a slide deck. A small senior team ships the first working version.</p><ul><li>Workshop on your real data</li><li>First working version</li><li>Your systems connected over MCP</li></ul></div>
+          <div class="tl-step"><span class="tl-node"><span>02</span></span><span class="tl-when">From launch</span><h3>Operate</h3><p>Agents take the routine work. People approve what matters. We keep everything running.</p><ul><li>Agents with approval for every change</li><li>Monitoring and support</li><li>Monthly review of what the agents did</li></ul></div>
+          <div class="tl-step"><span class="tl-node"><span>03</span></span><span class="tl-when">Year one and on</span><h3>Scale</h3><p>The same system grows to more sites, markets and users without a rebuild.</p><ul><li>New agents on the same base</li><li>More sites and markets</li><li>Swiss-hosted infrastructure that grows with you</li></ul></div>
+        </div>
       </div>
     </div>
   </section>
@@ -304,7 +332,7 @@
 
 <footer class="foot">
   <div class="wrap row">
-    <a class="brand" href="/" aria-label="Nordane home"><span class="brand-tile"><img src="/assets/nordane-n.png" alt="" width="24" height="24" /></span><span class="word">NORDANE</span></a>
+    <a class="brand" href="/" aria-label="Nordane home"><span class="brand-mark"><img class="for-light" src="/assets/nordane-n-light.png" alt="" width="34" height="34" /><img class="for-dark" src="/assets/nordane-n-dark.png" alt="" width="34" height="34" /></span><span class="word">NORDANE</span></a>
     <span class="place">Nordane GmbH · Teufen, Switzerland · <a href="mailto:info@nordane.ch">info@nordane.ch</a> · © 2026</span>
     <div class="socials">
       <a href="https://www.linkedin.com/company/nordane/" target="_blank" rel="noopener" aria-label="Nordane on LinkedIn"><svg viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9.75h4V21H3V9.75Zm6.5 0h3.8v1.6h.06c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.77 2.65 4.77 6.1V21h-4v-4.9c0-1.17-.02-2.68-1.63-2.68-1.64 0-1.89 1.28-1.89 2.6V21h-4V9.75Z"/></svg></a>
@@ -337,58 +365,111 @@
     var chat = bento.querySelector('.chat'), tiles = {}, reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
     bento.querySelectorAll('.tile, .core').forEach(function(el, i){ el.style.setProperty('--i', i); if (el.dataset.k) tiles[el.dataset.k] = el; });
 
-    var script = [
-      ['you', 'How did the weekend go?'],
-      ['tool', 'sales.read', ['mcp','data']],
-      ['ai', 'CHF 18,420 in sales, up 12% on last weekend. Saturday evening was the busiest.', ['agents','chat']],
-      ['you', 'Plan staff for next Saturday.'],
-      ['tool', 'schedule.draft', ['mcp','auto']],
-      ['ai', 'Draft ready: two extra people from 18:00 to 22:00.', ['agents'], 'approve'],
-      ['you', 'Where does our data live?'],
-      ['ai', 'In Switzerland. Every action is logged and only runs with your approval.', ['infra','security']]
+    // One customer problem per tile, played in tile order. [who, text, tiles to light, needs approval]
+    var scenarios = [
+      { k:'infra', label:'Site down on the busiest day', lines:[
+        ['you', 'Our shop went down on Black Friday last year. Will it happen again?'],
+        ['tool', 'infra.status', ['mcp','infra']],
+        ['ai', 'Traffic tripled at 10:02 today. Extra capacity started on its own and nobody saw an error.', ['infra','scale']] ]},
+      { k:'agents', label:'Hours of copy-and-paste', lines:[
+        ['you', 'We spend every Monday copying orders into the ERP.'],
+        ['tool', 'orders.sync', ['mcp','integr']],
+        ['ai', '214 orders entered and checked. Three look unusual, so I left them for you.', ['agents','auto'], 'approve'] ]},
+      { k:'chat', label:'Customers wait days for answers', lines:[
+        ['you', 'Customers wait two days for a reply.'],
+        ['tool', 'inbox.read', ['mcp','chat']],
+        ['ai', 'I answered 46 of 52 questions overnight. The six that need a person are at the top of your inbox.', ['chat','support']] ]},
+      { k:'mcp', label:'AI can’t see your systems', lines:[
+        ['you', 'Our team wants to ask the ERP questions in their AI assistant.'],
+        ['tool', 'mcp.connect · erp', ['mcp']],
+        ['ai', 'Connected over MCP. Reading is open; anything that changes data asks you first.', ['mcp','security'], 'approve'] ]},
+      { k:'apps', label:'Orders still on paper', lines:[
+        ['you', 'Our staff still write orders on paper.'],
+        ['tool', 'app.publish · ipad', ['mcp','apps']],
+        ['ai', 'The iPad app is ready for your three stores and works offline. Roll it out?', ['apps'], 'approve'] ]},
+      { k:'data', label:'Every report shows a different number', lines:[
+        ['you', 'Finance and sales report different revenue.'],
+        ['tool', 'data.reconcile', ['mcp','data']],
+        ['ai', 'Two systems count refunds differently. Fixed: one number for everyone, CHF 412,800 this quarter.', ['data','agents']] ]},
+      { k:'security', label:'Client data and AI', lines:[
+        ['you', 'Can we use AI without client data leaving Switzerland?'],
+        ['tool', 'audit.log', ['mcp','security']],
+        ['ai', 'Yes. Names are pseudonymised before any model sees them, everything is hosted in Switzerland, and every action is logged.', ['security','infra']] ]},
+      { k:'auto', label:'Nobody chases unpaid invoices', lines:[
+        ['you', 'Invoices go overdue and nobody chases them.'],
+        ['tool', 'accounting.invoices', ['mcp','integr']],
+        ['ai', 'Seven overdue, CHF 23,900 in total. A polite reminder is drafted for each.', ['auto','agents'], 'approve'] ]},
+      { k:'integr', label:'Tools that don’t talk to each other', lines:[
+        ['you', 'Payments, accounting and delivery all live in different tools.'],
+        ['tool', 'integrations.map', ['mcp','integr']],
+        ['ai', 'Payments, accounting and delivery now share one order record. No more double entry.', ['integr','data']] ]},
+      { k:'support', label:'Problems found too late', lines:[
+        ['you', 'Something broke at 7am and nobody noticed until noon.'],
+        ['tool', 'incident.open', ['mcp','support']],
+        ['ai', 'We saw it at 7:02 and fixed it at 7:11. The report is in your inbox.', ['support','infra']] ]},
+      { k:'scale', label:'Opening new locations', lines:[
+        ['you', 'We’re opening five new locations next quarter.'],
+        ['tool', 'sites.clone', ['mcp','scale']],
+        ['ai', 'Five sites set up from your template: products, prices and staff roles. Ready for your review.', ['scale','apps'], 'approve'] ]},
+      { k:'evals', label:'Can we trust the answers?', lines:[
+        ['you', 'How do we know the AI won’t make things up?'],
+        ['tool', 'evals.run', ['mcp','evals']],
+        ['ai', 'Every release is tested on more than 1,500 real questions before it ships. This week: no regressions.', ['evals','agents']] ]}
     ];
-    var timer = null, step = 0, visible = false;
+    var label = bento.querySelector('.demo-label');
+    var timer = null, scene = 0, step = 0, visible = false, held = false;
     function light(keys){ Object.keys(tiles).forEach(function(k){ tiles[k].classList.toggle('lit', !!keys && keys.indexOf(k) > -1); }); }
-    function add(cls, html){ var d = document.createElement('div'); d.className = 'msg ' + cls; d.innerHTML = html; chat.appendChild(d); while (chat.children.length > 7) chat.removeChild(chat.firstChild); return d; }
-    function later(fn, ms){ timer = setTimeout(function(){ if (visible) fn(); else timer = null; }, ms); }
+    function setActive(i){ Object.keys(tiles).forEach(function(k){ tiles[k].classList.toggle('active', k === scenarios[i].k); }); }
+    function add(cls, html){ var d = document.createElement('div'); d.className = 'msg ' + cls; d.innerHTML = html; chat.appendChild(d); while (chat.children.length > 6) chat.removeChild(chat.firstChild); return d; }
+    function later(fn, ms){ timer = setTimeout(function(){ timer = null; if (visible) fn(); }, ms); }
+    function show(i){ label.classList.remove('swap'); void label.offsetWidth; label.textContent = tiles[scenarios[i].k].querySelector('h3').textContent + ' · ' + scenarios[i].label; label.classList.add('swap'); setActive(i); }
+    function play(i){ clearTimeout(timer); timer = null; chat.classList.remove('fade'); chat.innerHTML = ''; light(null); scene = i; step = 0; show(i); next(); }
     function next(){
-      if (step >= script.length) { later(function(){ chat.innerHTML = ''; light(null); step = 0; next(); }, 2600); return; }
-      var line = script[step++], kind = line[0];
-      if (kind === 'you') { light(null); add('you', line[1]); later(next, 900); }
+      var lines = scenarios[scene].lines;
+      if (step >= lines.length) {
+        // A clicked tile stays on screen a little longer before the tour moves on.
+        later(function(){ chat.classList.add('fade'); later(function(){ held = false; play((scene + 1) % scenarios.length); }, 450); }, held ? 5000 : 2600);
+        return;
+      }
+      var line = lines[step++], kind = line[0];
+      if (kind === 'you') { light(null); add('you', line[1]); later(next, 1000); }
       else if (kind === 'tool') { light(line[2]); add('tool', '↳ <b>MCP</b> · ' + line[1]); later(next, 800); }
       else {
         var dots = add('typing', '<i></i><i></i><i></i>'); dots.className = 'typing';
         later(function(){
           dots.remove(); light(line[2]);
           var m = add('ai', line[1] + (line[3] ? '<br><span class="approve">Approve</span>' : ''));
-          if (line[3]) later(function(){ var b = m.querySelector('.approve'); b.textContent = 'Approved ✓'; b.classList.add('done'); light(['apps','auto']); later(next, 1600); }, 1500);
-          else later(next, 2200);
+          if (line[3]) later(function(){ var b = m.querySelector('.approve'); b.textContent = 'Approved ✓'; b.classList.add('done'); later(next, 1500); }, 1500);
+          else later(next, 2400);
         }, 1100);
       }
     }
     function start(){ if (!timer) next(); }
+    // Clicking or tapping a tile plays its story now.
+    scenarios.forEach(function(sc, i){
+      var t = tiles[sc.k]; t.setAttribute('role', 'button'); t.setAttribute('tabindex', '0'); t.setAttribute('aria-label', 'Show the ' + t.querySelector('h3').textContent + ' demo');
+      function go(){ if (reduce) { chat.innerHTML = ''; show(i); sc.lines.forEach(function(l){ if (l[0] !== 'tool') add(l[0], l[1]); }); return; } held = true; visible = true; play(i); }
+      t.addEventListener('click', go);
+      t.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
+    });
 
-    // Faint drifting constellation behind the chat, drawn on a small canvas.
-    var cv = bento.querySelector('.core-field'), ctx = cv.getContext('2d'), pts = [], raf = 0;
-    function size(){ var r = cv.getBoundingClientRect(), dpr = Math.min(devicePixelRatio || 1, 2); cv.width = r.width * dpr; cv.height = r.height * dpr; ctx.setTransform(dpr,0,0,dpr,0,0);
-      pts = []; for (var i = 0; i < 42; i++) pts.push({ x:Math.random()*r.width, y:Math.random()*r.height, vx:(Math.random()-.5)*.18, vy:(Math.random()-.5)*.18 }); }
-    function draw(){
-      var w = cv.clientWidth, h = cv.clientHeight; ctx.clearRect(0,0,w,h);
-      for (var i = 0; i < pts.length; i++) { var a = pts[i]; a.x += a.vx; a.y += a.vy; if (a.x < 0 || a.x > w) a.vx *= -1; if (a.y < 0 || a.y > h) a.vy *= -1;
-        for (var j = i + 1; j < pts.length; j++) { var b = pts[j], dx = a.x - b.x, dy = a.y - b.y, d = dx*dx + dy*dy;
-          if (d < 9000) { ctx.strokeStyle = 'rgba(166,227,251,' + (0.12 * (1 - d/9000)) + ')'; ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.stroke(); } }
-        ctx.fillStyle = i % 5 ? 'rgba(201,212,224,.35)' : 'rgba(255,138,112,.7)'; ctx.fillRect(a.x - 1, a.y - 1, 2, 2); }
-      if (visible) raf = requestAnimationFrame(draw);
-    }
-    size(); addEventListener('resize', size);
-
+    // Start when the section scrolls into view; pause when it leaves.
     new IntersectionObserver(function(entries){
       entries.forEach(function(e){
         visible = e.isIntersecting;
-        if (visible) { bento.classList.add('in'); if (!reduce) { start(); cancelAnimationFrame(raf); draw(); } else draw(); }
+        if (visible) { bento.classList.add('in'); if (!reduce) start(); }
       });
     }, { threshold: 0.2 }).observe(bento);
-    if (reduce) { visible = true; script.forEach(function(l){ if (l[0] !== 'tool') add(l[0], l[1]); }); visible = false; step = script.length + 1; }
+    show(0);
+    if (reduce) { scenarios[0].lines.forEach(function(l){ if (l[0] !== 'tool') add(l[0], l[1]); }); }
+  })();
+</script>
+<script>
+  // How we work: the timeline draws in when scrolled into view.
+  (function(){
+    document.querySelectorAll('.reveal-how').forEach(function(el){
+      new IntersectionObserver(function(es, o){ es.forEach(function(e){ if (e.isIntersecting) { el.classList.add('in'); o.disconnect(); } }); }, { threshold: .3 }).observe(el);
+    });
   })();
 </script>
 </body>
