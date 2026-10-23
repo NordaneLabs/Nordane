@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tagesansicht · Nordane</title>
+<link rel="stylesheet" href="app.css">
+<script src="../assets/data.js"></script>
+<script src="../assets/dienstplan.js"></script>
+<script src="shell.js"></script>
+<style>
+  .tlw { overflow-x: auto; }
+  .tlg { min-width: 860px; }
+  .tlr { display: grid; grid-template-columns: 200px minmax(0, 1fr); align-items: center; border-top: 1px solid var(--border); min-height: 44px; }
+  .tlr .nm { padding: 6px 12px 6px 20px; display: flex; gap: 10px; align-items: center; min-width: 0; }
+  .tlr .nm b { color: var(--ink); font-size: 13.5px; font-weight: 550; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+  .tlr .nm span.s { color: var(--muted); font-size: 12px; display: block; }
+  .track { position: relative; height: 44px; margin-right: 20px; background-image: linear-gradient(to right, var(--border) 1px, transparent 1px); background-size: calc(100% / 16) 100%; }
+  .track .shift { position: absolute; top: 7px; bottom: 7px; flex-direction: row; align-items: center; gap: 8px; padding: 0 10px; cursor: pointer; }
+  .track .shift .tm { font-size: 12px; }
+  .track .brk { position: absolute; top: 18px; height: 8px; border-radius: 2px; background-image: repeating-linear-gradient(135deg, var(--muted) 0 1.5px, transparent 1.5px 4px); opacity: .5; }
+  .track .now { position: absolute; top: 0; bottom: 0; width: 0; border-left: 1.5px dashed var(--coral); }
+  .hrs { display: grid; grid-template-columns: 200px minmax(0, 1fr); }
+  .hrs .h { position: relative; height: 26px; margin-right: 20px; }
+  .hrs .h span { position: absolute; top: 6px; transform: translateX(-50%); font-size: 11.5px; color: var(--muted); }
+  .agrid { display: grid; grid-template-columns: 200px minmax(0, 1fr); align-items: center; border-top: 1px solid var(--border); }
+  .agrid .nm { padding: 8px 12px 8px 20px; font-size: 13px; color: var(--ink); font-weight: 550; }
+  .agrid .nm small { display: block; color: var(--muted); font-weight: 400; font-size: 12px; }
+  .acov { display: grid; grid-template-columns: repeat(32, 1fr); gap: 2px; margin-right: 20px; height: 26px; }
+  .acov i { border-radius: 3px; background: var(--hover); position: relative; font-style: normal; font-size: 10.5px; display: grid; place-items: center; color: var(--muted); font-weight: 600; }
+  .acov i.ok { background: var(--green-bg); color: var(--green); }
+  .acov i.gap { background: #c22f43; color: #fff; }
+  [data-theme='dark'] .acov i.gap { background: #ff8f8f; color: #1a0508; }
+  .acov i.over { background: var(--primary-soft); color: var(--blue); }
+  .ch1 { height: 200px; } .ch2 { height: 170px; }
+  .grp-l { padding: 8px 20px; background: var(--sunken); font-size: 12px; font-weight: 600; color: var(--muted); border-top: 1px solid var(--border); }
+</style>
+</head>
+<body data-page="plan-day">
+<div class="app"><div class="main"><main class="content">
+  <div class="ph"><div><div class="crumb"><a href="plan.html">Personal</a> › <a href="plan.html">Wochenplan KW 44</a> › <span>Tagesansicht</span></div><h1 id="t"></h1><p id="sub"></p></div>
+    <div class="acts"><div class="seg" id="days" role="group" aria-label="Tag wählen"></div></div></div>
+  <div class="grid g4" id="kp"></div>
+  <div class="grid g2" style="margin-top:20px">
+    <div class="card"><div class="card-h"><div><h3>Erwartete Gäste pro Stunde</h3><p>Aus Reservationen und den letzten 6 gleichen Wochentagen</p></div><div class="legend"><span><i></i>Gäste</span><span><i class="d"></i>Bestellungen</span></div></div><div class="card-b"><div class="ch1" id="g"></div></div></div>
+    <div class="card"><div class="card-h"><div><h3>Personal im Haus</h3><p>Geplant gegenüber Bedarf aus den Vorlagen</p></div><div class="legend"><span><i></i>Geplant</span><span><i class="d"></i>Bedarf</span></div></div><div class="card-b"><div class="ch2" id="s"></div></div></div>
+  </div>
+  <div class="card raised" style="margin-top:20px">
+    <div class="card-h"><div><h3>Abdeckung pro Bereich</h3><p>Zahl = geplante Personen pro halbe Stunde. Rot = zu wenig.</p></div><a class="btn sm" href="plan.html">Im Wochenplan ändern</a></div>
+    <div class="tlw"><div class="tlg" id="tl"></div></div>
+  </div>
+</main></div></div>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const D = DP, U = UI, $ = (s) => document.querySelector(s);
+  let d = +(U.q.get('d') || 4); if (D.days[d].closed) d = 4;
+  const day = D.days[d], R = D.compute();
+  $('#t').textContent = day.long;
+  $('#sub').textContent = `KW 44 · geöffnet ${D.fmtH(day.open[0])} bis ${D.fmtH(day.open[1])}${day.note ? ' · ' + day.note : ''}${day.holiday ? ' · ' + day.holiday : ''}`;
+  $('#days').innerHTML = D.days.map((x, i) => x.closed ? `<button disabled title="Ruhetag">${x.short}</button>` : `<a href="plan-day.html?d=${i}" ${i === d ? 'aria-current="page"' : ''}>${x.short} ${x.date}</a>`).join('');
+  const sh = D.shifts.filter((s) => s.d === d);
+  const hrs = sh.filter((s) => s.p).reduce((a, s) => a + D.paidHours(s), 0);
+  const gaps = R.gaps.filter((g) => g.d === d);
+  const k = (l, v, s) => `<div class="card kpi"><span class="k-l">${l}</span><span class="k-v">${v}</span><span class="k-s">${s}</span></div>`;
+  const gTot = D.guestsTemplate[d].reduce((a, b) => a + b, 0);
+  $('#kp').innerHTML = k('Personen im Dienst', new Set(sh.filter((s) => s.p).map((s) => s.p)).size, `${D.h1(hrs)} Std. bezahlt`) + k('Erwartete Gäste', gTot, `Spitze ${Math.max(...D.guestsTemplate[d])} pro Stunde`) + k('Personalkosten', '<small>CHF</small> ' + D.chf0(R.dayCost[d]), `Umsatz CHF ${D.chf0(D.forecastSales[d])}, Quote ${R.pctByDay[d].toFixed(1)} %`) + k('Lücken', gaps.length, gaps.length ? gaps.map((g) => g.area).join(', ') : 'Alle Stunden gedeckt');
+  const labels = D.HOURS.map((h) => (h % 2 === 0 ? String(h).padStart(2, '0') : ''));
+  const orders = D.guestsTemplate[d].map((g) => Math.round(g * 0.55));
+  U.area($('#g'), { labels, series: [{ name: 'Bestellungen', vals: orders, kind: 'dash' }, { name: 'Gäste', vals: D.guestsTemplate[d], kind: 'area' }], h: 200, fmt: (v) => Math.round(v) });
+  const have = D.HOURS.map((h) => D.areas.reduce((s, a) => s + R.coverage[a][d][(h - 8) * 2].have, 0));
+  const need = D.HOURS.map((h) => D.areas.reduce((s, a) => s + R.coverage[a][d][(h - 8) * 2].need, 0));
+  U.area($('#s'), { labels, series: [{ name: 'Bedarf', vals: need, kind: 'step', dash: true, color: 'var(--chart-2)' }, { name: 'Geplant', vals: have, kind: 'step' }], h: 170, fmt: (v) => Math.round(v) });
+
+  const L = (t) => ((D.toH(t) - 8) / 16 * 100);
+  let h = `<div class="hrs"><div></div><div class="h">${D.HOURS.concat([24]).map((x, i) => i % 2 === 0 ? `<span style="left:${i / 16 * 100}%">${String(x).padStart(2, '0')}:00</span>` : '').join('')}</div></div>`;
+  D.areas.forEach((a) => {
+    const cov = R.coverage[a][d];
+    if (!cov.some((c) => c.need || c.have)) return;
+    h += `<div class="agrid"><div class="nm">${a}<small>Bedarf max. ${Math.max(...cov.map((c) => c.need))}</small></div><div class="acov">${cov.map((c) => `<i class="${!c.need && !c.have ? '' : c.have < c.need ? 'gap' : c.have > c.need ? 'over' : 'ok'}" title="${D.fmtH(c.t)}: ${c.have} von ${c.need}">${c.need || c.have ? c.have : ''}</i>`).join('')}</div></div>`;
+  });
+  [['Service', ['lead', 'service']], ['Bar', ['bar']], ['Küche', ['kitchen']], ['Abwasch', ['dish']]].forEach(([g, roles]) => {
+    const list = sh.filter((s) => roles.includes(s.role)).sort((a, b) => D.toH(a.s) - D.toH(b.s));
+    if (!list.length) return;
+    h += `<div class="grp-l">${g} · ${list.length} Schichten</div>`;
+    list.forEach((s) => {
+      const p = s.p ? D.byId[s.p] : null; const r = D.roles[s.role];
+      const len = D.toH(s.e) - D.toH(s.s), brk = D.breakFor(len);
+      const mid = D.toH(s.s) + len / 2 - brk / 2;
+      h += `<div class="tlr"><div class="nm">${p ? `<span class="avatar sm ${U.avClass(p)}">${p.initials}</span><div style="min-width:0"><b>${U.esc(p.name)}</b><span class="s">${r.name}</span></div>` : `<span class="ico-sq">${U.icon('hand', 15)}</span><div><b>Offene Schicht</b><span class="s">${U.esc(s.note)}</span></div>`}</div>
+        <div class="track"><div class="shift ${U.roleClass(s.role)} ${s.open ? 'open' : ''}" style="left:${L(s.s)}%;width:${len / 16 * 100}%" title="${U.esc(`${r.name}, ${s.s} bis ${s.e}`)}" tabindex="0"><span class="tm">${s.s}-${s.e}</span><span class="mt"><span class="code">${r.code}</span>${D.h1(D.paidHours(s))} h</span></div>
+        ${brk ? `<span class="brk" style="left:${(mid - 8) / 16 * 100}%;width:${brk / 16 * 100}%" title="Pause ${brk * 60} Min."></span>` : ''}</div></div>`;
+    });
+  });
+  $('#tl').innerHTML = h;
+  document.querySelectorAll('.track .shift').forEach((s) => s.onclick = () => U.toast('Im Wochenplan bearbeiten: Klick auf die Schicht öffnet das Detail.'));
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Speisekarte · Nordane</title>
+<link rel="stylesheet" href="app.css">
+<script src="../assets/data.js"></script>
+<script src="../assets/dienstplan.js"></script>
+<script src="shell.js"></script>
+<style>
+  .mlay { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 20px; align-items: start; }
+  .cats { padding: 8px; position: sticky; top: 76px; }
+  .cats button { display: flex; width: 100%; justify-content: space-between; align-items: center; padding: 8px 10px; border: 0; background: none; border-radius: 7px; cursor: pointer; font-size: 13.5px; color: var(--text); text-align: left; transition: background .15s; }
+  .cats button:hover { background: var(--hover); }
+  .cats button[aria-pressed='true'] { background: var(--primary-soft); color: var(--ink); font-weight: 600; }
+  .cats button span { color: var(--muted); font-size: 12px; font-weight: 500; }
+  .mi { display: grid; grid-template-columns: 44px minmax(0, 1fr) auto auto auto; gap: 14px; align-items: center; padding: 12px 20px; border-top: 1px solid var(--border); cursor: pointer; transition: background .12s; }
+  .mi:hover { background: var(--hover); }
+  .mi .th { width: 44px; height: 44px; border-radius: 10px; display: grid; place-items: center; font-weight: 600; color: var(--blue); background: var(--blue-bg); font-size: 14px; }
+  .mi .th.k2 { color: var(--green); background: var(--green-bg); }
+  .mi .th.k3 { color: var(--amber); background: var(--amber-bg); }
+  .mi .th.k4 { color: var(--violet); background: var(--violet-bg); }
+  .mi b { color: var(--ink); font-weight: 550; display: block; }
+  .mi .d { color: var(--muted); font-size: 12.5px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .mi .al { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px; }
+  .mi .al .tag { height: 20px; font-size: 11px; padding: 0 5px; }
+  .mi .pr { font-weight: 600; color: var(--ink); white-space: nowrap; }
+  .ch-h { padding: 16px 20px 10px; display: flex; justify-content: space-between; align-items: baseline; }
+  .ch-h h3 { font-size: 15px; }
+  .algrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 6px 12px; }
+  @media (max-width: 1240px) { .mi .vat { display: none; } .mi { grid-template-columns: 44px minmax(0, 1fr) auto auto; } }
+  @media (max-width: 900px) { .mlay { grid-template-columns: minmax(0, 1fr); } .cats { position: static; display: flex; overflow-x: auto; } .cats button { width: auto; white-space: nowrap; gap: 8px; } }
+</style>
+</head>
+<body data-page="menu">
+<div class="app"><div class="main"><main class="content">
+  <div class="ph">
+    <div><div class="crumb">Speisekarte</div><h1>Speisekarte</h1><p>Änderungen gelten sofort an Kasse, Tisch-QR und im Online-Shop.</p></div>
+    <div class="acts"><button class="btn" id="prev">Vorschau Gästeansicht</button><button class="btn primary" id="new">${'plus'}Neues Gericht</button></div>
+  </div>
+  <div class="mlay"><nav class="card cats" id="cats" aria-label="Kategorien"></nav><div class="card" id="list"></div></div>
+</main></div></div>
+<script>
+document.querySelectorAll('.acts button').forEach((a) => { a.innerHTML = a.innerHTML.replace(/\$\{'(\w+)'\}/, (m, n) => UI.icon(n, 16)); });
+document.addEventListener('DOMContentLoaded', () => {
+  const N = NORDANE, U = UI, $ = (s) => document.querySelector(s);
+  let cat = 'Alle';
+  const all = N.menu.flatMap((c, ci) => c.items.map((it) => Object.assign(it, { cat: c.cat, ci })));
+  function render() {
+    $('#cats').innerHTML = [['Alle', all.length]].concat(N.menu.map((c) => [c.cat, c.items.length])).map(([c, n]) => `<button aria-pressed="${cat === c}" data-c="${U.esc(c)}">${U.esc(c)}<span>${n}</span></button>`).join('');
+    const cs = N.menu.filter((c) => cat === 'Alle' || c.cat === cat);
+    $('#list').innerHTML = cs.map((c, i) => `<div class="ch-h" ${i ? 'style="border-top:1px solid var(--border)"' : ''}><h3>${U.esc(c.cat)}</h3><span class="muted small">${c.items.length} Gerichte</span></div>` + c.items.map((it) => `
+      <div class="mi" tabindex="0" data-n="${U.esc(it.name)}"><span class="th k${(it.ci % 4) + 1}">${it.name.split(' ').map((w) => w[0]).slice(0, 2).join('')}</span>
+        <div style="min-width:0"><b>${U.esc(it.name)} ${it.soldOut ? U.pill('Ausverkauft', 'red') : ''}</b><span class="d">${U.esc(it.desc || 'Ohne Beschreibung')}</span><div class="al">${it.al.map((a) => `<span class="tag" title="${N.allergens.find((x) => x[0] === a)[1]}">${a}</span>`).join('')}<span class="tag">${U.esc(it.avail)}</span></div></div>
+        <span class="vat muted small">${U.esc(it.vat)}</span><span class="pr">CHF ${N.chf(it.price)}</span>
+        <label class="switch" title="Verfügbar"><input type="checkbox" ${it.on ? 'checked' : ''} aria-label="${U.esc(it.name)} verfügbar" data-sw="${U.esc(it.name)}"><i></i></label></div>`).join('')).join('');
+    document.querySelectorAll('[data-c]').forEach((b) => b.onclick = () => { cat = b.dataset.c; render(); });
+    document.querySelectorAll('.mi').forEach((m) => { m.onclick = (e) => { if (e.target.closest('.switch')) return; edit(all.find((x) => x.name === m.dataset.n)); }; m.onkeydown = (e) => { if (e.key === 'Enter') edit(all.find((x) => x.name === m.dataset.n)); }; });
+    document.querySelectorAll('[data-sw]').forEach((s) => s.onchange = () => { const it = all.find((x) => x.name === s.dataset.sw); it.on = s.checked; it.soldOut = !s.checked; U.toast(`${it.name} ist ${s.checked ? 'wieder verfügbar' : 'ausverkauft'}. Kasse und Tisch-QR sind aktualisiert.`); render(); });
+  }
+  function edit(it) {
+    it = it || { name: '', desc: '', price: 0, al: [], vat: 'Speisen', avail: 'Ganztags', on: true, cat: 'Hauptgänge' };
+    U.drawer({ title: it.name || 'Neues Gericht', sub: it.name ? `${U.esc(it.cat)} · zuletzt geändert gestern von Thomas Rechsteiner` : 'Erscheint nach dem Speichern an allen Kassen',
+      body: `<label class="field"><span>Name</span><input class="input" value="${U.esc(it.name)}" placeholder="Zum Beispiel Kalbsbratwurst mit Rösti"></label>
+        <label class="field"><span>Beschreibung</span><textarea class="input">${U.esc(it.desc)}</textarea><small>Gäste sehen diesen Text im Tisch-QR und im Online-Shop.</small></label>
+        <div class="grid g2" style="gap:12px"><label class="field"><span>Preis inkl. MWST</span><div class="input-wrap"><span class="pre">CHF</span><input class="input" value="${N.chf(it.price)}"></div></label>
+        <label class="field"><span>MWST-Klasse</span><select class="input">${N.vatClasses.map((v) => `<option ${v.name === it.vat ? 'selected' : ''}>${v.name}</option>`).join('')}</select></label></div>
+        <div class="note">${U.icon('info', 16)}<span>${U.esc((N.vatClasses.find((v) => v.name === it.vat) || N.vatClasses[0]).note)}</span></div>
+        <div class="field"><span>Allergene (Lebensmittelinformationsverordnung)</span><div class="algrid">${N.allergens.map((a) => `<label class="check"><input type="checkbox" ${it.al.includes(a[0]) ? 'checked' : ''}> ${a[0]} · ${a[1]}</label>`).join('')}</div></div>
+        <label class="field"><span>Verfügbar</span><select class="input">${['Ganztags', 'Mittag', 'Abend'].map((x) => `<option ${x === it.avail ? 'selected' : ''}>${x}</option>`).join('')}</select></label>
+        <label class="row" style="justify-content:space-between"><span class="ink strong small">Heute verfügbar</span><span class="switch"><input type="checkbox" ${it.on ? 'checked' : ''}><i></i></span></label>`,
+      foot: `<button class="btn" data-close>Abbrechen</button><button class="btn primary" id="sv">Speichern</button>`,
+      onOpen: (d) => { d.querySelector('#sv').onclick = () => { UI.closeDrawer(); U.toast('Gespeichert. An allen Kassen aktualisiert.'); }; } });
+  }
+  $('#new').onclick = () => edit(null);
+  $('#prev').onclick = () => U.toast('Gästeansicht öffnet im Prototyp nicht.');
+  render();
+});
+</script>
+</body>
+</html>

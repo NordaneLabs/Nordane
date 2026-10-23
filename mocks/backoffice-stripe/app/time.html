@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zeiterfassung · Nordane</title>
+<link rel="stylesheet" href="app.css">
+<script src="../assets/data.js"></script>
+<script src="../assets/dienstplan.js"></script>
+<script src="shell.js"></script>
+<style>
+  .steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; }
+  .steps > div { padding: 16px 20px; border-left: 1px solid var(--border); display: flex; gap: 12px; align-items: flex-start; }
+  .steps > div:first-child { border-left: 0; }
+  .steps .n { flex: none; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; font-size: 12.5px; font-weight: 650; background: var(--hover); color: var(--muted); }
+  .steps .n.ok { background: var(--green-bg); color: var(--green); }
+  .steps .n.cur { background: var(--primary); color: var(--on-primary); }
+  .steps b { display: block; color: var(--ink); font-size: 13.5px; font-weight: 600; }
+  .steps span { font-size: 12.5px; color: var(--muted); }
+  pre.csv { margin: 0; padding: 14px 16px; background: var(--sunken); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); font: 12px/1.65 'JetBrains Mono', monospace; color: var(--ink); overflow-x: auto; max-height: 260px; }
+  .neg { color: var(--red); }
+  .pos { color: var(--green); }
+  .tbl td.c { white-space: nowrap; }
+  .tbl .who span.nt { max-width: 300px; overflow: hidden; text-overflow: ellipsis; }
+  @media (max-width: 1240px) { .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } .steps > div:nth-child(3) { border-left: 0; } .steps > div:nth-child(n+3) { border-top: 1px solid var(--border); } .hide-md { display: none; } }
+</style>
+</head>
+<body data-page="time">
+<div class="app"><div class="main"><main class="content">
+  <div class="ph"><div><div class="crumb"><a href="plan.html">Personal</a> › <span>Zeiterfassung</span></div><h1>Zeiterfassung</h1><p>Das Team stempelt mit PIN an der Kasse oder am Küchenmonitor. Hier prüfen Sie Abweichungen und schliessen den Monat für den Lohn ab.</p></div>
+    <div class="acts"><div class="seg"><a href="#stempel" aria-current="page" id="s1">Stempelzeiten</a><a href="#close" id="s2">Monatsabschluss</a></div></div></div>
+  <div class="grid g4" id="kp"></div>
+  <div class="card" style="margin-top:20px" id="stempel"><div class="card-h"><div><h3>Stempelzeiten KW 43</h3><p>Do 22. und Fr 23. Oktober, live von der Kasse</p></div><div class="row"><select class="input" style="width:170px" aria-label="Filter"><option>Alle Einträge</option><option>Nur Abweichungen</option></select></div></div>
+    <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Person</th><th>Tag</th><th class="hide-md">Plan</th><th>Ein</th><th>Aus</th><th class="num">Pause</th><th class="num">Ist</th><th>Status</th><th></th></tr></thead><tbody id="pt"></tbody></table></div></div>
+  <div class="card" style="margin-top:20px"><div class="card-h"><div><h3>Korrekturanträge</h3><p>Vom Team aus der App oder durch die Schichtleitung</p></div></div><ul class="list" id="cor"></ul></div>
+
+  <div class="sec-t" id="close"><div><h2>Monatsabschluss Oktober 2026</h2><p>${'last'}</p></div><span id="mstate"></span></div>
+  <div class="card"><div class="steps" id="steps"></div></div>
+  <div class="card" style="margin-top:20px"><div class="card-h"><div><h3>Stundenübersicht Oktober</h3><p>Soll aus Pensum mal 22 Arbeitstage, Absenzen werden gutgeschrieben</p></div><button class="btn sm" id="pdf">${'file'}PDF für Team</button></div>
+    <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Person</th><th class="num">Soll</th><th class="num">Ist</th><th class="num">Absenzen</th><th class="num">Saldo Monat</th><th class="num">Saldo neu</th><th class="num">Nacht</th><th class="num">Sonntag</th><th class="num">Zuschläge</th><th class="num">13. ML</th></tr></thead><tbody id="mt"></tbody><tfoot id="mf"></tfoot></table></div></div>
+  <div class="card raised" style="margin-top:20px"><div class="card-h"><div><h3>Export an die Lohnbuchhaltung</h3><p id="fnote"></p></div><div class="seg" id="fmt" role="group" aria-label="Format"></div></div>
+    <pre class="csv" id="csv" tabindex="0" aria-label="Vorschau CSV"></pre>
+    <div class="card-f"><span id="fname" class="mono"></span><div class="row"><button class="btn" id="copy">${'copy'}Kopieren</button><button class="btn primary" id="dl">${'download'}CSV herunterladen</button></div></div></div>
+</main></div></div>
+<script>
+document.querySelectorAll('.card-h button, .card-f button').forEach((b) => { b.innerHTML = b.innerHTML.replace(/\$\{'(\w+)'\}/, (m, n) => UI.icon(n, 16)); });
+document.addEventListener('DOMContentLoaded', () => {
+  const D = DP, U = UI, $ = (s) => document.querySelector(s);
+  $('#close p').textContent = 'Zuletzt abgeschlossen: ' + D.month.lastClosed;
+  const punches = D.punches.map((p) => ({ ...p }));
+  const cors = D.corrections.map((c) => ({ ...c }));
+  const sp = { eingestempelt: ['Im Dienst', 'green'], fehlt: ['Nicht gestempelt', 'red'], ok: ['In Ordnung', ''], prüfen: ['Prüfen', 'amber'], korrigieren: ['Korrektur nötig', 'red'], genehmigt: ['Genehmigt', 'blue'] };
+  const ist = (p) => (p.inn && p.out ? D.h1(D.toH(p.out) - D.toH(p.inn) - p.brk / 60) : p.inn ? 'läuft' : '');
+  function render() {
+    const open = punches.filter((p) => ['fehlt', 'prüfen', 'korrigieren'].includes(p.state)).length + cors.filter((c) => c.state === 'offen').length;
+    const k = (l, v, s, cls) => `<div class="card kpi ${cls || ''}"><span class="k-l">${l}</span><span class="k-v">${v}</span><span class="k-s">${s}</span></div>`;
+    $('#kp').innerHTML = k('Jetzt im Dienst', punches.filter((p) => p.state === 'eingestempelt').length, 'Freitag, 19:42') + k('Nicht gestempelt', punches.filter((p) => p.state === 'fehlt').length, 'Lara Manser seit 17:00 eingeplant', punches.some((p) => p.state === 'fehlt') ? 'alert' : '') + k('Zu prüfen', open, 'Vor dem Monatsabschluss lösen', open ? 'warn' : '') + k('Iststunden Oktober', D.h1(D.monthRows.reduce((s, r) => s + r.ist, 0)), 'Alle 14 Personen');
+    $('#pt').innerHTML = punches.filter((p) => p.plan !== 'frei').map((p, i) => { const s = D.byId[p.p]; return `<tr><td><div class="who"><span class="avatar sm ${U.avClass(s)}">${s.initials}</span><div style="min-width:0"><b>${U.esc(s.name)}</b><span class="nt" title="${U.esc(p.note)}">${U.esc([p.src, p.note].filter(Boolean).join(' · ') || 'Keine Abweichung')}</span></div></div></td><td class="c">${p.day}</td><td class="hide-md c">${p.plan}</td><td class="c ink">${p.inn || '<span class="muted">fehlt</span>'}</td><td class="c ink">${p.out || (p.state === 'eingestempelt' ? '<span class="muted">läuft</span>' : '<span class="muted">fehlt</span>')}</td><td class="num">${p.brk} Min.</td><td class="num ink strong">${ist(p)}</td><td>${U.pill(sp[p.state][0], sp[p.state][1])}</td>
+      <td class="num">${p.state === 'prüfen' ? `<button class="btn sm" data-ok="${i}">Genehmigen</button>` : p.state === 'korrigieren' || p.state === 'fehlt' ? `<button class="btn sm" data-fix="${i}">Korrigieren</button>` : ''}</td></tr>`; }).join('');
+    $('#cor').innerHTML = cors.map((c, i) => { const s = D.byId[c.p]; return `<li><span class="avatar sm ${U.avClass(s)}">${s.initials}</span><div class="t"><b>${c.what} · ${U.esc(s.name)}, ${c.day}</b><span>${c.from} wird ${c.to} · «${U.esc(c.reason)}» · ${U.esc(c.by)}</span></div>${c.state === 'offen' ? `<button class="btn sm" data-cn="${i}">Ablehnen</button><button class="btn sm primary" data-cy="${i}">Genehmigen</button>` : U.pill('Genehmigt', 'blue')}</li>`; }).join('');
+    const stp = [[open ? 'cur' : 'ok', 'Stempel prüfen', open ? `${open} Einträge offen` : 'Alles geprüft'], ['ok', 'Abwesenheiten', '4 Personen, bestätigt'], ['ok', 'Zuschläge berechnet', 'Nacht 25 %, Sonntag 10 %'], [open ? '' : 'cur', 'Exportieren', open ? 'Nach dem Prüfen' : 'Bereit für bexio oder Abacus']];
+    $('#steps').innerHTML = stp.map((s, i) => `<div><span class="n ${s[0]}">${s[0] === 'ok' ? U.icon('check', 14, 2.2) : i + 1}</span><div><b>${s[1]}</b><span>${s[2]}</span></div></div>`).join('');
+    $('#mstate').innerHTML = open ? U.pill(`Offen, ${open} Punkte vor dem Abschluss`, 'amber') : U.pill('Bereit zum Abschluss', 'green');
+    bind();
+  }
+  function bind() {
+    document.querySelectorAll('[data-ok]').forEach((b) => b.onclick = () => { punches.filter((p) => p.plan !== 'frei')[+b.dataset.ok].state = 'genehmigt'; render(); U.toast('Genehmigt.'); });
+    document.querySelectorAll('[data-fix]').forEach((b) => b.onclick = () => {
+      const p = punches.filter((x) => x.plan !== 'frei')[+b.dataset.fix], s = D.byId[p.p];
+      U.drawer({ title: `Zeit korrigieren · ${s.name}`, sub: `${p.day}, Plan ${p.plan}`, body: `<div class="grid g2" style="gap:12px"><label class="field"><span>Ein</span><input class="input" type="time" value="${p.inn || p.plan.slice(0, 5)}"></label><label class="field"><span>Aus</span><input class="input" type="time" value="${p.out || p.plan.slice(-5)}"></label><label class="field"><span>Pause in Minuten</span><input class="input" type="number" value="${p.brk || 30}"></label></div><label class="field"><span>Grund</span><textarea class="input">${p.state === 'fehlt' ? 'Vergessen einzustempeln, laut Kasse ab 17:04 aktiv.' : 'Ausstempeln vergessen.'}</textarea><small>Wird im Protokoll mit Ihrem Namen gespeichert.</small></label>`, foot: '<button class="btn" data-close>Abbrechen</button><button class="btn primary" id="sv">Korrektur speichern</button>', onOpen: (d) => { d.querySelector('#sv').onclick = () => { p.state = 'genehmigt'; p.note = 'Korrigiert durch Corina Fässler'; if (!p.inn) p.inn = '17:04'; if (!p.out && p.day !== 'Fr 23.10.') p.out = '22:08'; U.closeDrawer(); render(); U.toast('Korrektur gespeichert.'); }; } });
+    });
+    document.querySelectorAll('[data-cy]').forEach((b) => b.onclick = () => { cors[+b.dataset.cy].state = 'genehmigt'; const n = punches.find((p) => p.state === 'korrigieren'); if (n) { n.state = 'genehmigt'; n.out = '22:08'; } render(); U.toast('Korrektur genehmigt.'); });
+    document.querySelectorAll('[data-cn]').forEach((b) => b.onclick = () => U.toast('Abgelehnt. Nico wird informiert.'));
+  }
+  // month table
+  let tot = { soll: 0, ist: 0, night: 0, sun: 0, sur: 0, th: 0 };
+  $('#mt').innerHTML = D.monthRows.map((r) => { const p = D.byId[r.p]; tot.soll += r.soll || 0; tot.ist += r.ist; tot.night += r.night; tot.sun += r.sun; tot.sur += r.surcharge; tot.th += r.thirteenth;
+    const sg = (v) => (v == null ? '<span class="muted">-</span>' : `<span class="${v < 0 ? 'neg' : v > 0 ? 'pos' : ''}">${v > 0 ? '+' : ''}${D.h1(v)}</span>`);
+    return `<tr><td><div class="who"><span class="avatar sm ${U.avClass(p)}">${p.initials}</span><div><b>${U.esc(p.name)}</b><span>${p.contract}${p.pct ? ' ' + p.pct + ' %' : ''}</span></div></div></td><td class="num">${r.soll == null ? '<span class="muted">-</span>' : D.h1(r.soll)}</td><td class="num ink">${D.h1(r.ist)}</td><td class="num">${r.abs ? `${r.abs[0]} ${r.abs[1]} T.` : '<span class="muted">-</span>'}</td><td class="num">${sg(r.saldo)}</td><td class="num strong">${sg(r.next)}</td><td class="num">${D.h1(r.night)}</td><td class="num">${D.h1(r.sun)}</td><td class="num">${D.chf(r.surcharge)}</td><td class="num">${D.chf(r.thirteenth)}</td></tr>`; }).join('');
+  $('#mf').innerHTML = `<tr><td>Total 14 Personen</td><td class="num">${D.h1(tot.soll)}</td><td class="num">${D.h1(tot.ist)}</td><td></td><td></td><td></td><td class="num">${D.h1(tot.night)}</td><td class="num">${D.h1(tot.sun)}</td><td class="num">CHF ${D.chf(tot.sur)}</td><td class="num">CHF ${D.chf(tot.th)}</td></tr>`;
+  let fmt = 'bexio';
+  function exp() {
+    const f = D.exportFormats.find((x) => x.k === fmt);
+    $('#fmt').innerHTML = D.exportFormats.map((x) => `<button aria-pressed="${x.k === fmt}" data-k="${x.k}">${x.name}</button>`).join('');
+    const csv = D.exportCsv(fmt), lines = csv.split('\n');
+    $('#csv').textContent = lines.slice(0, 14).join('\n') + (lines.length > 14 ? `\n… ${lines.length - 14} weitere Zeilen` : '');
+    $('#fname').textContent = f.file;
+    $('#fnote').textContent = f.note + ' · Trennzeichen ' + (fmt === 'bexio' ? 'Semikolon' : 'Komma') + ', UTF-8';
+    document.querySelectorAll('#fmt button').forEach((b) => b.onclick = () => { fmt = b.dataset.k; exp(); });
+    $('#dl').onclick = () => { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' })); a.download = f.file; a.click(); U.toast(`${f.file} heruntergeladen. ${lines.length - 1} Lohnzeilen.`); };
+    $('#copy').onclick = async () => { try { await navigator.clipboard.writeText(csv); U.toast('CSV kopiert.'); } catch (e) { U.toast('Kopieren nicht möglich. Bitte herunterladen.'); } };
+  }
+  $('#pdf').onclick = () => U.toast('Stundenblätter als PDF für alle 14 Personen erstellt.');
+  document.querySelectorAll('.seg a').forEach((a) => a.onclick = () => document.querySelectorAll('.seg a').forEach((x) => x === a ? x.setAttribute('aria-current', 'page') : x.removeAttribute('aria-current')));
+  render(); exp();
+});
+</script>
+</body>
+</html>

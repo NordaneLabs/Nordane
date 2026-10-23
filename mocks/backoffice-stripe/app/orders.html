@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bestellungen · Nordane</title>
+<link rel="stylesheet" href="app.css">
+<script src="../assets/data.js"></script>
+<script src="../assets/dienstplan.js"></script>
+<script src="shell.js"></script>
+<style>
+  .chips { display: flex; gap: 6px; flex-wrap: wrap; }
+  .chip { height: 30px; padding: 0 12px; border-radius: 15px; border: 1px solid var(--border-2); background: var(--card); font-size: 13px; font-weight: 500; color: var(--text); cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: background .15s, border-color .15s, color .15s; }
+  .chip:hover { border-color: var(--muted); color: var(--ink); }
+  .chip[aria-pressed='true'] { background: var(--primary-soft); border-color: var(--primary-line); color: var(--ink); }
+  .chip b { font-weight: 600; color: var(--muted); font-size: 12px; }
+  .chip[aria-pressed='true'] b { color: var(--blue); }
+  .tb { display: flex; gap: 10px; align-items: center; justify-content: space-between; padding: 14px 20px; flex-wrap: wrap; }
+  .tb .input-wrap { width: 260px; }
+  .items { color: var(--muted); font-size: 12.5px; max-width: 280px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+  .pager { display: flex; gap: 6px; align-items: center; }
+  @media (max-width: 1240px) { .col-items { display: none; } }
+  @media (max-width: 720px) { .col-ch, .col-pay { display: none; } .tb .input-wrap { width: 100%; } }
+</style>
+</head>
+<body data-page="orders">
+<div class="app"><div class="main"><main class="content">
+  <div class="ph">
+    <div><div class="crumb">Heute, Freitag 23. Oktober</div><h1>Bestellungen</h1><p>Alle Kanäle an einem Ort: Kasse, Tisch-QR, Abholung und Lieferung.</p></div>
+    <div class="acts"><button class="btn" id="exp">Exportieren</button><a class="btn primary" href="order.html?id=1287">Neueste öffnen</a></div>
+  </div>
+  <div class="grid g4" id="kp"></div>
+  <div class="card" style="margin-top:20px">
+    <div class="tb"><div class="chips" id="chips" role="group" aria-label="Status filtern"></div>
+      <div class="row"><select class="input" id="ch" aria-label="Kanal" style="width:160px"><option value="">Alle Kanäle</option><option>Kasse</option><option>Tisch-QR</option><option>Abholung</option><option>Lieferung</option></select>
+      <label class="input-wrap ic"><span class="sr-only">Suchen</span><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="9" cy="9" r="5.5"/><path d="m13.2 13.2 3.6 3.6"/></svg><input class="input" id="qq" placeholder="Nummer, Tisch oder Gast"></label></div></div>
+    <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Bestellung</th><th>Zeit</th><th class="col-ch">Kanal</th><th>Ort</th><th class="col-items">Positionen</th><th class="col-pay">Zahlung</th><th>Status</th><th class="num">Betrag</th></tr></thead><tbody id="rows"></tbody></table></div>
+    <div class="card-f"><span id="cnt"></span><div class="pager"><button class="btn sm" disabled>Zurück</button><button class="btn sm" id="nx">Weiter</button></div></div>
+  </div>
+</main></div></div>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const N = NORDANE, U = UI, $ = (s) => document.querySelector(s);
+  const st = { 'neu': ['Neu', 'blue'], 'in Küche': ['In der Küche', 'violet'], 'bereit': ['Bereit', 'green'], 'verspätet': ['Verspätet', 'red'], 'offen': ['Offen', 'amber'], 'bezahlt': ['Bezahlt', ''], 'storniert': ['Storniert', ''], 'rückerstattet': ['Rückerstattet', 'amber'] };
+  const F = [['all', 'Alle', () => true], ['act', 'Braucht Aktion', (o) => !!o.action], ['run', 'Laufend', (o) => ['neu', 'in Küche', 'bereit', 'verspätet'].includes(o.status)], ['open', 'Offen', (o) => o.status === 'offen'], ['paid', 'Bezahlt', (o) => o.status === 'bezahlt'], ['void', 'Storniert und erstattet', (o) => ['storniert', 'rückerstattet'].includes(o.status)]];
+  let f = 'all';
+  const k = (l, v, s) => `<div class="card kpi"><span class="k-l">${l}</span><span class="k-v">${v}</span><span class="k-s">${s}</span></div>`;
+  $('#kp').innerHTML = k('Bestellungen heute', N.day.ordersCount, '18 hier angezeigt, Rest im Archiv') + k('Braucht Aktion', N.needsAction.length, 'Bestätigen, senden, abholen') + k('Ø Zubereitung', N.day.avgPrepMin + ' Min.', 'Ziel unter 18 Min.') + k('Rückerstattet', 'CHF 26.00', '1 Bestellung, durch C. Fässler');
+  function render() {
+    const qv = $('#qq').value.toLowerCase(), ch = $('#ch').value;
+    $('#chips').innerHTML = F.map(([id, l, fn]) => `<button class="chip" aria-pressed="${f === id}" data-f="${id}">${l}<b>${N.orders.filter(fn).length}</b></button>`).join('');
+    const rows = N.orders.filter(F.find((x) => x[0] === f)[2]).filter((o) => !ch || o.channel === ch).filter((o) => !qv || (o.id + ' ' + o.where + ' ' + o.guest).toLowerCase().includes(qv));
+    $('#rows').innerHTML = rows.map((o) => `<tr class="click" data-id="${o.id}" tabindex="0"><td><span class="id">#${o.id}</span></td><td>${o.time}</td><td class="col-ch">${U.esc(o.channel)}</td><td class="ink">${U.esc(o.where)}</td>
+      <td class="col-items"><span class="items">${o.items.map((i) => i[1] + '× ' + i[0]).join(', ')}</span></td><td class="col-pay">${o.tender || '<span class="muted">noch offen</span>'}</td>
+      <td>${U.pill(st[o.status][0], st[o.status][1])}${o.action ? ` <span class="muted xs">${U.esc(o.action)}</span>` : ''}</td><td class="num ink strong">CHF ${N.chf(o.total)}</td></tr>`).join('') ||
+      `<tr><td colspan="8"><div class="empty"><div class="ill">${U.icon('search', 26)}</div><h3>Keine Bestellungen gefunden</h3><p>Passen Sie die Suche oder den Filter an.</p><div class="acts"><button class="btn" id="reset">Filter zurücksetzen</button></div></div></td></tr>`;
+    $('#cnt').textContent = `${rows.length} von ${N.day.ordersCount} Bestellungen · Summe CHF ${N.chf(rows.reduce((s, o) => s + o.total, 0))}`;
+    document.querySelectorAll('[data-f]').forEach((b) => b.onclick = () => { f = b.dataset.f; render(); });
+    document.querySelectorAll('tr[data-id]').forEach((r) => { const go = () => location.href = 'order.html?id=' + r.dataset.id + '&theme=' + document.documentElement.dataset.theme; r.onclick = go; r.onkeydown = (e) => { if (e.key === 'Enter') go(); }; });
+    const rs = $('#reset'); if (rs) rs.onclick = () => { f = 'all'; $('#qq').value = ''; $('#ch').value = ''; render(); };
+  }
+  $('#qq').oninput = render; $('#ch').onchange = render;
+  $('#exp').onclick = () => U.toast('CSV mit 63 Bestellungen wird erstellt.');
+  $('#nx').onclick = () => U.toast('Seite 2 von 4: im Prototyp nur Seite 1.');
+  render();
+});
+</script>
+</body>
+</html>

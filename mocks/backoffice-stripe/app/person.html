@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Team · Nordane</title>
+<link rel="stylesheet" href="app.css">
+<script src="../assets/data.js"></script>
+<script src="../assets/dienstplan.js"></script>
+<script src="shell.js"></script>
+<style>
+  .prof { padding: 22px 24px; display: flex; gap: 18px; align-items: center; flex-wrap: wrap; }
+  .prof .t { flex: 1; min-width: 240px; }
+  .prof h1 { font-size: 24px; }
+  .prof .meta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; align-items: center; }
+  .prof .meta span.m { color: var(--muted); font-size: 13px; }
+  .av { display: grid; grid-template-columns: 90px repeat(7, minmax(0, 1fr)); gap: 4px; font-size: 12px; }
+  .av .h { color: var(--muted); text-align: center; font-weight: 600; padding-bottom: 4px; }
+  .av .l { color: var(--muted); display: flex; align-items: center; }
+  .av i { height: 30px; border-radius: 6px; display: grid; place-items: center; font-style: normal; font-weight: 600; font-size: 11px; }
+  .av i.y { background: var(--green-bg); color: var(--green); }
+  .av i.p { background: var(--amber-bg); color: var(--amber); }
+  .av i.n { background: var(--hover); color: var(--muted); background-image: var(--hatch); }
+  .brk-t td { padding-top: 9px; padding-bottom: 9px; }
+  .roles { display: flex; flex-direction: column; }
+  .roles label { display: flex; align-items: center; justify-content: space-between; padding: 10px 20px; border-top: 1px solid var(--border); gap: 10px; }
+  .roles .sw { display: inline-flex; align-items: center; gap: 10px; color: var(--ink); font-weight: 500; }
+  .roles .sw i { width: 26px; height: 22px; border-radius: 6px; display: grid; place-items: center; font-size: 10.5px; font-weight: 700; font-style: normal; }
+  .ch { height: 170px; }
+</style>
+</head>
+<body data-page="person">
+<div class="app"><div class="main"><main class="content" id="c"></main></div></div>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const D = DP, U = UI, N = NORDANE;
+  const p = D.byId[U.q.get('id')] || D.byId.mz;
+  const R = D.compute(), x = R.people[p.id];
+  const mr = D.monthRows.find((r) => r.p === p.id);
+  const cat = D.lgav.cats.find((c) => c.k === p.cat);
+  const hourly = p.contract === 'Stundenlohn';
+  const roleTone = { lead: 'r-lead', service: 'r-service', bar: 'r-bar', kitchen: 'r-kitchen', dish: 'r-dish' };
+  // availability: rows Morgen / Mittag / Abend; y = verfügbar, p = eingeschränkt, n = nicht
+  const AV = { mz: ['nnnyny', 'pnpnyy', 'yyyyyy'], lb: ['nnnnny', 'nyyyyy', 'nyyyyy'], ey: ['nyyyyy', 'nyyyyy', 'nppppn'], dh: ['nnyyyn', 'nnyyyn', 'nnyyyn'], ab: ['nynyyy', 'nynyyy', 'nynyyp'], lm: ['nyyyyy', 'nyyyyy', 'nyyyyp'] };
+  const av = (AV[p.id] || ['nyyyyy', 'nyyyyy', 'nyyyyy']).map((r) => 'n' + r);
+  const lbl = { y: 'Ja', p: 'Teils', n: 'Nein' };
+  const up = R.people[p.id].shifts.slice().sort((a, b) => a.d - b.d);
+  const bal = [p.balance - 6, p.balance - 3.5, p.balance - 4, p.balance - 1.5, p.balance - 2, p.balance];
+  const minLine = cat.min ? (hourly ? `CHF ${D.chf(cat.min / D.lgav.monthHours)} pro Std. (aus CHF ${D.chf0(cat.min)} pro Monat)` : `CHF ${D.chf0(cat.min)} pro Monat bei 100 %`) : 'Lehrlingslohn gemäss Lehrvertrag';
+  const pay = hourly ? `CHF ${D.chf(p.hourly)} pro Std. inkl. Zuschläge` : `CHF ${D.chf0(p.monthly)} pro Monat, 13 Mal`;
+  const breakdown = hourly ? `<table class="tbl brk-t"><tbody>
+      <tr><td>Grundlohn</td><td class="num ink">CHF ${D.chf(p.base)}</td></tr>
+      <tr><td>Ferienentschädigung 5 Wochen, ${D.lgav.holidayPct} %</td><td class="num">CHF ${D.chf(p.base * D.lgav.holidayPct / 100)}</td></tr>
+      <tr><td>Feiertagsentschädigung 6 Tage, ${D.lgav.publicHolidayPct} %</td><td class="num">CHF ${D.chf(p.base * D.lgav.publicHolidayPct / 100)}</td></tr>
+      <tr><td>13. Monatslohn, ${D.lgav.thirteenthPct} %</td><td class="num">CHF ${D.chf(p.base * D.lgav.thirteenthPct / 100)}</td></tr></tbody>
+      <tfoot><tr><td>Stundenlohn brutto</td><td class="num">CHF ${D.chf(p.hourly)}</td></tr></tfoot></table>`
+    : `<table class="tbl brk-t"><tbody><tr><td>Monatslohn brutto</td><td class="num ink">CHF ${D.chf(p.monthly)}</td></tr><tr><td>13. Monatslohn, anteilig pro Monat</td><td class="num">CHF ${D.chf(p.monthly / 12)}</td></tr><tr><td>Rückstellung Oktober</td><td class="num">CHF ${D.chf(mr.thirteenth)}</td></tr></tbody><tfoot><tr><td>Kostensatz pro Std. für die Planung</td><td class="num">CHF ${D.chf(p.rate)}</td></tr></tfoot></table>`;
+  document.getElementById('c').innerHTML = `
+  <div class="ph" style="padding-bottom:16px"><div><div class="crumb"><a href="plan.html">Personal</a> › <span>Team</span></div></div>
+    <div class="acts"><label class="sr-only" for="sw">Person wechseln</label><select class="input" id="sw" style="width:320px">${D.staff.map((s) => `<option value="${s.id}" ${s === p ? 'selected' : ''}>${U.esc(s.name)} · ${U.esc(s.title)}</option>`).join('')}</select></div></div>
+  <div class="card raised prof"><span class="avatar xl ${U.avClass(p)}">${p.initials}</span>
+    <div class="t"><h1>${U.esc(p.name)}</h1><div class="meta"><span class="m">${U.esc(p.title)}</span>${U.pill(p.contract, 'blue')}${p.pct ? U.pill(p.pct + ' %', '') : ''}${p.student ? U.pill('Studierende', 'violet') : ''}${p.minor ? U.pill('Jugendlich, 17', 'amber') : ''}<span class="m">Seit ${p.since} · ${p.phone}</span></div></div>
+    <div class="row wrap"><button class="btn" id="msg">${U.icon('chat', 16)}Nachricht</button><a class="btn" href="plan.html">${U.icon('calendar', 16)}Im Plan zeigen</a><button class="btn primary" id="ed">${U.icon('edit', 16)}Bearbeiten</button></div></div>
+  <div class="grid g4" style="margin-top:20px">
+    <div class="card kpi"><span class="k-l">KW 44 geplant</span><span class="k-v">${D.h1(x.hours)} <small>Std.</small></span><span class="k-s">${p.target ? 'Soll ' + D.h1(p.target) + ' Std.' : p.maxWeek ? 'Maximum ' + p.maxWeek + ' Std. im Semester' : 'Stundenlohn'}</span><div class="meter ${p.maxWeek && x.hours > p.maxWeek ? 'warn' : ''}" style="margin-top:10px"><i style="width:${Math.min(100, x.hours / (p.target || p.maxWeek || 42) * 100)}%"></i></div></div>
+    <div class="card kpi"><span class="k-l">Stundensaldo</span><span class="k-v">${mr.next == null ? '<small>nicht geführt</small>' : (mr.next > 0 ? '+' : '') + D.h1(mr.next) + ' <small>Std.</small>'}</span><span class="k-s">${mr.next == null ? 'Stundenlohn: alle Stunden werden ausbezahlt' : 'nach Oktober, Vormonat ' + D.h1(mr.prev)}</span></div>
+    <div class="card kpi"><span class="k-l">Ferien 2026</span><span class="k-v">${hourly ? '<small>im Lohn</small>' : p.holidayLeft + ' <small>Tage übrig</small>'}</span><span class="k-s">${hourly ? '10.64 % mit jedem Lohn ausbezahlt' : 'Anspruch 25 Tage, L-GAV Art. 17'}</span></div>
+    <div class="card kpi"><span class="k-l">Oktober</span><span class="k-v">${D.h1(mr.ist)} <small>Std.</small></span><span class="k-s">Nacht ${D.h1(mr.night)} · Sonntag ${D.h1(mr.sun)} Std.</span></div>
+  </div>
+  <div class="grid g-main" style="margin-top:20px">
+    <div class="stack">
+      <div class="card"><div class="card-h"><div><h3>Vertrag und Lohn</h3><p>Geprüft gegen L-GAV ${D.lgav.year} (Demo-Werte)</p></div>${p.minOk ? U.pill('Mindestlohn eingehalten', 'green') : U.pill('Unter Mindestlohn', 'red')}</div>
+        <div class="card-b"><dl class="dl"><dt>Vertragsart</dt><dd>${p.contract}${p.pct ? ', Pensum ' + p.pct + ' %' : ''}</dd><dt>Wochensoll</dt><dd>${p.target ? D.h1(p.target) + ' Std. (42 Std. bei 100 %)' : p.maxWeek ? 'Kein Soll, max. ' + p.maxWeek + ' Std. pro Woche' : 'Kein Soll'}</dd>
+          <dt>L-GAV-Kategorie</dt><dd>${cat.k} · ${U.esc(cat.name)}</dd><dt>Mindestlohn</dt><dd>${minLine}</dd><dt>Lohn</dt><dd>${pay}</dd><dt>Eintritt</dt><dd>${p.since}</dd></dl></div>
+        ${breakdown}</div>
+      <div class="card"><div class="card-h"><div><h3>Verfügbarkeit</h3><p>${U.esc((p.avail && p.avail.note) || 'Keine Einschränkungen hinterlegt')}</p></div><button class="btn sm" id="avb">Ändern</button></div>
+        <div class="card-b"><div class="av"><span></span>${D.days.map((d) => `<span class="h">${d.short}</span>`).join('')}
+          ${['Morgen bis 11', 'Mittag 11 bis 17', 'Abend ab 17'].map((l, r) => `<span class="l">${l}</span>${av[r].split('').map((v, i) => D.days[i].closed ? '<i class="n" title="Ruhetag">zu</i>' : `<i class="${v}" title="${lbl[v]}">${lbl[v]}</i>`).join('')}`).join('')}</div></div></div>
+      <div class="card"><div class="card-h"><div><h3>Stundensaldo</h3><p>Monatsende, Plus heisst Überstunden zum Kompensieren</p></div></div><div class="card-b"><div class="ch" id="bal"></div></div></div>
+    </div>
+    <div class="stack">
+      <div class="card"><div class="card-h"><h3>Rollen und Fähigkeiten</h3></div><div class="roles">${Object.keys(D.roles).map((k) => `<label><span class="sw"><i class="shift ${roleTone[k]}" style="box-shadow:none;padding:0;cursor:default">${D.roles[k].code}</i>${D.roles[k].name}</span><span class="switch"><input type="checkbox" ${p.skills.includes(k) ? 'checked' : ''} aria-label="${D.roles[k].name}"><i></i></span></label>`).join('')}</div></div>
+      <div class="card"><div class="card-h"><h3>Schichten KW 44</h3><span class="muted small">${up.length} Schichten</span></div><ul class="list">${up.map((s) => `<li><span class="shift ${roleTone[s.role]}" style="padding:4px 8px;cursor:default"><span class="code">${D.roles[s.role].code}</span></span><div class="t"><b>${D.days[s.d].short} ${D.days[s.d].date} · ${s.s} bis ${s.e}</b><span>${D.h1(s.hours)} Std. · CHF ${D.chf0(s.cost)}</span></div></li>`).join('') || '<li><div class="t"><b>Keine Schichten</b><span>Diese Woche frei</span></div></li>'}</ul></div>
+      <div class="card"><div class="card-h"><h3>Abwesenheiten</h3><button class="btn sm" id="abs">${U.icon('plus', 14)}Erfassen</button></div><ul class="list">${(p.absences || []).map((a) => `<li><span class="ico-sq violet">${U.icon(a.kind === 'Krank' ? 'sick' : 'plane', 16)}</span><div class="t"><b>${a.kind} ${a.from} bis ${a.to}</b><span>${a.state}</span></div></li>`).join('')}${D.requests.filter((r) => r.p === p.id).map((r) => `<li><span class="ico-sq blue">${U.icon('inbox', 16)}</span><div class="t"><b>${r.kind}: ${r.when}</b><span>Anfrage ${r.state}</span></div></li>`).join('') || (!(p.absences || []).length ? '<li><div class="t"><b>Keine Abwesenheiten</b><span>In den nächsten 8 Wochen</span></div></li>' : '')}</ul></div>
+      <div class="card"><div class="card-h"><h3>Dokumente</h3><button class="btn sm" id="up">Hochladen</button></div><ul class="list">${p.docs.map((d) => `<li><span class="ico-sq">${U.icon('file', 16)}</span><div class="t"><b>${U.esc(d[0])}</b><span>${d[1]} · nur Geschäftsführung</span></div><button class="btn sm ghost" aria-label="${U.esc(d[0])} herunterladen" data-dl>${U.icon('download', 15)}</button></li>`).join('')}</ul></div>
+    </div>
+  </div>`;
+  U.area(document.getElementById('bal'), { labels: ['Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober'], series: [{ name: 'Saldo', vals: bal, kind: 'area' }], h: 170, fmt: (v, t) => (t ? D.h1(v) + ' Std.' : Math.round(v)) });
+  document.getElementById('sw').onchange = (e) => { location.href = 'person.html?id=' + e.target.value + '&theme=' + document.documentElement.dataset.theme; };
+  document.getElementById('msg').onclick = () => U.toast(`Nachricht an ${p.name.split(' ')[0]} geöffnet.`);
+  document.getElementById('ed').onclick = () => U.toast('Bearbeiten: Vertrag und Lohn nur mit Recht Geschäftsführung.');
+  document.getElementById('avb').onclick = () => U.toast('Verfügbarkeit kann auch die Person selbst in der App pflegen.');
+  document.getElementById('abs').onclick = () => U.toast('Abwesenheit erfassen: Ferien, Krank, Unfall, Militär, Weiterbildung.');
+  document.getElementById('up').onclick = () => U.toast('Dokument hochladen: PDF oder Foto.');
+  document.querySelectorAll('[data-dl]').forEach((b) => b.onclick = () => U.toast('Download gestartet.'));
+});
+</script>
+</body>
+</html>

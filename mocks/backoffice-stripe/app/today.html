@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Übersicht · Nordane</title>
+<link rel="stylesheet" href="app.css">
+<script src="../assets/data.js"></script>
+<script src="../assets/dienstplan.js"></script>
+<script src="shell.js"></script>
+<style>
+  .hero-c { padding: 20px 22px 14px; }
+  .hero-c .big { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; margin: 4px 0 2px; }
+  .hero-c .big b { font-size: 34px; color: var(--ink); letter-spacing: -.025em; font-weight: 600; }
+  .hero-c .big small { color: var(--muted); font-size: 15px; }
+  .ch { margin-top: 18px; }
+  .chan .bar { height: 8px; border-radius: 4px; background: var(--hover); overflow: hidden; margin-top: 6px; }
+  [data-theme='dark'] .chan .bar { background: var(--border); }
+  .chan .bar i { display: block; height: 100%; border-radius: 4px; background: var(--primary-line); }
+  .chan li { display: block; }
+  .live { display: inline-flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--green); font-weight: 600; }
+  .live::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--green-dot); box-shadow: 0 0 0 3px var(--green-bg); }
+</style>
+</head>
+<body data-page="today">
+<div class="app"><div class="main"><main class="content">
+  <div class="ph">
+    <div><div class="crumb">Freitag, 23. Oktober 2026 · 19:42</div><h1>Guten Abend, Corina</h1><p>Der Abendservice läuft. 31 Gäste sitzen, 6 Bons in der Küche, im Schnitt 14 Minuten pro Gericht.</p></div>
+    <div class="acts"><span class="live">Live</span><a class="btn" href="money.html">${'bank'}Z-Bericht gestern</a><a class="btn primary" href="plan.html">${'calendar'}Wochenplan KW 44</a></div>
+  </div>
+  <div class="grid g4" id="kpis"></div>
+  <div class="grid g-main" style="margin-top:20px">
+    <div class="card hero-c">
+      <div class="row between wrap"><div><span class="muted small strong">Umsatz pro Stunde</span><div class="big"><b id="tot"></b><small>bis 19:42</small><span id="tdelta"></span></div></div>
+        <div class="legend"><span><i></i>Heute</span><span><i class="d"></i>Freitag, 16. Oktober</span><span><i class="c" style="height:8px;width:2px"></i>Jetzt</span></div></div>
+      <div class="ch" id="chart"></div>
+    </div>
+    <div class="card"><div class="card-h"><div><h3>Braucht Ihre Aufmerksamkeit</h3><p>Sortiert nach Dringlichkeit</p></div></div><ul class="list" id="attn"></ul></div>
+  </div>
+  <div class="grid g3" style="margin-top:20px">
+    <div class="card"><div class="card-h"><div><h3>Jetzt im Dienst</h3><p>Gestempelt an Kasse und Küchenmonitor</p></div><a class="btn sm" href="time.html">Zeiterfassung</a></div><ul class="list" id="now"></ul></div>
+    <div class="card"><div class="card-h"><div><h3>Letzte Bestellungen</h3><p>Live aus allen Kanälen</p></div><a class="btn sm" href="orders.html">Alle</a></div><ul class="list" id="last"></ul></div>
+    <div class="card"><div class="card-h"><div><h3>Kanäle heute</h3><p>Anteil am Umsatz</p></div></div><ul class="list chan" id="chan"></ul>
+      <div class="card-f"><span>Personalquote heute</span><b class="ink" id="lq"></b></div></div>
+  </div>
+</main></div></div>
+<script>
+document.querySelectorAll('.acts a').forEach((a) => { a.innerHTML = a.innerHTML.replace(/\$\{'(\w+)'\}/, (m, n) => UI.icon(n, 16)); });
+document.addEventListener('DOMContentLoaded', () => {
+  const N = NORDANE, D = DP, U = UI, $ = (s) => document.querySelector(s);
+  const cum = (a) => { let s = 0; return a.map((v) => (v == null ? null : (s += v))); };
+  const ct = cum(N.salesToday), cl = cum(N.salesLastFri);
+  const ordersH = [6, 21, 17, 5, 2, 1, 4, 11, 19, null, null, null], ordersL = [5, 22, 15, 6, 2, 2, 5, 13, 22, 21, 14, 6];
+  const d = N.day;
+  const delta = (v) => `<span class="delta ${v >= 0 ? 'up' : 'down'}">${U.icon(v >= 0 ? 'up' : 'down', 12, 2)}${Math.abs(v).toFixed(1)} %</span>`;
+  const kpi = (l, v, sub, sp, ref) => `<div class="card kpi"><span class="k-l">${l}</span><span class="k-v">${v}</span><span class="k-s">${sub}</span>${U.spark(sp, { ref })}</div>`;
+  $('#kpis').innerHTML = [
+    kpi('Umsatz brutto', `<small>CHF</small> ${N.chf0(d.gross)}`, `${delta(d.vsLastFri)} gegenüber Fr 16.10. um diese Zeit`, ct, cl),
+    kpi('Bestellungen', d.ordersCount, `Ø CHF ${N.chf(d.avgTicket)} pro Bestellung`, ordersH, ordersL),
+    kpi('Gäste', d.covers, `Ø CHF ${N.chf(d.avgPerCover)} pro Gast · ${d.seatedGuests} sitzen jetzt`, [8, 30, 26, 6, 2, 1, 3, 17, 25, null, null, null], [7, 32, 24, 7, 3, 2, 4, 19, 30, 26, 14, 5]),
+    kpi('Personalquote heute', `${d.labourPct.toFixed(1)} %`, `CHF ${N.chf0(d.labourCostToday)} Personal · Ziel unter 32 %`, [24, 22, 21, 23, 22, 21, 21], null),
+  ].join('');
+  $('#tot').textContent = 'CHF ' + N.chf(d.gross);
+  $('#tdelta').innerHTML = delta(d.vsLastFri);
+  U.area($('#chart'), { labels: N.hours.map((h) => h + ':00'), series: [{ name: 'Fr 16.10.', vals: N.salesLastFri, kind: 'dash' }, { name: 'Heute', vals: N.salesToday, kind: 'area' }], h: 300, fmt: (v, t) => (t ? 'CHF ' + N.chf(v) : N.chf0(v)), markIdx: 8 + 42 / 60 });
+
+  const attn = [
+    ...N.needsAction.map((o) => ({ tone: o.status === 'verspätet' ? 'red' : 'blue', ic: o.status === 'verspätet' ? 'alert' : 'receipt', t: `${o.action} · #${o.id}`, s: `${o.where}, ${o.status === 'verspätet' ? o.late + ' Min. verspätet' : 'CHF ' + N.chf(o.total)}`, href: `order.html?id=${o.id}` })),
+    { tone: 'amber', ic: 'calendar', t: 'KW 44: 4 offene Schichten', s: '3 Regelverstösse vor dem Veröffentlichen', href: 'plan.html' },
+    { tone: 'amber', ic: 'clock', t: 'Lara Manser nicht eingestempelt', s: 'Erfasst seit 17:04 Bestellungen', href: 'time.html' },
+      ];
+  $('#attn').innerHTML = attn.map((a) => `<li><span class="ico-sq ${a.tone}">${U.icon(a.ic, 16)}</span><div class="t"><b>${U.esc(a.t)}</b><span>${U.esc(a.s)}</span></div><a class="btn sm ghost" href="${a.href}" aria-label="Öffnen: ${U.esc(a.t)}">${U.icon('right', 14)}</a></li>`).join('');
+
+  const nowP = D.punches.filter((p) => p.day === 'Fr 23.10.' && (p.state === 'eingestempelt' || p.state === 'fehlt'));
+  $('#now').innerHTML = nowP.map((p) => { const s = D.byId[p.p]; return `<li><span class="avatar sm ${U.avClass(s)}">${s.initials}</span><div class="t"><b>${U.esc(s.name)}</b><span>${p.inn ? 'seit ' + p.inn + ' · ' + U.esc(p.src) : 'Plan ' + p.plan}</span></div>${p.state === 'fehlt' ? U.pill('Nicht gestempelt', 'amber') : U.pill('Im Dienst', 'green')}</li>`; }).join('');
+  const sc = { 'neu': 'blue', 'in Küche': 'violet', 'bereit': 'green', 'verspätet': 'red', 'offen': 'amber', 'bezahlt': '', 'storniert': '', 'rückerstattet': '' };
+  $('#last').innerHTML = N.orders.slice(0, 6).map((o) => `<li><span class="ico-sq">${U.icon('receipt', 16)}</span><div class="t"><b><span class="mono">#${o.id}</span> · ${U.esc(o.where)}</b><span>${o.time} · ${U.esc(o.channel)}</span></div><div style="text-align:right"><b class="ink small" style="display:block">CHF ${N.chf(o.total)}</b>${U.pill(o.status.charAt(0).toUpperCase() + o.status.slice(1), sc[o.status])}</div></li>`).join('');
+  const ch = {}; N.orders.forEach((o) => { ch[o.channel] = (ch[o.channel] || 0) + o.total; });
+  const tot = Object.values(ch).reduce((a, b) => a + b, 0);
+  $('#chan').innerHTML = Object.entries(ch).sort((a, b) => b[1] - a[1]).map(([k, v]) => `<li><div class="row between"><b class="ink small">${k}</b><span class="small">${(v / tot * 100).toFixed(0)} % · CHF ${N.chf0(v / tot * d.gross)}</span></div><div class="bar"><i style="width:${v / tot * 100}%"></i></div></li>`).join('');
+  $('#lq').textContent = `${d.labourPct.toFixed(1)} % von CHF ${N.chf0(d.forecastClose)} Prognose`;
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Komponenten · Nordane</title>
+<link rel="stylesheet" href="app.css">
+<script src="../assets/data.js"></script>
+<script src="../assets/dienstplan.js"></script>
+<script src="shell.js"></script>
+<style>
+  .sw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
+  .sw-grid > div { padding: 18px 20px; background: var(--canvas); color: var(--text); }
+  .sw-grid h4 { font-size: 13px; margin-bottom: 12px; }
+  .sws { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+  .sws div { font-size: 11.5px; color: var(--muted); }
+  .sws i { display: block; height: 44px; border-radius: 8px; margin-bottom: 6px; border: 1px solid var(--border); }
+  .sws b { display: block; color: var(--ink); font-weight: 600; font-size: 12px; }
+  .demo { padding: 20px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .demo.col { flex-direction: column; align-items: stretch; }
+  .ts div { display: flex; align-items: baseline; gap: 20px; padding: 8px 0; border-top: 1px solid var(--border); }
+  .ts div:first-child { border-top: 0; }
+  .ts span.m { width: 150px; flex: none; font-size: 12px; color: var(--muted); }
+  .static { position: static !important; transform: none !important; opacity: 1 !important; visibility: visible !important; animation: none !important; }
+  .blocks { display: grid; grid-template-columns: repeat(5, minmax(0, 140px)); gap: 10px; }
+  .lab { font-size: 12px; color: var(--muted); margin-top: 6px; }
+  .cov-demo { width: 260px; }
+</style>
+</head>
+<body data-page="components">
+<div class="app"><div class="main"><main class="content">
+  <div class="ph"><div><div class="crumb">System</div><h1>Komponenten</h1><p>Variante 2: hell zuerst, grosszügig, Karten mit weicher Tiefe, Nordane-Eisblau als einzige Primärfarbe. Alles hier ist echt gerendert, in hell und dunkel.</p></div></div>
+  <div id="c" class="stack"></div>
+</main></div></div>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const D = DP, U = UI, N = NORDANE;
+  const toks = [['Canvas', '--canvas'], ['Card', '--card'], ['Border', '--border'], ['Ink', '--ink'], ['Text', '--text'], ['Muted', '--muted'], ['Primary', '--primary'], ['Coral', '--coral']];
+  const roles = ['lead', 'service', 'bar', 'kitchen', 'dish'];
+  const sw = (th) => `<div data-theme="${th}"><h4>${th === 'light' ? 'Hell' : 'Dunkel'}</h4><div class="sws">${toks.map((t) => `<div><i style="background:var(${t[1]})"></i><b>${t[0]}</b><span class="mono">${t[1]}</span></div>`).join('')}</div>
+    <h4 style="margin-top:16px">Rollen</h4><div class="sws" style="grid-template-columns:repeat(5,1fr)">${roles.map((r) => `<div><i style="background:var(--r-${r}-bg);box-shadow:inset 3px 0 0 var(--r-${r})"></i><b>${D.roles[r].code} ${D.roles[r].name}</b></div>`).join('')}</div></div>`;
+  const sec = (t, p, body) => `<div class="card"><div class="card-h"><div><h3>${t}</h3>${p ? `<p>${p}</p>` : ''}</div></div>${body}</div>`;
+  const sh = (r, extra, open, label) => `<div><div class="shift r-${r} ${extra || ''} ${open ? 'open' : ''}" style="cursor:default"><span class="tm">17:00-23:30</span><span class="mt"><span class="code">${D.roles[r].code}</span>6.3 h${open ? ' · offen' : ''}</span>${extra && extra.includes('conflict') ? `<span class="cbadge" style="position:absolute;right:5px;bottom:5px">${U.icon('alert', 11, 2.2)}</span>` : ''}</div><div class="lab">${label}</div></div>`;
+  const req = D.requests[0], rp = D.byId[req.p];
+  const slots = (pattern) => pattern.split('').map((c) => `<i class="${{ g: 'gap', o: 'over', x: 'off', k: '' }[c]}"></i>`).join('');
+  document.getElementById('c').innerHTML =
+    sec('Farben', 'Tokens als CSS-Variablen. Rollenfarben sind immer mit Kürzel, nie Farbe allein.', `<div class="card-b"><div class="sw-grid">${sw('light')}${sw('dark')}</div></div>`) +
+    sec('Schrift', 'Inter mit Tabellenziffern. JetBrains Mono nur für Nummern und Codes.', `<div class="card-b ts">
+      <div><span class="m">Seitentitel 26 / 600</span><span style="font-size:26px;font-weight:600;color:var(--ink);letter-spacing:-.02em">Wochenplan KW 44</span></div>
+      <div><span class="m">Kennzahl 24 / 600</span><span style="font-size:24px;font-weight:600;color:var(--ink)">CHF 14’399</span></div>
+      <div><span class="m">Abschnitt 17 / 600</span><span style="font-size:17px;font-weight:600;color:var(--ink)">Monatsabschluss Oktober</span></div>
+      <div><span class="m">Kartentitel 15 / 600</span><span style="font-size:15px;font-weight:600;color:var(--ink)">Regeln und Konflikte</span></div>
+      <div><span class="m">Text 14 / 400</span><span>Wir zeigen Ihnen, was eine Zusage für Plan und Kosten bedeutet.</span></div>
+      <div><span class="m">Klein 12.5 / 400</span><span class="muted" style="font-size:12.5px">Zuletzt veröffentlicht Mi 21.10., 16:12</span></div>
+      <div><span class="m">Code 12.5 Mono</span><span class="mono ink" style="font-size:12.5px">#1287 · Z-0412 · PLAN_SYNC_TIMEOUT</span></div></div>`) +
+    `<div class="grid g2">` +
+    sec('Knöpfe', '', `<div class="demo"><button class="btn primary">${U.icon('send', 16)}Veröffentlichen</button><button class="btn">Abbrechen</button><button class="btn ghost">Mehr</button><button class="btn danger">Löschen</button><button class="btn danger solid">Rückerstatten</button><button class="btn sm">Klein</button><button class="btn primary" disabled>Gesperrt</button>
+      <div class="seg"><button aria-pressed="true">Woche</button><button>Tag</button><button>Monat</button></div></div>`) +
+    sec('Eingaben', '', `<div class="demo col"><label class="field"><span>Preis inkl. MWST</span><div class="input-wrap"><span class="pre">CHF</span><input class="input" value="27.50"></div><small>Gilt sofort an allen Kassen.</small></label>
+      <div class="row"><select class="input" style="width:200px"><option>Service</option></select><label class="row small"><span class="switch"><input type="checkbox" checked aria-label="Aktiv"><i></i></span>Aktiv</label><label class="check"><input type="checkbox" checked> Allergen G</label></div></div>`) +
+    sec('Status', 'Immer Wort plus Farbe', `<div class="demo">${U.pill('Veröffentlicht', 'green')}${U.pill('Geändert seit Veröffentlichung · 3', 'amber')}${U.pill('Entwurf')}${U.pill('Verspätet', 'red')}${U.pill('In der Küche', 'violet')}${U.pill('Neu', 'blue')}<span class="delta up">${U.icon('up', 12, 2)}4.2 %</span><span class="delta down">${U.icon('down', 12, 2)}6.7 %</span><span class="tag">ArG Art. 15a</span></div>`) +
+    sec('Kennzahl mit Sparkline', '', `<div class="demo"><div class="card kpi" style="width:100%"><span class="k-l">Umsatz brutto</span><span class="k-v"><small>CHF</small> 6’694</span><span class="k-s"><span class="delta down">${U.icon('down', 12, 2)}6.7 %</span> gegenüber Fr 16.10.</span>${U.spark([412, 2060, 3350, 3736, 3878, 3977, 4241, 5159, 6694], { ref: [388, 2090, 3278, 3681, 3837, 3957, 4268, 5314, 7112] })}</div></div>`) +
+    `</div>` +
+    sec('Flächendiagramm', 'Vergleichszeitraum gestrichelt, Tooltip beim Überfahren', `<div class="card-b"><div id="ar" style="height:220px"></div></div>`) +
+    sec('Tabelle', '', `<table class="tbl"><thead><tr><th>Bestellung</th><th>Ort</th><th>Status</th><th class="num">Betrag</th></tr></thead><tbody>${N.orders.slice(0, 3).map((o) => `<tr><td><span class="id">#${o.id}</span></td><td class="ink">${o.where}</td><td>${U.pill(o.status, o.status === 'verspätet' ? 'red' : 'blue')}</td><td class="num ink strong">CHF ${N.chf(o.total)}</td></tr>`).join('')}</tbody></table>`) +
+    sec('Planung: Schichtblock', 'Rollenfarbe als Fläche und Kante, Kürzel immer sichtbar', `<div class="demo"><div class="blocks">${roles.map((r) => sh(r, '', false, D.roles[r].name)).join('')}${sh('service', '', true, 'Offen')}${sh('lead', 'conflict', false, 'Konflikt')}${sh('kitchen', 'changed', false, 'Geändert')}${sh('bar', 'dragging', false, 'Wird gezogen')}${sh('service', 'ghost-demo', false, 'Über Zielzelle')}</div></div>`) +
+    `<div class="grid g3">` +
+    sec('Abdeckungsbalken', 'Pro halbe Stunde, 08 bis 24 Uhr', `<div class="demo col"><div class="cov cov-demo">${slots('xxxxxxkkkkkkkkoooookkkkkkgggggkkk')}</div><div class="legend"><span><i class="b" style="background:var(--green-dot)"></i>gedeckt</span><span><i class="b" style="background:var(--red-dot)"></i>Lücke</span><span><i class="b" style="background:var(--primary-line);opacity:.45"></i>mehr als nötig</span></div></div>`) +
+    sec('Konfliktmarke', '', `<div class="demo"><span class="cbadge">${U.icon('alert', 11, 2.2)}Ruhezeit 10.0 Std.</span><span class="cbadge warn">${U.icon('alert', 11, 2.2)}16.5 von 15 Std.</span><span class="cbadge info">${U.icon('info', 11, 2.2)}Feiertag</span></div>`) +
+    sec('Kostenmesser', 'Strich = Ziel 32 %', `<div class="demo col">${[[27.4, 'ok'], [34.1, 'warn'], [38.2, 'bad']].map(([v, c]) => `<div class="cost-meter"><div class="cm-t"><span>Personalquote</span><b class="${c === 'ok' ? '' : c}">${v} %</b></div><div class="meter ${c}"><i style="width:${v / 50 * 100}%"></i><b style="left:64%"></b></div></div>`).join('')}</div>`) +
+    `</div><div class="grid g2">` +
+    sec('Anfragekarte', '', `<div class="demo col"><article class="card req-card"><div class="rh"><span class="ico-sq violet">${U.icon('plane', 16)}</span><div class="t"><b>Ferien · ${rp.name}</b><div class="sub">${req.when} · ${req.days} Arbeitstage</div></div>${U.pill('Offen', 'amber')}</div><p class="quote">«${req.text}»</p><div class="impact">${U.icon('info', 15)}<span>${req.impact}</span></div><div class="ra"><button class="btn sm">Ablehnen</button><button class="btn sm primary">${U.icon('check', 14, 2)}Bewilligen</button></div></article></div>`) +
+    sec('Leerer Zustand und Laden', '', `<div class="empty" style="padding:28px 20px"><div class="ill">${U.icon('calendar', 28, 1.4)}</div><h3>KW 45 ist noch leer</h3><p>Starten Sie mit der Vorwoche oder Ihren Vorlagen.</p><div class="acts"><button class="btn primary">KW 44 kopieren</button><button class="btn">Vorlagen anwenden</button></div></div>
+      <div class="demo col" style="padding-top:0"><span class="skel" style="height:14px;width:40%"></span><span class="skel" style="height:40px"></span><span class="skel" style="height:40px;width:80%"></span></div>`) +
+    sec('Dialog', '', `<div class="demo"><div class="dlg static" style="display:block;border:1px solid var(--border);border-radius:14px;width:100%;background:var(--card)"><div class="in"><h2>3 Änderungen veröffentlichen?</h2><p>Alle Betroffenen erhalten eine Push-Nachricht und eine SMS.</p><div class="rows"><div><span>Benachrichtigt</span><b>4 Personen</b></div><div><span>Personalquote</span><b>27.4 %</b></div></div></div><div class="act"><button class="btn">Abbrechen</button><button class="btn primary">Jetzt veröffentlichen</button></div></div></div>`) +
+    sec('Befehlspalette und Meldung', '⌘K oder Ctrl+K auf jeder Seite', `<div class="demo col"><div class="pal static" style="width:100%;box-shadow:var(--sh-2)"><div class="p-in">${U.icon('search')}<span class="ink" style="height:48px;display:flex;align-items:center">lara</span></div><ul><li class="g">Team</li><li class="it" aria-selected="true">${U.icon('users', 16)}<span>Lara Manser</span><span class="x">Service</span></li><li class="it">${U.icon('inbox', 16)}<span>Ferienanfrage von Lara Manser prüfen</span></li></ul></div>
+      <div class="toast static" style="position:static;transform:none;align-self:flex-start">${U.icon('check', 16, 2)}<span>Veröffentlicht. 4 Personen informiert.</span></div>
+      <button class="btn" id="op">${U.icon('search', 16)}Palette öffnen</button></div>`) +
+    `</div>`;
+  U.area(document.getElementById('ar'), { labels: N.hours.map((h) => h + ':00'), series: [{ name: 'Fr 16.10.', vals: N.salesLastFri, kind: 'dash' }, { name: 'Heute', vals: N.salesToday, kind: 'area' }], h: 220, fmt: (v, t) => (t ? 'CHF ' + N.chf(v) : N.chf0(v)) });
+  document.getElementById('op').onclick = U.openPalette;
+});
+</script>
+</body>
+</html>

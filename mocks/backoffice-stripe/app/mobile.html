@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Linde Team · Mia Zünd</title>
+<link rel="stylesheet" href="app.css">
+<script src="../assets/data.js"></script>
+<script src="../assets/dienstplan.js"></script>
+<script src="shell.js"></script>
+<style>
+  body { background: var(--canvas); }
+  .mh { padding: 20px 20px 8px; display: flex; align-items: center; gap: 12px; }
+  .mh .t { flex: 1; }
+  .mh small { display: block; color: var(--muted); font-size: 13px; }
+  .mh h1 { font-size: 22px; letter-spacing: -.02em; }
+  .ms { padding: 8px 16px; display: flex; flex-direction: column; gap: 12px; }
+  .mt { font-size: 13px; font-weight: 600; color: var(--muted); padding: 14px 4px 0; display: flex; justify-content: space-between; align-items: baseline; }
+  .mt a { font-weight: 500; }
+  .clock { padding: 18px; border-radius: 16px; background-color: #1f5f96; background-image: linear-gradient(150deg, #2a72ad, #1d5a8e 70%); color: #fff; box-shadow: var(--sh-2); position: relative; overflow: hidden; }
+  [data-theme='dark'] .clock { background-color: #13293f; background-image: linear-gradient(150deg, #15324f, #0f2238); border: 1px solid #23476b; }
+  .clock .st { display: inline-flex; align-items: center; gap: 7px; font-size: 13px; font-weight: 600; background: rgba(255, 255, 255, .16); padding: 4px 10px; border-radius: 12px; }
+  .clock .st::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: #ffd2c9; }
+  .clock.on .st::before { background: #7ff0b8; }
+  .clock .big { font-size: 28px; font-weight: 650; margin: 12px 0 2px; letter-spacing: -.02em; }
+  .clock p { margin: 0; font-size: 13.5px; color: #e3eef8; }
+  .clock .cb { margin-top: 14px; width: 100%; height: 46px; border-radius: 12px; border: 0; background: #fff; color: #0d1b2a; font-weight: 650; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; transition: transform .1s; }
+  .clock .cb:active { transform: scale(.98); }
+  .mc { background: var(--card); border: 1px solid var(--border); border-radius: 14px; box-shadow: var(--sh-1); }
+  .wk { padding: 14px 16px; display: flex; flex-direction: column; gap: 8px; }
+  .wk .row b { color: var(--ink); font-size: 15px; }
+  .sh { display: flex; gap: 14px; padding: 14px 16px; align-items: center; border-top: 1px solid var(--border); }
+  .sh:first-child { border-top: 0; }
+  .sh .dt { width: 46px; flex: none; text-align: center; border-radius: 10px; padding: 6px 0; background: var(--sunken); border: 1px solid var(--border); }
+  .sh .dt b { display: block; font-size: 17px; color: var(--ink); line-height: 1.15; }
+  .sh .dt span { font-size: 11.5px; color: var(--muted); font-weight: 600; }
+  .sh .t { flex: 1; min-width: 0; }
+  .sh .t b { display: block; color: var(--ink); font-size: 15px; font-weight: 600; }
+  .sh .t span { display: block; color: var(--muted); font-size: 13px; }
+  .sh .shift { padding: 3px 8px; cursor: default; box-shadow: inset 3px 0 0 var(--rc); }
+  .sh.warn .t span.w { color: var(--amber); }
+  .claim { padding: 14px 16px; display: flex; flex-direction: column; gap: 10px; border-top: 1px solid var(--border); }
+  .claim:first-child { border-top: 0; }
+  .claim .btn { height: 40px; border-radius: 10px; font-size: 14px; }
+  .tabbar { position: fixed; left: 50%; transform: translateX(-50%); bottom: 0; width: 100%; max-width: 420px; display: grid; grid-template-columns: repeat(5, 1fr); background: color-mix(in srgb, var(--card) 92%, transparent); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border-top: 1px solid var(--border); padding: 8px 6px 22px; z-index: 30; }
+  @media (min-width: 640px) { .tabbar { bottom: 33px; border-radius: 0 0 28px 28px; max-width: 418px; } }
+  .tabbar button { border: 0; background: none; display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 11px; font-weight: 550; color: var(--muted); cursor: pointer; padding: 4px 0; }
+  .tabbar button[aria-current='page'] { color: var(--link); }
+  .sheet-s { position: fixed; inset: 0; background: var(--scrim); z-index: 50; opacity: 0; visibility: hidden; transition: opacity .2s, visibility .2s; }
+  .sheet-s.on { opacity: 1; visibility: visible; }
+  .sheet { position: fixed; left: 50%; bottom: 0; width: 100%; max-width: 420px; transform: translate(-50%, 100%); background: var(--card); border-radius: 20px 20px 0 0; z-index: 51; padding: 10px 18px 28px; transition: transform .25s cubic-bezier(.2, .8, .2, 1), visibility .25s; visibility: hidden; box-shadow: var(--sh-3); display: flex; flex-direction: column; gap: 14px; }
+  .sheet.on { transform: translate(-50%, 0); visibility: visible; }
+  .sheet .grab { width: 40px; height: 5px; border-radius: 3px; background: var(--border-2); margin: 0 auto 4px; }
+  .sheet h2 { font-size: 18px; }
+  .sheet .seg { width: 100%; display: grid; grid-template-columns: repeat(3, 1fr); }
+  .sheet .seg button { justify-content: center; height: 34px; }
+  .sheet .btn.lg { height: 46px; border-radius: 12px; width: 100%; }
+  .msg { padding: 12px 16px; display: flex; gap: 12px; align-items: center; border-top: 1px solid var(--border); }
+  .msg:first-child { border-top: 0; }
+  .msg .t { flex: 1; min-width: 0; }
+  .msg b { display: block; color: var(--ink); font-size: 14px; font-weight: 550; }
+  .msg span { color: var(--muted); font-size: 12.5px; }
+  .qa { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .qa button { height: 64px; border-radius: 14px; border: 1px solid var(--border); background: var(--card); box-shadow: var(--sh-1); display: flex; align-items: center; gap: 10px; padding: 0 14px; font-size: 14px; font-weight: 600; color: var(--ink); cursor: pointer; text-align: left; transition: box-shadow .15s; }
+  .qa button:hover { box-shadow: var(--sh-2); }
+</style>
+</head>
+<body data-page="mobile" data-bare>
+<div class="phone-page"><div class="phone" id="ph"></div></div>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const D = DP, U = UI, me = D.byId[D.me.p];
+  const mine = D.shifts.filter((s) => s.p === me.id).sort((a, b) => a.d - b.d);
+  const hrs = mine.reduce((s, x) => s + D.paidHours(x), 0);
+  let clocked = false;
+  const colleagues = (s) => D.shifts.filter((x) => x.p && x.p !== me.id && x.d === s.d && D.toH(x.s) < D.toH(s.e) && D.toH(x.e) > D.toH(s.s) && ['service', 'lead', 'bar'].includes(x.role)).map((x) => D.byId[x.p].name.split(' ')[0]).slice(0, 3);
+  const t = document.documentElement.dataset.theme;
+  document.getElementById('ph').innerHTML = `
+    <header class="mh"><span class="avatar lg a-service">MZ</span><div class="t"><small>Freitag, 23. Oktober</small><h1>Hoi Mia</h1></div>
+      <button class="icon-btn" id="th" aria-label="${t === 'dark' ? 'Helle' : 'Dunkle'} Darstellung">${U.icon(t === 'dark' ? 'sun' : 'moon')}</button><button class="icon-btn" aria-label="Mitteilungen">${U.icon('bell')}</button></header>
+    <div class="ms">
+      <section class="clock" id="clock"></section>
+      <div class="mc wk"><div class="row between"><span class="small muted strong">Diese Woche KW 44</span><b>${D.h1(hrs)} von max. ${me.maxWeek} Std.</b></div><div class="meter warn"><i style="width:100%"></i></div>
+        <span class="xs" style="color:var(--amber)">1.5 Std. über deinem Semester-Maximum. Corina ist informiert.</span></div>
+      <div class="qa"><button id="off">${U.icon('plane', 20)}Frei beantragen</button><button id="sw">${U.icon('swap', 20)}Schicht tauschen</button></div>
+      <div class="mt"><span>Meine Schichten</span><span>KW 44, veröffentlicht</span></div>
+      <div class="mc">${mine.map((s) => { const r = D.roles[s.role], cl = colleagues(s), w = s.d === 3; return `<div class="sh ${w ? 'warn' : ''}"><div class="dt"><span>${D.days[s.d].short}</span><b>${D.days[s.d].date.slice(0, 2)}</b></div><div class="t"><b>${s.s} bis ${s.e}</b><span>${r.name} · ${D.h1(D.paidHours(s))} Std.${cl.length ? ' · mit ' + cl.join(', ') : ''}</span>${w ? '<span class="w">Überschneidet deine Vorlesung bis 13:30</span>' : ''}</div><span class="shift r-${s.role}"><span class="code">${r.code}</span></span></div>`; }).join('')}</div>
+      <div class="mt"><span>Offene Schichten für dich</span><span>${D.me.openForMe.length}</span></div>
+      <div class="mc" id="open">${D.me.openForMe.map((o, i) => `<div class="claim"><div class="row between"><div><b class="ink" style="font-size:15px">${D.days[o.d].short} ${D.days[o.d].date} · ${o.s} bis ${o.e}</b><div class="small muted">${D.roles[o.role].name} · ${U.esc(o.note)}</div><div class="xs muted">${U.esc(o.pay)}</div></div></div><button class="btn primary" data-c="${i}">${U.icon('hand', 16)}Übernehmen</button></div>`).join('')}</div>
+      <div class="mt"><span>Nachrichten</span></div>
+      <div class="mc">${D.me.news.map((n) => `<div class="msg"><span class="ico-sq blue">${U.icon('chat', 16)}</span><div class="t"><b>${U.esc(n[0])}</b><span>${U.esc(n[1])}</span></div></div>`).join('')}</div>
+    </div>
+    <nav class="tabbar" aria-label="App"><button aria-current="page">${U.icon('calendar', 22)}Schichten</button><button>${U.icon('hand', 22)}Offen</button><button>${U.icon('inbox', 22)}Anfragen</button><button>${U.icon('clock', 22)}Zeit</button><button>${U.icon('users', 22)}Profil</button></nav>
+    <div class="sheet-s" id="ss"></div>
+    <section class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sh-t"><div class="grab"></div><h2 id="sh-t">Frei beantragen</h2>
+      <div class="seg" role="group" aria-label="Art"><button aria-pressed="true">Ferien</button><button>Frei</button><button>Krank</button></div>
+      <div class="grid g2" style="gap:10px"><label class="field"><span>Von</span><input class="input" type="date" value="2026-11-12"></label><label class="field"><span>Bis</span><input class="input" type="date" value="2026-11-14"></label></div>
+      <label class="field"><span>Nachricht an Corina</span><textarea class="input" placeholder="Zum Beispiel: Prüfungsvorbereitung">Prüfungsvorbereitung HSG</textarea></label>
+      <div class="note">${U.icon('info', 16)}<span>Betrifft 1 Schicht: Sa 14.11., 11:00 bis 15:00. Wir fragen automatisch, wer übernimmt.</span></div>
+      <button class="btn primary lg" id="send">${U.icon('send', 16)}Anfrage senden</button></section>`;
+  const ck = document.getElementById('clock');
+  const draw = () => {
+    ck.className = 'clock' + (clocked ? ' on' : '');
+    ck.innerHTML = clocked ? `<span class="st">Eingestempelt seit 17:58</span><div class="big">0 Std. 04 Min.</div><p>Wirtschaft zur Linde · Kasse Tresen · Pause nach 5.5 Std. 15 Min.</p><button class="cb" id="cb">${U.icon('out', 18)}Ausstempeln</button>`
+      : `<span class="st">Ausgestempelt</span><div class="xs" style="margin-top:12px;color:#e3eef8;font-weight:600">Nächste Schicht</div><div class="big" style="margin-top:2px">Di 27.10. · 18:00</div><p>${U.esc(D.me.clock.last)}. Du stempelst an der Kasse mit deiner PIN oder hier, wenn du im Lokal bist.</p><button class="cb" id="cb">${U.icon('pin', 18)}Einstempeln im Lokal</button>`;
+    document.getElementById('cb').onclick = () => { clocked = !clocked; draw(); U.toast(clocked ? 'Eingestempelt um 17:58. Gute Schicht!' : 'Ausgestempelt. Danke, Mia.'); };
+  };
+  draw();
+  document.querySelectorAll('[data-c]').forEach((b) => b.onclick = () => { b.className = 'btn'; b.innerHTML = U.icon('check', 16) + 'Angefragt, Corina entscheidet'; b.disabled = true; U.toast('Angefragt. Du bekommst eine Nachricht.'); });
+  const ss = document.getElementById('ss'), sh = document.getElementById('sheet');
+  const open = () => { ss.classList.add('on'); sh.classList.add('on'); }, close = () => { ss.classList.remove('on'); sh.classList.remove('on'); };
+  document.getElementById('off').onclick = open; ss.onclick = close;
+  document.getElementById('sw').onclick = () => U.toast('Tausch: wähle eine Schicht und eine Person.');
+  sh.querySelectorAll('.seg button').forEach((b) => b.onclick = () => sh.querySelectorAll('.seg button').forEach((x) => x.setAttribute('aria-pressed', String(x === b))));
+  document.getElementById('send').onclick = () => { close(); U.toast('Anfrage gesendet. Corina antwortet meist am selben Tag.'); };
+  document.getElementById('th').onclick = () => { UI.setTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'); location.reload(); };
+  document.querySelectorAll('.tabbar button').forEach((b) => b.onclick = () => document.querySelectorAll('.tabbar button').forEach((x) => x === b ? x.setAttribute('aria-current', 'page') : x.removeAttribute('aria-current')));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+});
+</script>
+</body>
+</html>

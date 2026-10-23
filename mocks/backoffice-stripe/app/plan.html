@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wochenplan KW 44 · Nordane</title>
+<link rel="stylesheet" href="app.css">
+<script src="../assets/data.js"></script>
+<script src="../assets/dienstplan.js"></script>
+<script src="shell.js"></script>
+<style>
+  .strip { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .strip > div { padding: 14px 18px; border-left: 1px solid var(--border); display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+  .strip > div:first-child { border-left: 0; }
+  .strip .l { font-size: 12.5px; color: var(--muted); font-weight: 500; white-space: nowrap; }
+  .strip .v { font-size: 21px; font-weight: 600; color: var(--ink); letter-spacing: -.02em; white-space: nowrap; }
+  .strip .v small { font-size: 13px; color: var(--muted); font-weight: 500; letter-spacing: 0; }
+  .strip .s { font-size: 12px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .strip .v.red { color: var(--red); }
+  .strip .meter { margin-top: 6px; }
+  .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 16px 12px 20px; flex-wrap: wrap; }
+  .legend-r { display: flex; gap: 14px; flex-wrap: wrap; font-size: 12.5px; color: var(--muted); align-items: center; }
+  .legend-r .lr { display: inline-flex; align-items: center; gap: 6px; }
+  .legend-r .sw { width: 10px; height: 10px; border-radius: 3px; }
+  .legend-r .code { font-size: 10.5px; font-weight: 700; color: var(--ink); }
+  .planner { max-height: calc(100vh - 116px); min-height: 420px; }
+  .confl li { align-items: flex-start; }
+  .confl .ico-sq { margin-top: 1px; }
+  .confl .t span { white-space: normal; }
+  .confl .basis { font-size: 12px; color: var(--muted); margin-top: 4px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+  .confl .act-c { flex: none; }
+  .gaps li .t span { white-space: normal; }
+  .dsum { display: flex; flex-direction: column; gap: 6px; }
+  .dsum .r { display: flex; justify-content: space-between; gap: 6px; }
+  .dsum .r span { color: var(--muted); }
+  .dsum .r b { color: var(--ink); font-weight: 600; }
+  .pg .nmc .bdg { margin-left: auto; flex: none; }
+  .pg .shift .cb { position: absolute; right: 5px; bottom: 5px; }
+  .pg .cell.unavail .na { font-size: 11.5px; color: var(--muted); }
+  .wk { display: inline-flex; align-items: center; gap: 4px; }
+  @media (min-width: 1241px) { .ph { flex-wrap: nowrap; } .ph .acts { flex-wrap: nowrap; } }
+  .sk-row { display: grid; grid-template-columns: 208px repeat(7, 1fr); gap: 10px; padding: 12px 20px; border-top: 1px solid var(--border); }
+  @media (max-width: 1240px) { .strip { grid-template-columns: repeat(3, minmax(0, 1fr)); } .strip > div:nth-child(4) { border-left: 0; } .strip > div:nth-child(n+4) { border-top: 1px solid var(--border); } }
+  @media (max-width: 720px) { .strip { grid-template-columns: repeat(2, minmax(0, 1fr)); } .strip > div { border-left: 0 !important; border-top: 1px solid var(--border); } .planner { max-height: none; } }
+</style>
+</head>
+<body data-page="plan">
+<div class="app">
+<div class="main">
+<main class="content" id="content">
+  <div class="ph">
+    <div>
+      <div class="crumb"><a href="plan.html">Personal</a>›<span>Wochenplan</span></div>
+      <h1>Wochenplan</h1>
+      <div class="row wrap" style="margin-top:12px;gap:12px">
+        <div class="seg" role="group" aria-label="Woche wählen">
+          <a href="plan.html?state=loading" id="prev">‹ KW 43</a><a href="plan.html" aria-current="page" id="cur">KW 44</a><a href="plan.html?state=empty" id="next">KW 45 ›</a>
+        </div><span class="muted" id="sub">26. Oktober bis 1. November 2026</span></div>
+    </div>
+    <div class="acts">
+      <span class="pub" id="pub"></span>
+      <button class="btn" id="tpl"></button>
+      <button class="btn primary" id="publish"></button>
+    </div>
+  </div>
+  <div id="body"></div>
+</main>
+</div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const D = DP, U = UI, $ = (s, r = document) => r.querySelector(s);
+  const state = U.q.get('state');
+  const roleKeys = ['lead', 'service', 'bar', 'kitchen', 'dish'];
+  $('#tpl').innerHTML = U.icon('wand', 16) + 'Vorlagen';
+  $('#tpl').onclick = () => U.toast('Vorlagen für leere Tage angewendet. Bestehende Schichten bleiben.');
+  let list = D.shifts.map((s) => ({ ...s }));
+  let pub = { state: U.q.get('pub') || D.publish.state, changes: D.publish.changes };
+  let R;
+
+  const pubPill = () => {
+    const m = { draft: ['Entwurf', ''], published: ['Veröffentlicht', 'green'], changed: [`Geändert seit Veröffentlichung · ${pub.changes}`, 'amber'] }[pub.state];
+    $('#pub').innerHTML = `<span class="pill lg ${m[1]}" title="Zuletzt veröffentlicht ${D.week.publishedAt} durch ${D.week.publishedBy}">${m[0]}</span>`;
+    $('#publish').innerHTML = U.icon('send', 16) + (pub.state === 'draft' ? 'Veröffentlichen' : pub.state === 'changed' ? 'Änderungen veröffentlichen' : 'Veröffentlicht');
+    $('#publish').disabled = pub.state === 'published';
+  };
+
+  // ----- states -----
+  if (state === 'loading') {
+    $('#publish').innerHTML = 'Veröffentlichen'; $('#publish').disabled = true; $('#tpl').disabled = true;
+    $('#pub').innerHTML = '<span class="pill lg">Wird geladen</span>';
+    $('#cur').removeAttribute('aria-current'); $('#prev').setAttribute('aria-current', 'page');
+    $('#body').innerHTML = `<div class="card" aria-busy="true" aria-label="Wochenplan wird geladen"><div class="strip">${Array(6).fill('<div><span class="skel" style="height:12px;width:60%"></span><span class="skel" style="height:22px;width:45%;margin-top:6px"></span></div>').join('')}</div></div>
+      <div class="card" style="margin-top:20px"><div class="toolbar"><span class="skel" style="height:14px;width:320px"></span><span class="skel" style="height:28px;width:180px"></span></div>
+      ${Array(9).fill(0).map((_, r) => `<div class="sk-row"><div class="row"><span class="skel" style="width:30px;height:30px;border-radius:50%"></span><span class="skel" style="height:12px;width:110px"></span></div>${Array(7).fill(0).map((_, c) => (r + c) % 3 === 0 || c === 0 ? '<span></span>' : `<span class="skel" style="height:42px;border-radius:8px;opacity:${0.5 + ((r * c) % 4) / 8}"></span>`).join('')}</div>`).join('')}</div>
+      <p class="muted small" style="margin-top:14px">Wir laden KW 43 mit allen Stempelzeiten. Das dauert meist nur einen Moment.</p>`;
+    $('#sub').textContent = '19. bis 25. Oktober 2026';
+    return;
+  }
+  if (state === 'error') {
+    $('#publish').innerHTML = 'Veröffentlichen'; $('#publish').disabled = true; $('#pub').innerHTML = ''; $('#tpl').disabled = true;
+    $('#body').innerHTML = `<div class="err-box" role="alert">${U.icon('alert', 20)}<div><h3>Der Wochenplan konnte nicht geladen werden</h3><p>Die Verbindung zum Server ist abgebrochen. Ihre letzten Änderungen sind lokal gespeichert und gehen nicht verloren.</p>
+      <div class="row wrap"><a class="btn primary" href="plan.html">${U.icon('refresh', 16)}Erneut versuchen</a><a class="btn" href="today.html">Zur Übersicht</a><span class="muted xs">Fehlercode <span class="mono">PLAN_SYNC_TIMEOUT · 504</span></span></div></div></div>`;
+    return;
+  }
+  if (state === 'empty') {
+    $('#cur').removeAttribute('aria-current'); $('#next').setAttribute('aria-current', 'page');
+    $('#sub').textContent = '2. bis 8. November 2026';
+    $('#pub').innerHTML = '<span class="pill lg">Entwurf, leer</span>';
+    $('#publish').innerHTML = U.icon('send', 16) + 'Veröffentlichen'; $('#publish').disabled = true;
+    $('#body').innerHTML = `<div class="grid g-main"><div class="card"><div class="empty">
+        <div class="ill">${U.icon('calendar', 30, 1.4)}</div>
+        <h3>KW 45 ist noch leer</h3>
+        <p>Starten Sie mit der Vorwoche oder Ihren Vorlagen. Ferien, Berufsschule und Verfügbarkeiten berücksichtigen wir automatisch.</p>
+        <div class="acts"><button class="btn primary" id="copy">${U.icon('copy', 16)}KW 44 kopieren</button><button class="btn" id="apply">${U.icon('wand', 16)}Vorlagen anwenden</button><button class="btn ghost" id="blank">Leer beginnen</button></div>
+      </div></div>
+      <div class="card"><div class="card-h"><div><h3>Was wir schon wissen</h3><p>Für KW 45 bereits erfasst</p></div></div>
+        <ul class="list">
+          <li><span class="ico-sq violet">${U.icon('plane', 16)}</span><div class="t"><b>Fabienne Koch zurück</b><span>Voll verfügbar ab Montag</span></div></li>
+          <li><span class="ico-sq blue">${U.icon('day', 16)}</span><div class="t"><b>Ardit Berisha</b><span>Mittwoch Berufsschule</span></div></li>
+          <li><span class="ico-sq amber">${U.icon('clock', 16)}</span><div class="t"><b>Ersatzruhetage Allerheiligen</b><span>7 Personen, bis 29.11. einplanen</span></div></li>
+          <li><span class="ico-sq green">${U.icon('bank', 16)}</span><div class="t"><b>Umsatzprognose CHF 49’800</b><span>Di bis So, aus den letzten 6 Wochen</span></div></li>
+        </ul></div></div>`;
+    $('#copy').onclick = () => { location.href = 'plan.html?pub=draft&theme=' + document.documentElement.dataset.theme; };
+    $('#apply').onclick = () => U.toast('Vorlagen werden angewendet: 41 Schichten vorbereitet.');
+    $('#blank').onclick = () => U.toast('Leerer Plan angelegt.');
+    return;
+  }
+
+  // ----- main planner -----
+  const groups = [['Service', 'r-service', 'var(--r-service)'], ['Bar', 'r-bar', 'var(--r-bar)'], ['Küche', 'r-kitchen', 'var(--r-kitchen)'], ['Abwasch', 'r-dish', 'var(--r-dish)']];
+  const unavail = (p, d) => (p.id === 'dh' && (d === 1 || d === 6)) ? 'Nicht verfügbar' : (p.id === 'ab' && d === 2) ? 'Berufsschule' : null;
+  const absent = (p, d) => (p.absences || []).find((a) => a.days.includes(d));
+
+  function shiftHtml(sh, confl) {
+    const r = D.roles[sh.role];
+    const cls = `shift ${U.roleClass(sh.role)} ${sh.open ? 'open' : ''} ${confl ? 'conflict' : ''} ${sh.changed ? 'changed' : ''}`;
+    const label = `${r.name}, ${sh.s} bis ${sh.e}, ${D.h1(sh.hours)} Stunden${confl ? ', ' + confl.title : ''}${sh.changed ? ', geändert' : ''}`;
+    return `<div class="${cls}" draggable="true" tabindex="0" role="button" data-id="${sh.id}" aria-label="${U.esc(label)}" title="${U.esc(sh.note || label)}">
+      <span class="tm">${sh.s}-${sh.e}</span>
+      <span class="mt"><span class="code">${r.code}</span>${D.h1(sh.hours)} h${sh.open ? ' · offen' : ''}</span>
+      ${confl ? `<span class="cb cbadge ${confl.sev === 'error' ? '' : 'warn'}" aria-hidden="true">${U.icon('alert', 11, 2.2)}</span>` : ''}
+    </div>`;
+  }
+
+  function render() {
+    R = D.compute(list);
+    const cByPD = {}, cByP = {};
+    R.conflicts.filter((c) => c.sev !== 'info').forEach((c) => { if (c.d != null) (cByPD[c.p + c.d] = cByPD[c.p + c.d] || c); else (cByP[c.p] = cByP[c.p] || c); });
+    const errs = R.conflicts.filter((c) => c.sev === 'error').length, warns = R.conflicts.filter((c) => c.sev === 'warn').length;
+    const pct = R.pct, tgt = D.target.labourPct;
+    const openC = R.openCount;
+    const meter = (p) => `<div class="meter ${p > D.target.warnPct ? 'bad' : p > tgt ? 'warn' : 'ok'}"><i style="width:${Math.min(100, p / 50 * 100)}%"></i><b style="left:${tgt / 50 * 100}%"></b></div>`;
+
+    let h = `<div class="card"><div class="strip">
+      <div><span class="l">Geplante Stunden</span><span class="v">${D.h1(R.totalHours)}</span><span class="s">14 Personen, Di bis So</span></div>
+      <div><span class="l">Personalkosten</span><span class="v"><small>CHF</small> ${D.chf0(R.totalCost)}</span><span class="s">inkl. Zuschläge, AG-Beiträge</span></div>
+      <div><span class="l">Umsatzprognose</span><span class="v"><small>CHF</small> ${D.chf0(R.totalSales)}</span><span class="s">Ø letzte 6 Wochen</span></div>
+      <div><span class="l">Personalquote</span><span class="v">${pct.toFixed(1)} %</span>${meter(pct)}<span class="s">Ziel unter ${tgt} %</span></div>
+      <div><span class="l">Offene Schichten</span><span class="v">${openC}</span><span class="s">CHF ${D.chf0(R.openCost.reduce((a, b) => a + b, 0))} wenn besetzt</span></div>
+      <div><span class="l">Regelverstösse</span><span class="v ${errs ? 'red' : ''}">${errs}<small> · ${warns} Hinweise</small></span><span class="s"><a href="#konflikte">Alle ansehen</a></span></div>
+    </div></div>`;
+
+    h += `<div class="card raised" style="margin-top:20px"><div class="toolbar">
+      <div class="legend-r">${roleKeys.map((k) => `<span class="lr"><span class="sw" style="background:var(--r-${k})"></span><span class="code">${D.roles[k].code}</span>${D.roles[k].name}</span>`).join('')}
+        <span class="lr" style="margin-left:8px">${U.icon('drag', 14)}Ziehen zum Verschieben</span></div>
+      <div class="row"><span class="legend-r"><span class="lr"><span class="sw" style="background:var(--green-dot)"></span>gedeckt</span><span class="lr"><span class="sw" style="background:var(--red-dot)"></span>Lücke</span><span class="lr"><span class="sw" style="background:var(--primary-line);opacity:.45"></span>mehr als nötig</span></span></div>
+    </div>
+    <div class="planner" id="planner"><div class="pg" role="grid" aria-label="Wochenplan KW 44, Personen mal Tage">`;
+    // header
+    h += `<div class="hd nm"><span class="muted xs">Bedarf pro Stunde, 08 bis 24 Uhr</span></div>`;
+    D.days.forEach((day, d) => {
+      const slots = D.SLOTS.map((t, i) => {
+        const need = D.areas.reduce((s, a) => s + R.coverage[a][d][i].need, 0), have = D.areas.reduce((s, a) => s + R.coverage[a][d][i].have, 0);
+        const gap = D.areas.some((a) => R.coverage[a][d][i].have < R.coverage[a][d][i].need);
+        return `<i class="${!need && !have ? 'off' : gap ? 'gap' : have > need + 1 ? 'over' : ''}"></i>`;
+      }).join('');
+      const g = R.gaps.filter((x) => x.d === d);
+      h += `<div class="hd ${day.holiday ? 'hol' : ''}" role="columnheader">
+        <div class="dn"><b>${day.short} ${day.date}</b>${day.holiday ? `<span class="holi">Feiertag</span>` : ''}</div>
+        <div class="cov" title="${g.length ? 'Lücken: ' + g.map((x) => `${x.area} ${D.fmtH(x.from)} bis ${D.fmtH(x.to)}, ${x.short} fehlt`).join('; ') : day.closed ? 'Geschlossen' : 'Voll gedeckt'}" aria-label="${g.length ? g.length + ' Lücken' : 'gedeckt'}">${slots}</div>
+        <div class="fc"><span>${day.closed ? 'Ruhetag' : 'CHF ' + D.chf0(D.forecastSales[d])}</span><span>${day.closed ? '' : g.length ? `<span style="color:var(--red);font-weight:600">${g.length} Lücke${g.length > 1 ? 'n' : ''}</span>` : 'gedeckt'}</span></div>
+      </div>`;
+    });
+    // open shifts row
+    h += `<div class="grp">${U.icon('hand', 14)}Offene Schichten · ${openC}</div>`;
+    h += `<div class="nmc openrow"><span class="ico-sq">${U.icon('hand', 16)}</span><div class="t"><b>Noch niemand</b><span>Ziehen Sie eine Person hierher</span></div></div>`;
+    D.days.forEach((day, d) => {
+      const os = list.filter((s) => !s.p && s.d === d);
+      h += `<div class="cell ${day.closed ? 'closed' : ''}" data-p="" data-d="${d}" role="gridcell">${day.closed ? '<span class="rt">Ruhetag</span>' : os.map((s) => shiftHtml(s)).join('') + `<button class="add" data-add="${d}" data-p="" aria-label="Offene Schicht ${day.short} hinzufügen">+ Schicht</button>`}</div>`;
+    });
+    groups.forEach(([area, rc, col]) => {
+      const ppl = D.staff.filter((p) => p.area === area);
+      const hrs = ppl.reduce((s, p) => s + R.people[p.id].hours, 0);
+      h += `<div class="grp"><span class="sw" style="background:${col}"></span>${area} · ${ppl.length} Personen · ${D.h1(hrs)} Std.</div>`;
+      ppl.forEach((p) => {
+        const x = R.people[p.id], lim = p.target || p.maxWeek, ratio = lim ? x.hours / lim : 0;
+        const c = cByP[p.id];
+        h += `<div class="nmc" role="rowheader"><span class="avatar sm ${U.avClass(p)}">${p.initials}</span><div class="t"><b><a href="person.html?id=${p.id}" style="color:inherit">${U.esc(p.name)}</a></b><span>${D.h1(x.hours)} ${lim ? `von ${D.h1(lim)} Std.` : 'Std., Stundenlohn'}</span>
+          ${lim ? `<div class="meter hm ${ratio > 1.1 ? 'bad' : ratio > 1 ? 'warn' : ''}"><i style="width:${Math.min(100, ratio * 100)}%"></i></div>` : ''}</div>
+          ${c ? `<span class="bdg cbadge ${c.sev === 'error' ? '' : 'warn'}" title="${U.esc(c.title + ': ' + c.detail)}" aria-label="${U.esc(c.title)}">${U.icon('alert', 11, 2.2)}</span>` : ''}</div>`;
+        D.days.forEach((day, d) => {
+          const sh = list.filter((s) => s.p === p.id && s.d === d).sort((a, b) => D.toH(a.s) - D.toH(b.s));
+          const ua = unavail(p, d), ab = absent(p, d);
+          h += `<div class="cell ${day.closed ? 'closed' : ''} ${ua && !sh.length ? 'unavail' : ''}" data-p="${p.id}" data-d="${d}" role="gridcell">`;
+          if (day.closed) h += '';
+          else {
+            if (ab) h += `<span class="tag-abs">${ab.kind}</span>`;
+            if (ua && !sh.length) h += `<span class="na">${ua}</span>`;
+            h += sh.map((s) => shiftHtml(s, cByPD[p.id + d])).join('');
+            h += `<button class="add" data-add="${d}" data-p="${p.id}" aria-label="Schicht für ${U.esc(p.name)} am ${day.short} hinzufügen">+ Schicht</button>`;
+          }
+          h += '</div>';
+        });
+      });
+    });
+    // footer
+    h += `<div class="ft nm">Kosten und Quote</div>`;
+    D.days.forEach((day, d) => {
+      if (day.closed) { h += `<div class="ft"><span class="muted">geschlossen</span></div>`; return; }
+      const p = R.pctByDay[d];
+      h += `<div class="ft"><div class="cost-meter dsum"><div class="r"><span>Kosten</span><b>${D.chf0(R.dayCost[d])}</b></div><div class="r"><span>Umsatz</span><b>${D.chf0(D.forecastSales[d])}</b></div>
+        <div class="cm-t"><span>Quote</span><b class="${p > D.target.warnPct ? 'bad' : p > tgt ? 'warn' : ''}">${p.toFixed(1)} %</b></div>${meter(p)}</div></div>`;
+    });
+    h += `</div></div></div>`;
+
+    // conflicts + gaps
+    const sevIc = { error: ['red', 'alert'], warn: ['amber', 'alert'], info: ['blue', 'info'] };
+    h += `<div class="grid g2" style="margin-top:20px">
+      <div class="card" id="konflikte"><div class="card-h"><div><h3>Regeln und Konflikte</h3><p>${errs} Regelverstösse, ${warns} Hinweise, ${R.conflicts.length - errs - warns} Feiertagsinfos</p></div><span class="pill ${errs ? 'red' : 'green'}">${errs ? 'Vor dem Veröffentlichen prüfen' : 'Alles im Rahmen'}</span></div>
+        <ul class="list confl">${R.conflicts.filter((c) => c.sev !== 'info').map((c) => `<li><span class="ico-sq ${sevIc[c.sev][0]}">${U.icon(sevIc[c.sev][1], 16)}</span><div class="t"><b>${U.esc(c.title)} · ${U.esc(D.byId[c.p].name)}</b><span>${U.esc(c.detail)}</span>
+          <div class="basis"><span class="tag">${U.esc(c.rule)}</span>${c.fix ? `<span>Vorschlag: ${U.esc(c.fix)}</span>` : ''}</div></div>${c.fix ? `<button class="btn sm act-c" data-fix="${c.id}">Lösen</button>` : ''}</li>`).join('')}
+          <li><span class="ico-sq blue">${U.icon('info', 16)}</span><div class="t"><b>Allerheiligen, So 1.11.</b><span>${R.conflicts.filter((c) => c.sev === 'info').length} Personen arbeiten am Feiertag: 50 % Zuschlag und je ein Ersatzruhetag innert 4 Wochen.</span></div></li></ul></div>
+      <div class="card"><div class="card-h"><div><h3>Lücken und offene Schichten</h3><p>Bedarf aus den Vorlagen, pro halbe Stunde gerechnet</p></div><a class="btn sm" href="rules.html">Bedarf anpassen</a></div>
+        <ul class="list gaps">${R.gaps.map((g) => `<li><span class="ico-sq red">${U.icon('users', 16)}</span><div class="t"><b>${g.area}: ${g.short} Person fehlt</b><span>${D.days[g.d].long}, ${D.fmtH(g.from)} bis ${D.fmtH(g.to)}</span></div></li>`).join('') || '<li><div class="t"><b>Keine Lücken</b><span>Jede Stunde ist gedeckt.</span></div></li>'}
+        ${list.filter((s) => !s.p).map((s) => `<li><span class="ico-sq">${U.icon('hand', 16)}</span><div class="t"><b>Offen: ${D.roles[s.role].name}, ${D.days[s.d].short} ${s.s} bis ${s.e}</b><span>${U.esc(s.note || '')}</span></div><button class="btn sm" data-offer="${s.id}">Anbieten</button></li>`).join('')}</ul></div>
+    </div>`;
+    $('#body').innerHTML = h;
+    pubPill();
+    bind();
+  }
+
+  function markChanged(sh) {
+    sh.changed = true;
+    if (pub.state === 'published') { pub.state = 'changed'; pub.changes = 0; }
+    if (pub.state === 'changed') pub.changes++;
+  }
+
+  function bind() {
+    const planner = $('#planner');
+    let dragId = null;
+    planner.querySelectorAll('.shift').forEach((el) => {
+      el.addEventListener('dragstart', (e) => { dragId = el.dataset.id; el.classList.add('dragging'); e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', dragId); });
+      el.addEventListener('dragend', () => { el.classList.remove('dragging'); planner.querySelectorAll('.cell.over').forEach((c) => c.classList.remove('over')); });
+      el.addEventListener('click', () => edit(list.find((s) => s.id === el.dataset.id)));
+      el.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); edit(list.find((s) => s.id === el.dataset.id)); } });
+    });
+    planner.querySelectorAll('.cell:not(.closed)').forEach((c) => {
+      c.addEventListener('dragover', (e) => { e.preventDefault(); c.classList.add('over'); });
+      c.addEventListener('dragleave', () => c.classList.remove('over'));
+      c.addEventListener('drop', (e) => {
+        e.preventDefault(); c.classList.remove('over');
+        const sh = list.find((s) => s.id === (dragId || e.dataTransfer.getData('text/plain'))); if (!sh) return;
+        const np = c.dataset.p || null, nd = +c.dataset.d;
+        if (sh.p === np && sh.d === nd) return;
+        sh.p = np; sh.d = nd; sh.open = !np; markChanged(sh);
+        const before = R.conflicts.filter((x) => x.sev === 'error').length;
+        render();
+        const after = R.conflicts.filter((x) => x.sev === 'error').length;
+        U.toast(np ? `Verschoben zu ${D.byId[np].short}, ${D.days[nd].short}. ${after > before ? 'Achtung: neuer Regelverstoss.' : 'Noch nicht veröffentlicht.'}` : `Als offene Schicht am ${D.days[nd].short} markiert.`);
+      });
+    });
+    planner.querySelectorAll('[data-add]').forEach((b) => b.addEventListener('click', () => {
+      const p = b.dataset.p ? D.byId[b.dataset.p] : null;
+      const role = p ? p.skills[0] : 'service';
+      const t = D.templates.find((x) => x.role === role) || D.templates[0];
+      edit({ id: 'new' + Date.now(), p: p ? p.id : null, d: +b.dataset.add, s: t.s, e: t.e, role, open: !p, isNew: true });
+    }));
+    document.querySelectorAll('[data-fix]').forEach((b) => b.addEventListener('click', () => fix(b.dataset.fix)));
+    document.querySelectorAll('[data-offer]').forEach((b) => b.addEventListener('click', () => { b.textContent = 'Angeboten'; b.disabled = true; U.toast('An passende Personen gesendet. Wer zuerst zusagt, bekommt die Schicht.'); }));
+  }
+
+  function fix(id) {
+    const c = R.conflicts.find((x) => x.id === id); if (!c) return;
+    const mine = list.filter((s) => s.p === c.p);
+    if (c.kind === 'rest') { const sh = mine.find((s) => s.d === c.d); sh.s = '10:30'; markChanged(sh); }
+    else if (c.kind === 'minor') { const sh = mine.find((s) => s.d === c.d); sh.e = '23:00'; markChanged(sh); }
+    else if (c.kind === 'absence') { const sh = mine.find((s) => s.d === c.d); sh.p = 'lb'; markChanged(sh); }
+    else if (c.kind === 'avail') { const sh = mine.find((s) => s.d === c.d); sh.p = 'ey'; markChanged(sh); }
+    else if (c.kind === 'hours' || c.kind === 'restdays') { const sh = mine.filter((s) => s.d !== 0).sort((a, b) => b.d - a.d)[0]; if (c.p === 'tr') { const s2 = mine.find((s) => s.d === 6); if (s2) { s2.p = 'ik'; markChanged(s2); } } else if (sh) { sh.p = null; sh.open = true; markChanged(sh); } }
+    render();
+    U.toast(`Gelöst bei ${D.byId[c.p].short}: ${c.fix}.`);
+  }
+
+  function edit(sh) {
+    const isNew = !!sh.isNew;
+    const opt = (v, l, sel) => `<option value="${v}" ${sel ? 'selected' : ''}>${U.esc(l)}</option>`;
+    const calc = () => {
+      const f = document.querySelector('.drawer');
+      const tmp = { ...sh, p: f.querySelector('#f-p').value || null, d: +f.querySelector('#f-d').value, s: f.querySelector('#f-s').value, e: f.querySelector('#f-e').value, role: f.querySelector('#f-r').value };
+      if (tmp.e < tmp.s) tmp.e = String(+tmp.e.slice(0, 2) + 24) + tmp.e.slice(2);
+      const rate = tmp.p ? D.byId[tmp.p].rate : 26;
+      f.querySelector('#f-calc').innerHTML = `<div><span>Bezahlte Stunden</span><b>${D.h1(D.paidHours(tmp))} Std.</b></div><div><span>Pause nach ArG</span><b>${D.breakFor(D.toH(tmp.e) - D.toH(tmp.s)) * 60} Min.</b></div><div><span>Davon Nacht ab 23:00</span><b>${D.h1(D.nightHours(tmp))} Std.</b></div><div><span>Kosten inkl. AG-Beiträge</span><b>CHF ${D.chf(D.shiftCost(tmp, rate))}</b></div>`;
+      return tmp;
+    };
+    const p = sh.p ? D.byId[sh.p] : null;
+    const pc = sh.p ? R.conflicts.filter((c) => c.p === sh.p && (c.d === sh.d || c.d == null) && c.sev !== 'info') : [];
+    U.drawer({
+      title: isNew ? 'Neue Schicht' : sh.open ? 'Offene Schicht' : `Schicht von ${p.name}`,
+      sub: `${D.days[sh.d].long} 2026${sh.changed ? ' · geändert seit Veröffentlichung' : ''}`,
+      body: `${pc.map((c) => `<div class="note amber">${U.icon('alert', 16)}<div><b>${U.esc(c.title)}</b><br>${U.esc(c.detail)}</div></div>`).join('')}
+        <label class="field"><span>Person</span><select class="input" id="f-p">${opt('', 'Offen, noch niemand', !sh.p)}${D.staff.map((x) => opt(x.id, `${x.name} · ${x.title}`, x.id === sh.p)).join('')}</select></label>
+        <div class="grid g2" style="gap:12px"><label class="field"><span>Tag</span><select class="input" id="f-d">${D.days.map((d, i) => opt(i, `${d.short} ${d.date}${d.closed ? ' Ruhetag' : ''}`, i === sh.d)).join('')}</select></label>
+          <label class="field"><span>Rolle</span><select class="input" id="f-r">${Object.keys(D.roles).map((k) => opt(k, `${D.roles[k].code} · ${D.roles[k].name}`, k === sh.role)).join('')}</select></label>
+          <label class="field"><span>Beginn</span><input class="input" type="time" id="f-s" value="${sh.s}"></label>
+          <label class="field"><span>Ende</span><input class="input" type="time" id="f-e" value="${sh.e.replace(/^24/, '00')}"></label></div>
+        <div class="dlg" style="display:block;border:0;width:auto;box-shadow:none;background:none;padding:0"><div class="rows" id="f-calc" style="margin:0"></div></div>
+        <label class="field"><span>Notiz für das Team</span><textarea class="input" id="f-n" placeholder="Zum Beispiel: Firmenessen, bitte schwarze Schürze">${U.esc(sh.note || '')}</textarea></label>
+        <div class="note">${U.icon('info', 16)}<span>Die Person erhält eine Nachricht, sobald Sie die Änderungen veröffentlichen.</span></div>`,
+      foot: `${isNew ? '' : `<button class="btn ghost danger" id="f-del" style="margin-right:auto">${U.icon('trash', 16)}Löschen</button>`}<button class="btn" data-close>Abbrechen</button><button class="btn primary" id="f-save">${isNew ? 'Hinzufügen' : 'Speichern'}</button>`,
+      onOpen: (dr) => {
+        calc();
+        dr.querySelectorAll('input,select').forEach((i) => i.addEventListener('input', calc));
+        dr.querySelector('#f-save').onclick = () => {
+          const t = calc(); Object.assign(sh, t, { note: dr.querySelector('#f-n').value, open: !t.p }); delete sh.isNew;
+          if (isNew) list.push(sh);
+          markChanged(sh); UI.closeDrawer(); render(); U.toast(isNew ? 'Schicht hinzugefügt.' : 'Schicht gespeichert. Noch nicht veröffentlicht.');
+        };
+        const del = dr.querySelector('#f-del');
+        if (del) del.onclick = () => { list = list.filter((s) => s !== sh); if (pub.state !== 'draft') { pub.state = 'changed'; pub.changes++; } UI.closeDrawer(); render(); U.toast('Schicht gelöscht.'); };
+      },
+    });
+  }
+
+  async function publish() {
+    if (pub.state === 'published') return;
+    const changed = list.filter((s) => s.changed && s.p).map((s) => D.byId[s.p].name);
+    const who = [...new Set(pub.state === 'draft' ? D.staff.map((p) => p.name) : changed)];
+    const errs = R.conflicts.filter((c) => c.sev === 'error');
+    const ok = await U.confirm({
+      title: pub.state === 'draft' ? 'Wochenplan KW 44 veröffentlichen?' : `${pub.changes} Änderungen veröffentlichen?`,
+      body: 'Alle Betroffenen erhalten eine Push-Nachricht und eine SMS mit ihren Schichten. Danach ist der Plan in der Team-App sichtbar.',
+      rows: [['Benachrichtigt', who.length ? `${who.length} Personen` : 'niemand'], ['Wer', who.slice(0, 4).join(', ') + (who.length > 4 ? ` und ${who.length - 4} weitere` : '')], ['Personalquote', R.pct.toFixed(1) + ' %'], ['Offene Schichten', String(R.openCount)]],
+      extra: errs.length ? `<div class="note amber" style="margin-top:12px">${U.icon('alert', 16)}<span>${errs.length} Regelverstösse sind noch markiert. Sie werden im Protokoll mit Ihrem Namen vermerkt.</span></div>` : '',
+      ok: 'Jetzt veröffentlichen',
+    });
+    if (!ok) return;
+    list.forEach((s) => { s.changed = false; }); pub = { state: 'published', changes: 0 };
+    render(); U.toast(`Veröffentlicht. ${who.length} Personen informiert.`);
+  }
+  $('#publish').onclick = publish;
+  render();
+  if (location.hash === '#publish') publish();
+  if (location.hash === '#new') edit({ id: 'new' + Date.now(), p: null, d: 5, s: '17:00', e: '23:30', role: 'service', open: true, isNew: true });
+});
+</script>
+</body>
+</html>

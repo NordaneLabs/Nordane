@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Geld und Berichte · Nordane</title>
+<link rel="stylesheet" href="app.css">
+<script src="../assets/data.js"></script>
+<script src="../assets/dienstplan.js"></script>
+<script src="shell.js"></script>
+<style>
+  .ch { height: 240px; }
+  .zrow { display: flex; justify-content: space-between; padding: 8px 0; border-top: 1px solid var(--border); font-size: 13.5px; gap: 12px; }
+  .zrow span { color: var(--muted); }
+  .zrow b { color: var(--ink); font-weight: 550; }
+  .zrow.t b { font-size: 15px; font-weight: 650; }
+</style>
+</head>
+<body data-page="money">
+<div class="app"><div class="main"><main class="content">
+  <div class="ph">
+    <div><div class="crumb">Betrieb</div><h1>Geld und Berichte</h1><p>Umsätze, Abschlüsse, MWST und Auszahlungen. Alles prüfbar und exportierbar für die Treuhand.</p></div>
+    <div class="acts"><div class="seg" role="group" aria-label="Zeitraum"><button>Heute</button><button aria-pressed="true">Diese Woche</button><button>Oktober</button></div><button class="btn" id="exp">Für Treuhand exportieren</button></div>
+  </div>
+  <div class="grid g4" id="kp"></div>
+  <div class="grid g-main" style="margin-top:20px">
+    <div class="card"><div class="card-h"><div><h3>Umsatz pro Tag</h3><p>KW 43 gegenüber KW 42, brutto inkl. MWST</p></div><div class="legend"><span><i></i>KW 43</span><span><i class="d"></i>KW 42</span></div></div><div class="card-b"><div class="ch" id="wk"></div></div></div>
+    <div class="card"><div class="card-h"><div><h3>Z-Bericht <span class="mono">${'z'}</span></h3><p id="zsub"></p></div>${'pill'}</div><div class="card-b" id="z"></div></div>
+  </div>
+  <div class="grid g2" style="margin-top:20px">
+    <div class="card"><div class="card-h"><div><h3>Auszahlungen</h3><p>Auf ${'bank'}</p></div></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Datum</th><th>Quelle</th><th>Zeitraum</th><th>Status</th><th class="num">Betrag</th></tr></thead><tbody id="po"></tbody></table></div></div>
+    <div class="card"><div class="card-h"><div><h3>Tagesabschlüsse</h3><p>Kassendifferenzen auf einen Blick</p></div></div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Nr.</th><th>Datum</th><th>Status</th><th class="num">Differenz</th><th class="num">Umsatz</th></tr></thead><tbody id="cl"></tbody></table></div></div>
+  </div>
+  <div class="card" style="margin-top:20px"><div class="card-h"><div><h3>Zahlungsarten</h3><p>Gebühren nach Vertrag</p></div><a class="btn sm" href="settings.html">Verwalten</a></div><table class="tbl"><thead><tr><th>Zahlungsart</th><th>Details</th><th>Gebühr</th><th class="num">Status</th></tr></thead><tbody id="pm"></tbody></table></div>
+</main></div></div>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const N = NORDANE, U = UI, $ = (s) => document.querySelector(s), z = N.z;
+  document.querySelectorAll('.card-h h3, .card-h p, .card-h').forEach((e) => { e.innerHTML = e.innerHTML.replace("${'z'}", z.no).replace("${'pill'}", U.pill('Abgeschlossen', 'green')).replace("${'bank'}", N.store.bank + ', ' + N.store.iban); });
+  const k = (l, v, s, sp) => `<div class="card kpi"><span class="k-l">${l}</span><span class="k-v">${v}</span><span class="k-s">${s}</span>${sp ? U.spark(sp) : ''}</div>`;
+  const wk = N.week.gross, last = [0, 5980.4, 6710.0, 8102.3, 10380.7, 11842.0, 5410.5];
+  $('#kp').innerHTML = k('Umsatz KW 43', '<small>CHF</small> ' + N.chf0(wk.reduce((a, b) => a + (b || 0), 0)), 'Di bis Fr, Sa und So folgen', wk.map((v) => v || null)) + k('MWST geschuldet', '<small>CHF</small> ' + N.chf(z.vatTotal), 'Z-Bericht gestern, 2 Sätze') + k('Unterwegs', '<small>CHF</small> ' + N.chf(7842.15 + 2178.8), '2 Auszahlungen, Gutschrift Mo') + k('Trinkgeld gestern', '<small>CHF</small> ' + N.chf(z.tips), 'Verteilung im Monatsabschluss');
+  U.area($('#wk'), { labels: N.days.map((d) => d.replace('.', '')), series: [{ name: 'KW 42', vals: last, kind: 'dash' }, { name: 'KW 43', vals: wk, kind: 'area' }], fmt: (v, t) => (t ? 'CHF ' + N.chf(v) : N.chf0(v)), h: 240 });
+  $('#zsub').textContent = `${z.date}, ${z.opened} bis ${z.closed} · ${z.register}, ${z.by}`;
+  $('#z').innerHTML = `<div class="zrow t"><span>Umsatz brutto</span><b>CHF ${N.chf(z.gross)}</b></div>` +
+    z.rates.map((r) => `<div class="zrow"><span>${r.label}, MWST</span><b>CHF ${N.chf(r.vat)}</b></div>`).join('') +
+    `<div class="zrow"><span>Netto</span><b>CHF ${N.chf(z.net)}</b></div>` +
+    z.tenders.map((t) => `<div class="zrow"><span>${t.name} · ${t.count}</span><b>CHF ${N.chf(t.amount)}</b></div>`).join('') +
+    `<div class="zrow"><span>Bargeld gezählt</span><b>CHF ${N.chf(z.cash.counted)} <span class="pill amber" style="margin-left:6px">${N.chf(z.cash.diff)}</span></b></div>`;
+  const ps = { 'Geplant': '', 'Unterwegs': 'blue', 'Gutgeschrieben': 'green' };
+  $('#po').innerHTML = N.payouts.map((p) => `<tr><td>${p.date}</td><td class="ink">${p.source}</td><td>${p.period}</td><td>${U.pill(p.status, ps[p.status])}</td><td class="num ink strong">${p.amount ? 'CHF ' + N.chf(p.amount) : '<span class="muted">wird berechnet</span>'}</td></tr>`).join('');
+  $('#cl').innerHTML = N.closings.map((c) => `<tr><td><span class="id">${c.no}</span></td><td>${c.date}</td><td>${U.pill(c.status, c.status === 'Geprüft' ? 'green' : 'blue')}</td><td class="num ${c.diff ? '' : 'muted'}" style="${c.diff < 0 ? 'color:var(--red)' : ''}">${c.diff ? N.chf(c.diff) : '0.00'}</td><td class="num ink">CHF ${N.chf(c.gross)}</td></tr>`).join('');
+  $('#pm').innerHTML = N.payments.map((p) => `<tr><td class="ink strong">${p.name}</td><td>${p.detail}</td><td>${p.fee}</td><td class="num">${U.pill(p.state, 'green')}</td></tr>`).join('');
+  document.querySelectorAll('.seg button').forEach((b) => b.onclick = () => { document.querySelectorAll('.seg button').forEach((x) => x.setAttribute('aria-pressed', String(x === b))); });
+  $('#exp').onclick = () => U.toast('Export für die Treuhand: CSV und PDF werden erstellt.');
+});
+</script>
+</body>
+</html>

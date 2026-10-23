@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Anfragen · Nordane</title>
+<link rel="stylesheet" href="app.css">
+<script src="../assets/data.js"></script>
+<script src="../assets/dienstplan.js"></script>
+<script src="shell.js"></script>
+<style>
+  .tabs { display: flex; gap: 2px; border-bottom: 1px solid var(--border); margin-bottom: 20px; overflow-x: auto; }
+  .tabs button { border: 0; background: none; padding: 10px 12px; font-size: 13.5px; font-weight: 500; color: var(--muted); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; display: inline-flex; gap: 6px; align-items: center; transition: color .15s, border-color .15s; }
+  .tabs button:hover { color: var(--ink); }
+  .tabs button[aria-selected='true'] { color: var(--ink); border-bottom-color: var(--primary-line); font-weight: 600; }
+  .tabs button b { font-size: 11.5px; background: var(--hover); color: var(--muted); border-radius: 9px; padding: 1px 7px; font-weight: 600; }
+  .tabs button[aria-selected='true'] b { background: var(--primary-soft); color: var(--blue); }
+  .cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; font-size: 11.5px; text-align: center; }
+  .cal .h { color: var(--muted); font-weight: 600; padding: 2px 0 4px; }
+  .cal i { font-style: normal; height: 28px; border-radius: 6px; display: grid; place-items: center; color: var(--text); background: var(--sunken); }
+  .cal i.o { background: none; color: var(--muted); }
+  .cal i.f { background: var(--violet-bg); color: var(--violet); font-weight: 650; }
+  .cal i.ho { box-shadow: inset 0 0 0 1.5px var(--violet); }
+  .req-list { display: flex; flex-direction: column; gap: 14px; }
+</style>
+</head>
+<body data-page="requests">
+<div class="app"><div class="main"><main class="content">
+  <div class="ph"><div><div class="crumb"><a href="plan.html">Personal</a> › <span>Anfragen</span></div><h1>Anfragen vom Team</h1><p>Ferien, Schichttausch, Krankmeldungen und Verfügbarkeiten. Wir zeigen Ihnen, was eine Zusage für Plan und Kosten bedeutet.</p></div>
+    <div class="acts"><button class="btn" id="rule">Regeln für Anfragen</button></div></div>
+  <div class="tabs" role="tablist" id="tabs"></div>
+  <div class="grid g-main"><div class="req-list" id="list"></div>
+    <div class="stack">
+      <div class="card"><div class="card-h"><div><h3>November 2026</h3><p>Bewilligte und angefragte Ferien</p></div></div><div class="card-b"><div class="cal" id="cal"></div>
+        <div class="legend" style="margin-top:12px"><span><i class="b" style="background:var(--violet-bg);box-shadow:inset 0 0 0 1px var(--violet)"></i>Lara Manser, angefragt</span></div></div></div>
+      <div class="card"><div class="card-h"><h3>Bald abwesend</h3></div><ul class="list">
+        <li><span class="avatar sm a-bar">FK</span><div class="t"><b>Fabienne Koch</b><span>Ferien bis Mi 28.10., bewilligt</span></div></li>
+        <li><span class="avatar sm a-kitchen">SF</span><div class="t"><b>Samuel Fritsche</b><span>Krank 24. bis 25.10., Zeugnis fehlt</span></div></li>
+        <li><span class="avatar sm a-lead">JI</span><div class="t"><b>Jonas Inauen</b><span>Ferien 28.12. bis 3.1., bewilligt</span></div></li>
+      </ul></div>
+      <div class="note">${'info'}<span>Anfragen kommen aus der Team-App. Die Person sieht Ihre Antwort sofort, mit Ihrer Begründung.</span></div>
+    </div></div>
+</main></div></div>
+<script>
+document.querySelector('.note').innerHTML = document.querySelector('.note').innerHTML.replace("${'info'}", UI.icon('info', 16));
+document.addEventListener('DOMContentLoaded', () => {
+  const D = DP, U = UI, $ = (s) => document.querySelector(s);
+  const reqs = D.requests.map((r) => ({ ...r }));
+  const kinds = { 'Ferien': ['plane', 'violet'], 'Schichttausch': ['swap', 'blue'], 'Krankmeldung': ['sick', 'red'], 'Offene Schicht': ['hand', 'green'], 'Verfügbarkeit': ['calendar', 'amber'] };
+  const T = [['open', 'Offen', (r) => r.state === 'offen'], ['Ferien', 'Ferien', (r) => r.kind === 'Ferien'], ['Schichttausch', 'Tausch', (r) => r.kind === 'Schichttausch'], ['Krankmeldung', 'Krank', (r) => r.kind === 'Krankmeldung'], ['Offene Schicht', 'Offene Schichten', (r) => r.kind === 'Offene Schicht'], ['Verfügbarkeit', 'Verfügbarkeit', (r) => r.kind === 'Verfügbarkeit'], ['done', 'Erledigt', (r) => r.state !== 'offen']];
+  let tab = 'open';
+  const stp = { offen: ['Offen', 'amber'], bewilligt: ['Bewilligt', 'green'], abgelehnt: ['Abgelehnt', ''], 'zur Kenntnis': ['Zur Kenntnis genommen', 'blue'] };
+  function render() {
+    $('#tabs').innerHTML = T.map(([k, l, f]) => `<button role="tab" aria-selected="${tab === k}" data-t="${k}">${l}<b>${reqs.filter(f).length}</b></button>`).join('');
+    const list = reqs.filter(T.find((t) => t[0] === tab)[2]);
+    $('#list').innerHTML = list.map((r) => {
+      const p = D.byId[r.p], w = r.with ? D.byId[r.with] : null, k = kinds[r.kind];
+      const actions = r.state !== 'offen' ? `<span class="muted small">${r.by ? (r.state === 'abgelehnt' ? 'Abgelehnt' : 'Bewilligt') + ' von ' + r.by : ''}${r.reason ? ': ' + U.esc(r.reason) : ''}</span>`
+        : r.kind === 'Krankmeldung' ? `<button class="btn sm" data-a="doc" data-id="${r.id}">Arztzeugnis anfordern</button><button class="btn sm primary" data-a="ack" data-id="${r.id}">${U.icon('check', 14, 2)}Zur Kenntnis nehmen</button>`
+        : `<button class="btn sm" data-a="no" data-id="${r.id}">Ablehnen</button><button class="btn sm primary" data-a="yes" data-id="${r.id}">${U.icon('check', 14, 2)}${r.kind === 'Offene Schicht' ? 'Schicht zuteilen' : 'Bewilligen'}</button>`;
+      return `<article class="card req-card ${r.state !== 'offen' ? 'done' : ''}">
+        <div class="rh"><span class="ico-sq ${k[1]}">${U.icon(k[0], 16)}</span><div class="t"><b>${r.kind} · ${U.esc(p.name)}${w ? ' mit ' + U.esc(w.name) : ''}</b><div class="sub">${U.esc(r.when)}${r.days ? ' · ' + r.days + ' Arbeitstage' : ''} · gesendet ${U.esc(r.sent)}</div></div>${U.pill(stp[r.state][0], stp[r.state][1])}</div>
+        <p class="quote">«${U.esc(r.text)}»</p>
+        <div class="impact ${r.warn ? 'warn' : ''}">${U.icon(r.warn ? 'alert' : 'info', 15)}<span>${U.esc(r.impact)}</span></div>
+        ${r.doc ? `<div class="impact warn">${U.icon('file', 15)}<span>${U.esc(r.doc)}</span></div>` : ''}
+        <div class="ra">${actions}</div></article>`;
+    }).join('') || `<div class="card"><div class="empty"><div class="ill">${U.icon('check', 28)}</div><h3>Alles erledigt</h3><p>Keine offenen Anfragen in dieser Ansicht. Neue Anfragen erscheinen hier und als Mitteilung.</p><div class="acts"><button class="btn" data-t="done">Erledigte ansehen</button></div></div></div>`;
+    document.querySelectorAll('[data-t]').forEach((b) => b.onclick = () => { tab = b.dataset.t; render(); });
+    document.querySelectorAll('[data-a]').forEach((b) => b.onclick = () => act(reqs.find((r) => r.id === b.dataset.id), b.dataset.a));
+    document.querySelectorAll('.nav .cnt').forEach((c) => { if (c.closest('a').getAttribute('href').startsWith('requests')) c.textContent = reqs.filter((r) => r.state === 'offen').length; });
+  }
+  async function act(r, a) {
+    const p = D.byId[r.p];
+    if (a === 'no') {
+      const ok = await U.confirm({ title: `${r.kind} von ${p.name} ablehnen?`, body: `${U.esc(p.name.split(' ')[0])} sieht Ihre Begründung in der App.`, extra: '<label class="field"><span>Begründung</span><textarea class="input" id="why">An dem Tag sind wir knapp besetzt. Können wir eine andere Lösung finden?</textarea></label>', ok: 'Ablehnen', danger: true });
+      if (!ok) return; r.state = 'abgelehnt'; r.by = 'Corina Fässler'; U.toast(`Abgelehnt. ${p.name.split(' ')[0]} wurde informiert.`);
+    } else if (a === 'yes') {
+      if (r.warn) { const ok = await U.confirm({ title: 'Trotz Hinweis bewilligen?', body: U.esc(r.impact), ok: 'Trotzdem bewilligen' }); if (!ok) return; }
+      r.state = 'bewilligt'; r.by = 'Corina Fässler'; U.toast(r.kind === 'Ferien' ? 'Bewilligt. Im Plan als Ferien eingetragen.' : r.kind === 'Offene Schicht' ? 'Schicht zugeteilt. Der Wochenplan ist angepasst.' : 'Bewilligt. Beide wurden informiert.');
+    } else if (a === 'ack') { r.state = 'zur Kenntnis'; r.by = 'Corina Fässler'; U.toast('Zur Kenntnis genommen. Gute Besserung wurde gesendet.'); }
+    else if (a === 'doc') { U.toast('Anfrage für Arztzeugnis gesendet. Frist 3 Tage.'); return; }
+    render();
+  }
+  // November calendar, Sunday 1.11. is Allerheiligen; 1.11.2026 is a Sunday so the month starts on Sunday.
+  let cal = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'].map((d) => `<span class="h">${d}</span>`).join('') + '<i class="o"></i>'.repeat(6);
+  for (let i = 1; i <= 30; i++) cal += `<i class="${i >= 16 && i <= 22 ? 'f' : ''} ${i === 1 ? 'ho' : ''}" ${i === 1 ? 'title="Allerheiligen"' : ''}>${i}</i>`;
+  $('#cal').innerHTML = cal;
+  $('#rule').onclick = () => U.toast('Ferien mindestens 4 Wochen im Voraus, Tausch bis 48 Std. vorher.');
+  render();
+});
+</script>
+</body>
+</html>

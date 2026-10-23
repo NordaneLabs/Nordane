@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vorlagen und Regeln · Nordane</title>
+<link rel="stylesheet" href="app.css">
+<script src="../assets/data.js"></script>
+<script src="../assets/dienstplan.js"></script>
+<script src="shell.js"></script>
+<style>
+  .heat-w { overflow-x: auto; padding: 0 20px 20px; }
+  .heat { display: grid; grid-template-columns: 70px repeat(32, minmax(18px, 1fr)); gap: 2px; min-width: 720px; font-size: 11.5px; }
+  .heat .h { color: var(--muted); text-align: left; font-weight: 600; }
+  .heat .d { color: var(--ink); font-weight: 600; display: flex; align-items: center; }
+  .heat i { height: 30px; border-radius: 4px; display: grid; place-items: center; font-style: normal; font-weight: 650; font-size: 11px; cursor: pointer; transition: transform .1s, box-shadow .15s; background: var(--sunken); color: var(--muted); }
+  .heat i:hover { box-shadow: 0 0 0 2px var(--primary-line); }
+  .heat i.l1 { background: color-mix(in srgb, var(--primary-line) 18%, var(--card)); color: var(--ink); }
+  .heat i.l2 { background: color-mix(in srgb, var(--primary-line) 34%, var(--card)); color: var(--ink); }
+  .heat i.l3 { background: color-mix(in srgb, var(--primary-line) 58%, var(--card)); color: var(--ink); }
+  .heat i.l4 { background: var(--primary); color: var(--on-primary); }
+  .heat i.z { background-image: var(--hatch); }
+  input[type=range] { width: 100%; accent-color: var(--primary); }
+  .tgt { display: flex; align-items: baseline; gap: 8px; }
+  .tgt b { font-size: 30px; color: var(--ink); font-weight: 600; letter-spacing: -.02em; }
+  .rules li .t span { white-space: normal; }
+  .hol li.on { background: var(--violet-bg); }
+</style>
+</head>
+<body data-page="rules">
+<div class="app"><div class="main"><main class="content">
+  <div class="ph"><div><div class="crumb"><a href="plan.html">Personal</a> › <span>Vorlagen und Regeln</span></div><h1>Vorlagen und Regeln</h1><p>Was der Wochenplan wissen muss: typische Schichten, wie viele Leute Sie wann brauchen, Ihr Kostenziel und die Regeln aus L-GAV und Arbeitsgesetz.</p></div>
+    <div class="acts"><button class="btn primary" id="save">Speichern</button></div></div>
+  <div class="card"><div class="card-h"><div><h3>Schichtvorlagen</h3><p>Pausen nach ArG Art. 15 automatisch abgezogen</p></div><button class="btn sm" id="nt">+ Vorlage</button></div>
+    <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Vorlage</th><th>Rolle</th><th>Zeit</th><th class="num">Bezahlt</th><th class="num">Pause</th><th>Tage</th><th class="num">KW 40 bis 43</th><th></th></tr></thead><tbody id="tp"></tbody></table></div></div>
+  <div class="card raised" style="margin-top:20px"><div class="card-h"><div><h3>Personalbedarf pro halbe Stunde</h3><p>Grundlage für Lücken und Abdeckung im Wochenplan. Klicken erhöht, Shift-Klick senkt.</p></div><div class="seg" id="area" role="group" aria-label="Bereich"></div></div>
+    <div class="heat-w"><div class="heat" id="heat"></div></div></div>
+  <div class="grid g3" style="margin-top:20px">
+    <div class="card"><div class="card-h"><div><h3>Ziel Personalquote</h3><p>Personalkosten durch Umsatzprognose</p></div></div><div class="card-b">
+      <div class="tgt"><b id="tv">32 %</b><span class="muted">Warnung ab <span id="wv">35 %</span></span></div>
+      <label class="sr-only" for="tr">Ziel in Prozent</label><input type="range" id="tr" min="24" max="40" value="32">
+      <div class="row between xs muted"><span>24 %</span><span>Branchenschnitt Gastro CH 33 bis 38 %</span><span>40 %</span></div>
+      <div class="note" style="margin-top:14px">${'info'}<span>KW 44 liegt mit 27.4 % unter dem Ziel. Offene Schichten sind noch nicht eingerechnet.</span></div></div></div>
+    <div class="card"><div class="card-h"><div><h3>Zuschläge</h3><p>Fliessen in Planung und Lohnexport</p></div></div><ul class="list" id="sur"></ul></div>
+    <div class="card"><div class="card-h"><div><h3>Feiertage St. Gallen 2026</h3><p>Ruhetagsgesetz SG und 1. August</p></div></div><ul class="list hol" id="hol"></ul></div>
+  </div>
+  <div class="grid g2" style="margin-top:20px">
+    <div class="card"><div class="card-h"><div><h3>L-GAV Mindestlöhne ${'yr'}</h3><p>Pro Monat, 13 Mal, bei 42 Std. pro Woche</p></div>${'demo'}</div>
+      <table class="tbl"><thead><tr><th>Kat.</th><th>Beschreibung</th><th class="num">Monat</th><th class="num">Std.</th></tr></thead><tbody id="lg"></tbody></table>
+      <div class="card-f"><span>Stundenlöhner: Grundlohn plus Ferien 10.64 %, Feiertage 2.27 %, 13. ML 8.33 %</span></div></div>
+    <div class="card"><div class="card-h"><div><h3>Regeln im Wochenplan</h3><p>Was blockiert und was nur warnt</p></div></div><ul class="list rules" id="rl"></ul></div>
+  </div>
+</main></div></div>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const D = DP, U = UI, $ = (s) => document.querySelector(s);
+  document.querySelector('.note').innerHTML = document.querySelector('.note').innerHTML.replace("${'info'}", U.icon('info', 16));
+  document.querySelectorAll('.card-h').forEach((h) => { h.innerHTML = h.innerHTML.replace("${'yr'}", D.lgav.year).replace("${'demo'}", U.pill('Demo-Werte 2026, vor Einsatz prüfen', 'amber')); });
+  $('#tp').innerHTML = D.templates.map((t) => `<tr><td class="ink strong">${t.name}</td><td><span class="shift r-${t.role}" style="display:inline-flex;flex-direction:row;padding:2px 8px;cursor:default"><span class="code">${D.roles[t.role].code}</span><span class="mt" style="margin-left:6px">${D.roles[t.role].name}</span></span></td><td>${t.s} bis ${t.e}</td><td class="num">${D.h1(t.hours)} Std.</td><td class="num">${t.brk * 60} Min.</td><td>${t.days}</td><td class="num">${t.used}×</td><td class="num"><button class="btn sm ghost" aria-label="${t.name} bearbeiten">${U.icon('edit', 15)}</button></td></tr>`).join('');
+  let area = 'Service';
+  const req = JSON.parse(JSON.stringify(D.reqTemplate));
+  function heat() {
+    $('#area').innerHTML = D.areas.map((a) => `<button aria-pressed="${a === area}" data-a="${a}">${a}</button>`).join('');
+    let h = '<span></span>' + D.SLOTS.map((t) => `<span class="h">${t % 2 === 0 ? String(t).padStart(2, '0') : ''}</span>`).join('');
+    D.days.forEach((d, di) => {
+      h += `<span class="d">${d.short}</span>`;
+      D.SLOTS.forEach((t, si) => { const n = d.closed ? 0 : (req[area][di] || []).reduce((v, w) => (v || (t >= w[0] && t < w[1] ? w[2] : 0)), 0); h += `<i class="${d.closed ? 'z' : n ? 'l' + Math.min(4, n) : ''}" data-d="${di}" data-t="${t}" title="${d.short} ${D.fmtH(t)}: ${n} Personen">${n || ''}</i>`; });
+    });
+    $('#heat').innerHTML = h;
+    document.querySelectorAll('[data-a]').forEach((b) => b.onclick = () => { area = b.dataset.a; heat(); });
+    document.querySelectorAll('#heat i[data-d]').forEach((c) => c.onclick = (e) => { if (c.classList.contains('z')) return; const v = Math.max(0, (+c.textContent || 0) + (e.shiftKey ? -1 : 1)); c.textContent = v || ''; c.className = v ? 'l' + Math.min(4, v) : ''; U.toast(`${D.days[+c.dataset.d].short} ${D.fmtH(+c.dataset.t)}: ${v} Personen ${area}. Wirkt nach dem Speichern.`); });
+  }
+  heat();
+  $('#tr').oninput = (e) => { $('#tv').textContent = e.target.value + ' %'; $('#wv').textContent = (+e.target.value + 3) + ' %'; };
+  $('#sur').innerHTML = D.lgav.surcharges.map((s) => `<li><span class="ico-sq ${s.k === 'night' ? 'blue' : s.k === 'holiday' ? 'violet' : 'amber'}">${U.icon(s.k === 'night' ? 'clock' : 'calendar', 16)}</span><div class="t"><b>${s.name} · ${s.pct} %</b><span>${U.esc(s.basis)}</span></div></li>`).join('') + `<li><span class="ico-sq">${U.icon('bank', 16)}</span><div class="t"><b>Arbeitgeberbeiträge ${D.lgav.employerPct} %</b><span>AHV, ALV, FAK SG, BVG, UVG, KTG geschätzt</span></div></li>`;
+  $('#hol').innerHTML = D.holidaysSG.map((h) => `<li class="${h[1] === 'Allerheiligen' ? 'on' : ''}"><div class="t"><b>${h[1]}</b><span>${h[0]}${h[1] === 'Allerheiligen' ? ' · in KW 44, Brunch offen' : ''}</span></div></li>`).join('');
+  $('#lg').innerHTML = D.lgav.cats.map((c) => `<tr><td class="ink strong">${c.k}</td><td>${U.esc(c.name)}</td><td class="num ink">${c.min ? 'CHF ' + D.chf0(c.min) : '<span class="muted">Lehrvertrag</span>'}</td><td class="num">${c.min ? D.chf(c.min / D.lgav.monthHours) : ''}</td></tr>`).join('');
+  const lv = { 'Blockiert Veröffentlichung': 'red', 'Warnung': 'amber', 'Automatisch abgezogen': 'blue' };
+  $('#rl').innerHTML = D.ruleSettings.map((r) => `<li><div class="t"><b>${r.name}</b><span>${U.esc(r.value)} · ${U.esc(r.basis)}</span></div>${U.pill(r.level === 'Blockiert Veröffentlichung' ? 'Regelverstoss' : r.level, lv[r.level])}<label class="switch"><input type="checkbox" ${r.on ? 'checked' : ''} aria-label="${U.esc(r.name)} aktiv"><i></i></label></li>`).join('');
+  $('#save').onclick = () => U.toast('Gespeichert. Der Wochenplan rechnet neu.');
+  $('#nt').onclick = () => U.toast('Neue Vorlage: Name, Rolle, Zeit und Tage.');
+});
+</script>
+</body>
+</html>
