@@ -5,7 +5,7 @@ One merged back-office design for restaurants (the till and kitchen display keep
 ## How to open
 
 - As a file: double-click `index.html`.
-- Over a local server: `python3 -m http.server 5491 --bind 127.0.0.1 --directory /Users/svendaneel/Desktop/Nordane/artifacts/backoffice-final`, then open `http://127.0.0.1:5491/index.html`.
+- Over a local server: `python3 -m http.server 5491 --bind 127.0.0.1 --directory mocks/backoffice`, then open `http://127.0.0.1:5491/index.html`.
 - URL parameters: `?view=…`, `?theme=light|dark`, `?palette=c|a|b`, `?bg=glow|mountains`. All three are remembered locally.
 
 ## Routes
