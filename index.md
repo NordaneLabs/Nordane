@@ -205,7 +205,7 @@ Fixed quote in CHF
 
 [Request a quote](mailto:info@nordane.ch)
 
-Prices per location, in Swiss francs. Cancel any month. Hardware on request.
+Prices per location, in Swiss francs. Cancel any month. Hardware (iPad, stand, printer, card terminal) on request, priced in CHF and delivered anywhere in Switzerland.
 
 Nordane
 

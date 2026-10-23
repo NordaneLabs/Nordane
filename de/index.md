@@ -205,7 +205,7 @@ Festpreis in CHF
 
 [Offerte anfragen](mailto:info@nordane.ch)
 
-Preise pro Standort, in Schweizer Franken. Monatlich kündbar. Hardware auf Anfrage.
+Preise pro Standort, in Schweizer Franken. Monatlich kündbar. Hardware (iPad, Ständer, Drucker, Kartenterminal) auf Anfrage, mit Preisen in CHF und Lieferung in die ganze Schweiz.
 
 Nordane
 
