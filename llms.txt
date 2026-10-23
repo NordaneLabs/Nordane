@@ -1,0 +1,34 @@
+# Nordane
+
+> Nordane is a Swiss AI studio. We help businesses scale into the agentic era with native apps, platforms, AI agents and the infrastructure underneath. Our flagship is Okam.
+
+Nordane GmbH (UID CHE-311.699.374) is a Swiss company in Lustmühle, Appenzell Ausserrhoden. It designs, builds and runs native apps, platforms, AI agents and the infrastructure underneath, for its own products and for other companies. Its flagship is Okam, the operating system for restaurants, in daily service in Norway. Prices on this site are in Swiss francs (CHF).
+
+The site is one page in English at / and the same page in German (Swiss German spelling) at /de/. Die Website gibt es auch auf Deutsch: https://nordane.ch/de/
+
+## Pages
+- [Nordane (English)](https://nordane.ch/): Nordane is a Swiss AI studio. We help businesses scale into the agentic era with native apps, platforms, AI agents and the infrastructure underneath. Our flagship is Okam. Markdown: https://nordane.ch/index.md
+- [Nordane (Deutsch)](https://nordane.ch/de/): Nordane ist ein Schweizer KI-Studio. Wir bringen Unternehmen ins Zeitalter der KI-Agenten: mit nativen Apps, Plattformen, KI-Agenten und der Infrastruktur darunter. Unser Flaggschiff ist Okam. Markdown: https://nordane.ch/de/index.md
+- [Impressum / Legal notice](https://nordane.ch/impressum.html): Impressum und rechtliche Angaben der Nordane GmbH, Lustmühle, Schweiz. Markdown: https://nordane.ch/impressum.md
+- [Datenschutzerklärung / Privacy notice](https://nordane.ch/datenschutz.html): Privacy notice of Nordane GmbH: which personal data arises on nordane.ch, what for, and your rights under the Swiss FADP and the GDPR. Markdown: https://nordane.ch/datenschutz.md
+- [AGB / Terms and conditions](https://nordane.ch/agb.html): General terms and conditions of Nordane GmbH for restaurant platform subscriptions and projects, under Swiss law. Markdown: https://nordane.ch/agb.md
+
+## Prices for restaurants (Okam, per location per month, cancel any month)
+- Till Light (Kasse Light): from CHF 69 per month. For cafés and small restaurants.
+- Till Full (Kasse Komplett): from CHF 139 per month. For busy restaurants.
+- Online ordering (Onlinebestellung): from CHF 45 per month. Guests order and pay online.
+- Staff planning (Personalplanung): from CHF 45 per month. Plan the team, see the cost.
+- Companies: apps, AI agents and infrastructure, with a fixed written quote in CHF before any work starts.
+
+## Contact
+- E-mail: info@nordane.ch (the contact form on the site opens an e-mail to this address; nothing is sent by the site itself)
+- Nordane GmbH, Stäheli 851, 9062 Lustmühle, Switzerland
+- LinkedIn: https://www.linkedin.com/company/nordane/
+- X: https://x.com/Nordane_ch
+- Facebook: https://www.facebook.com/profile.php?id=61595439659661
+
+## Related
+- [Okam](https://okam.no/en): the restaurant operating system Nordane builds (German: https://okam.no/de)
+
+## Optional
+- [Full text of the site](https://nordane.ch/llms-full.txt): both languages, the legal notice, the privacy notice and the terms in one file

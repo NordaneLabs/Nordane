@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="de-CH">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#f5f7fa" />
+<script>
+/* pre-paint theme restore: same key as the home page, runs before any CSS so there is no flash of the wrong theme */
+(function(){ try{ if(localStorage.getItem("nordane-theme")==="dark"){ document.documentElement.setAttribute("data-theme","dark"); var m=document.querySelector('meta[name="theme-color"]'); if(m) m.setAttribute("content","#05080d"); } }catch(e){} })();
+</script>
+<title>Impressum · Nordane GmbH</title>
+<meta name="description" data-i18n-content="meta.desc" content="Impressum und rechtliche Angaben der Nordane GmbH, Lustmühle, Schweiz." />
+<meta name="robots" content="index,follow" />
+<link rel="canonical" href="https://nordane.ch/impressum.html" />
+<link rel="alternate" type="text/markdown" href="/impressum.md" />
+<link rel="describedby" type="text/markdown" href="/llms.txt" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg?v=4" />
+<link rel="icon" href="/favicon.ico?v=4" sizes="any" />
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png?v=4" />
+<link href="/assets/fonts/fonts.css" rel="stylesheet" />
+<link rel="stylesheet" href="/assets/legal.css?v=1" />
+</head>
+<body>
+<header class="topbar">
+  <div class="wrap">
+    <nav class="nav" aria-label="Hauptnavigation" data-i18n-aria="nav.aria">
+      <a class="brand" href="/de/" aria-label="Nordane Startseite" data-i18n-aria="brand.aria"><span class="brand-mark"><img class="for-light" src="/assets/nordane-n-light.png" alt="" width="34" height="34" /><img class="for-dark" src="/assets/nordane-n-dark.png" alt="" width="34" height="34" /></span><span class="word">NORDANE</span></a>
+      <div class="nav-end">
+        <a class="btn ghost" href="mailto:info@nordane.ch" data-i18n="nav.contact">Kontakt</a>
+        <div class="lang" role="group" aria-label="Sprache" data-i18n-aria="lang.aria"><button type="button" data-lang="de" lang="de" aria-label="Deutsch" aria-pressed="true"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" fill="#DA291C"/><path fill="#fff" d="M13 6h6v7h7v6h-7v7h-6v-7H6v-6h7z"/></svg>DE</button><button type="button" data-lang="en" lang="en" aria-label="English" aria-pressed="false">EN</button></div>
+        <button class="mode" type="button" id="mode" aria-label="Dunkles Design einschalten"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5 13.6 10.4 22.5 12 13.6 13.6 12 22.5 10.4 13.6 1.5 12 10.4 10.4Z"/></svg></button>
+      </div>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="page-head">
+    <div class="wrap">
+      <div class="mono" data-i18n="eyebrow">Rechtliches</div>
+      <h1 data-i18n="h1">Impressum</h1>
+      <p class="lede" data-i18n="lede">Wer hinter nordane.ch steht und wie Sie uns erreichen. Angaben zum Unternehmen nach Schweizer Recht.</p>
+    </div>
+  </div>
+
+  <div class="body">
+    <div class="wrap">
+      <div class="cards">
+        <section class="card">
+          <h2 data-i18n="c.company">Unternehmen</h2>
+          <dl>
+            <dt data-i18n="firm">Firma</dt><dd>Nordane GmbH</dd>
+            <dt data-i18n="form">Rechtsform</dt><dd data-i18n="form.v">Gesellschaft mit beschränkter Haftung (GmbH) nach Schweizer Recht</dd>
+          </dl>
+        </section>
+        <section class="card">
+          <h2 data-i18n="c.contact">Kontakt</h2>
+          <dl>
+            <dt data-i18n="addr">Adresse</dt><dd>Nordane GmbH<br>c/o Sven Daneel<br>Stäheli 851<br>9062 Lustmühle<br><span data-i18n="country">Schweiz</span></dd>
+            <dt data-i18n="mail">E-Mail</dt><dd><a class="legal-a" href="mailto:info@nordane.ch">info@nordane.ch</a></dd>
+          </dl>
+        </section>
+        <section class="card wide">
+          <h2 data-i18n="c.register">Register</h2>
+          <dl>
+            <dt data-i18n="uid">Unternehmens-Identifikationsnummer (UID)</dt><dd>CHE-311.699.374</dd>
+            <dt data-i18n="reg">Handelsregister</dt><dd data-i18n="reg.v">Kanton Appenzell Ausserrhoden</dd>
+          </dl>
+        </section>
+      </div>
+
+      <div class="notes">
+        <section class="note">
+          <h2 data-i18n="prices">Preise</h2>
+          <p data-i18n="prices.p">Alle Preise auf dieser Website verstehen sich in Schweizer Franken (CHF).</p>
+        </section>
+        <section class="note">
+          <h2 data-i18n="links">Haftung für Links</h2>
+          <p data-i18n="links.p">Für Inhalte verlinkter Websites Dritter sind ausschliesslich deren Betreiber verantwortlich.</p>
+        </section>
+        <section class="note">
+          <h2 data-i18n="more">Datenschutz und AGB</h2>
+          <p data-i18n-html="more.p">Wie wir mit Daten umgehen, steht in der <a class="legal-a" href="/datenschutz.html">Datenschutzerklärung</a>. Für Verträge mit uns gelten unsere <a class="legal-a" href="/agb.html">Allgemeinen Geschäftsbedingungen</a>.</p>
+        </section>
+      </div>
+    </div>
+  </div>
+</main>
+
+<footer class="foot">
+  <div class="wrap row">
+    <a class="brand" href="/de/" aria-label="Nordane Startseite" data-i18n-aria="brand.aria"><span class="brand-mark"><img class="for-light" src="/assets/nordane-n-light.png" alt="" width="34" height="34" /><img class="for-dark" src="/assets/nordane-n-dark.png" alt="" width="34" height="34" /></span><span class="word">NORDANE</span></a>
+    <span class="place">Nordane GmbH · Stäheli 851, 9062 Lustmühle, <span data-i18n="foot.country">Schweiz</span> · <a href="mailto:info@nordane.ch">info@nordane.ch</a> · <a href="/impressum.html" aria-current="page" data-i18n="foot.imp">Impressum</a> · <a href="/datenschutz.html" data-i18n="foot.ds">Datenschutz</a> · <a href="/agb.html" data-i18n="foot.agb">AGB</a> · © 2026</span>
+    <div class="socials">
+      <a href="https://www.linkedin.com/company/nordane/" target="_blank" rel="noopener" aria-label="Nordane auf LinkedIn" data-i18n-aria="foot.li"><svg viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9.75h4V21H3V9.75Zm6.5 0h3.8v1.6h.06c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.77 2.65 4.77 6.1V21h-4v-4.9c0-1.17-.02-2.68-1.63-2.68-1.64 0-1.89 1.28-1.89 2.6V21h-4V9.75Z"/></svg></a>
+      <a href="https://x.com/Nordane_ch" target="_blank" rel="noopener" aria-label="Nordane auf X" data-i18n-aria="foot.x"><svg viewBox="0 0 24 24"><path d="M17.75 3h3.07l-6.7 7.66L22 21h-6.17l-4.83-6.32L5.47 21H2.4l7.17-8.2L2 3h6.33l4.37 5.78L17.75 3Zm-1.08 16.2h1.7L7.4 4.73H5.58L16.67 19.2Z"/></svg></a>
+      <a href="https://www.facebook.com/profile.php?id=61595439659661" target="_blank" rel="noopener" aria-label="Nordane auf Facebook" data-i18n-aria="foot.fb"><svg viewBox="0 0 24 24"><path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5.02 3.66 9.18 8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.52 1.49-3.91 3.78-3.91 1.1 0 2.24.2 2.24.2v2.47h-1.26c-1.24 0-1.63.78-1.63 1.57v1.88h2.78l-.44 2.91h-2.34V22c4.78-.76 8.44-4.92 8.44-9.94Z"/></svg></a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // German lives in the HTML (no-JS fallback); English lives here. Header and footer strings are in /assets/legal.js.
+  var D = { de:{}, en:{
+    'title':'Legal notice · Nordane GmbH',
+    'meta.desc':'Legal notice and company details of Nordane GmbH, Lustmühle, Switzerland.',
+    'eyebrow':'Legal', 'h1':'Legal notice',
+    'lede':'Who is behind nordane.ch and how to reach us. Company details under Swiss law.',
+    'c.company':'Company', 'c.contact':'Contact', 'c.register':'Register',
+    'firm':'Company name', 'form':'Legal form', 'form.v':'Limited liability company (GmbH) under Swiss law',
+    'addr':'Address', 'country':'Switzerland', 'mail':'E-mail', 'uid':'Company ID (UID)',
+    'reg':'Commercial register', 'reg.v':'Canton of Appenzell Ausserrhoden',
+
+    'prices':'Prices', 'prices.p':'All prices on this website are in Swiss francs (CHF).',
+    'links':'Liability for links', 'links.p':'The operators of linked third-party websites are solely responsible for their content.',
+    'more':'Privacy and terms',
+    'more.p':'How we handle data is set out in the <a class="legal-a" href="/datenschutz.html">privacy notice</a>. Contracts with us are governed by our <a class="legal-a" href="/agb.html">terms and conditions</a>.'
+  }};
+</script>
+<script src="/assets/legal.js?v=1"></script>
+</body>
+</html>

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="theme-color" content="#f5f7fa" />
 <script>
-/* pre-paint theme restore — runs before any CSS so there is no flash of the wrong theme */
+/* pre-paint theme restore: runs before any CSS so there is no flash of the wrong theme */
 (function(){
   try{
     if(localStorage.getItem("nordane-theme")==="dark"){
@@ -17,7 +17,14 @@
 })();
 </script>
 <title>Nordane</title>
-<meta name="description" content="Nordane is a Swiss AI studio. We help businesses scale into the agentic era with native apps, platforms, AI agents and the infrastructure underneath. Our flagship is Okam." />
+<meta name="description" data-i18n-content="meta.desc" content="Nordane is a Swiss AI studio. We help businesses scale into the agentic era with native apps, platforms, AI agents and the infrastructure underneath. Our flagship is Okam." />
+<meta name="robots" content="index,follow" />
+<link rel="canonical" href="https://nordane.ch/" />
+<link rel="alternate" hreflang="en" href="https://nordane.ch/" />
+<link rel="alternate" hreflang="de" href="https://nordane.ch/de/" />
+<link rel="alternate" hreflang="x-default" href="https://nordane.ch/" />
+<link rel="alternate" type="text/markdown" href="/index.md" />
+<link rel="describedby" type="text/markdown" href="/llms.txt" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=4" />
 <link rel="icon" href="/favicon.ico?v=4" sizes="any" />
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png?v=4" />
@@ -25,22 +32,102 @@
 <meta property="og:type" content="website" />
 <meta property="og:site_name" content="Nordane" />
 <meta property="og:title" content="Nordane" />
-<meta property="og:description" content="Helping businesses scale into the agentic era. Swiss AI studio, makers of Okam." />
+<meta property="og:description" data-i18n-content="og.desc" content="Helping businesses scale into the agentic era. Swiss AI studio, makers of Okam." />
 <meta property="og:url" content="https://nordane.ch/" />
+<meta property="og:locale" content="en_US" />
+<meta property="og:locale:alternate" content="de_CH" />
 <meta property="og:image" content="https://nordane.ch/assets/og.png?v=3" />
 <meta property="og:image:secure_url" content="https://nordane.ch/assets/og.png?v=3" />
 <meta property="og:image:type" content="image/png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:image:alt" content="Nordane — Swiss Alps at dusk with the Nordane mark" />
+<meta property="og:image:alt" data-i18n-content="og.alt" content="Nordane, Swiss Alps at dusk with the Nordane mark" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@Nordane_ch" />
 <meta name="twitter:title" content="Nordane" />
-<meta name="twitter:description" content="Helping businesses scale into the agentic era. Swiss AI studio, makers of Okam." />
+<meta name="twitter:description" data-i18n-content="og.desc" content="Helping businesses scale into the agentic era. Swiss AI studio, makers of Okam." />
 <meta name="twitter:image" content="https://nordane.ch/assets/og.png?v=3" />
-<link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+<!-- schema.org data for search engines and AI agents. The four plan prices must match the pricing cards below:
+     tools/build-de.mjs checks them on every run and stops if they differ. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://nordane.ch/#org",
+      "name": "Nordane",
+      "legalName": "Nordane GmbH",
+      "url": "https://nordane.ch/",
+      "logo": "https://nordane.ch/assets/icon-512.png",
+      "image": "https://nordane.ch/assets/og.png",
+      "description": "Swiss AI studio. Nordane designs, builds and runs native apps, platforms, AI agents and the infrastructure underneath. Its flagship is Okam, the operating system for restaurants.",
+      "email": "info@nordane.ch",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Stäheli 851",
+        "postalCode": "9062",
+        "addressLocality": "Lustmühle",
+        "addressRegion": "AR",
+        "addressCountry": "CH"
+      },
+      "taxID": "CHE-311.699.374",
+      "identifier": { "@type": "PropertyValue", "propertyID": "UID", "value": "CHE-311.699.374" },
+      "contactPoint": { "@type": "ContactPoint", "contactType": "sales", "email": "info@nordane.ch", "availableLanguage": ["en", "de"] },
+      "sameAs": [
+        "https://www.linkedin.com/company/nordane/",
+        "https://x.com/Nordane_ch",
+        "https://www.facebook.com/profile.php?id=61595439659661"
+      ],
+      "hasOfferCatalog": { "@id": "https://nordane.ch/#pricing" }
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://nordane.ch/#site",
+      "url": "https://nordane.ch/",
+      "name": "Nordane",
+      "inLanguage": ["en", "de-CH"],
+      "publisher": { "@id": "https://nordane.ch/#org" }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://nordane.ch/#okam",
+      "name": "Okam",
+      "url": "https://okam.no/",
+      "description": "The operating system for restaurants: till (POS) for iPad with back office, kitchen display, online ordering and staff planning.",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "iPadOS, iOS, Web"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://nordane.ch/#platform",
+      "name": "Nordane restaurant platform",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "iPadOS, iOS, Web",
+      "description": "Till for iPad, kitchen display, online ordering with card and TWINT, and staff planning for restaurants in Switzerland.",
+      "provider": { "@id": "https://nordane.ch/#org" }
+    },
+    {
+      "@type": "OfferCatalog",
+      "@id": "https://nordane.ch/#pricing",
+      "name": "Nordane restaurant platform, prices in Swiss francs",
+      "url": "https://nordane.ch/#pricing",
+      "description": "Prices per location, in Swiss francs. Cancel any month. Hardware on request.",
+      "itemListElement": [
+        { "@type": "Offer", "@id": "https://nordane.ch/#plan-till-light", "name": "Till Light", "description": "Till for iPad with back office for menu, staff and money.", "url": "https://nordane.ch/#pricing", "price": 69, "priceCurrency": "CHF", "seller": { "@id": "https://nordane.ch/#org" }, "itemOffered": { "@id": "https://nordane.ch/#platform" },
+          "priceSpecification": { "@type": "UnitPriceSpecification", "price": 69, "minPrice": 69, "priceCurrency": "CHF", "unitCode": "MON", "unitText": "per location per month" } },
+        { "@type": "Offer", "@id": "https://nordane.ch/#plan-till-full", "name": "Till Full", "description": "Every till feature, for busier restaurants and several tills.", "url": "https://nordane.ch/#pricing", "price": 139, "priceCurrency": "CHF", "seller": { "@id": "https://nordane.ch/#org" }, "itemOffered": { "@id": "https://nordane.ch/#platform" },
+          "priceSpecification": { "@type": "UnitPriceSpecification", "price": 139, "minPrice": 139, "priceCurrency": "CHF", "unitCode": "MON", "unitText": "per location per month" } },
+        { "@type": "Offer", "@id": "https://nordane.ch/#plan-online-ordering", "name": "Online ordering", "description": "Your own web shop and app. Guests pay by card or TWINT.", "url": "https://nordane.ch/#pricing", "price": 45, "priceCurrency": "CHF", "seller": { "@id": "https://nordane.ch/#org" }, "itemOffered": { "@id": "https://nordane.ch/#platform" },
+          "priceSpecification": { "@type": "UnitPriceSpecification", "price": 45, "minPrice": 45, "priceCurrency": "CHF", "unitCode": "MON", "unitText": "per location per month" } },
+        { "@type": "Offer", "@id": "https://nordane.ch/#plan-staff-planning", "name": "Staff planning", "description": "Rota, hours and staff costs per week.", "url": "https://nordane.ch/#pricing", "price": 45, "priceCurrency": "CHF", "seller": { "@id": "https://nordane.ch/#org" }, "itemOffered": { "@id": "https://nordane.ch/#platform" },
+          "priceSpecification": { "@type": "UnitPriceSpecification", "price": 45, "minPrice": 45, "priceCurrency": "CHF", "unitCode": "MON", "unitText": "per location per month" } }
+      ]
+    }
+  ]
+}
+</script>
+<link href="/assets/fonts/fonts.css" rel="stylesheet" />
 <style>
   /* Light (default): soft daylight. Dark: the dusk banner on near-black. Same layout, swapped tokens. */
   :root {
@@ -48,18 +135,20 @@
     --line:#dde5ee; --line-strong:#c9d4e0; --acc:#5c7fa3; --acc-deep:#3d5c7e; --tag-bg:#e8eef5; --tag-ink:#3d5c7e;
     --bullet:#5c7fa3; --eyebrow:#5c7fa3; --btn-bg:#3d5c7e; --btn-ink:#fff;
     --band:#071426; --band-ink:#c9d4e0; --band-line:#18324f;
-    --hero-img:url(/assets/banner-day.jpg); --hero-wash:linear-gradient(90deg,rgba(245,247,250,.94),rgba(245,247,250,.6) 55%,rgba(245,247,250,0));
+    --hero-img:url(/assets/banner-day.jpg?v=7); --hero-wash:linear-gradient(90deg,rgba(245,247,250,.94),rgba(245,247,250,.6) 55%,rgba(245,247,250,0));
     --hero-ink:#0e1722; --hero-body:#2b3a4d; --hero-eyebrow:#5c7fa3;
     --accent-text:linear-gradient(90deg,#ff6a4d,#5c7fa3);
+    --hi:#2f7fbf; --hi-glow:rgba(47,127,191,.45);
   }
   html[data-theme="dark"] {
     --bg:#05080d; --surface:#0b111b; --surface-2:#0a0f17; --ink:#f5f8fa; --body:#c9d4e0; --muted:#8796a8;
     --line:#1a2333; --line-strong:#2a3647; --acc:#ff9a82; --acc-deep:#ff765f; --tag-bg:#14202f; --tag-ink:#a6e3fb;
     --bullet:#ff765f; --eyebrow:#ff9a82; --btn-bg:#ff765f; --btn-ink:#071426;
     --band:#0a1422; --band-ink:#c9d4e0; --band-line:#1a2a40;
-    --hero-img:url(/assets/banner-night.jpg); --hero-wash:linear-gradient(90deg,rgba(5,8,13,.85),rgba(5,8,13,.3) 60%,rgba(5,8,13,0));
+    --hero-img:url(/assets/banner-night.jpg?v=7); --hero-wash:linear-gradient(90deg,rgba(5,8,13,.85),rgba(5,8,13,.3) 60%,rgba(5,8,13,0));
     --hero-ink:#f5f8fa; --hero-body:#c9d4e0; --hero-eyebrow:#ff9a82;
     --accent-text:linear-gradient(90deg,#ff7a5c,#ffd2c6 55%,#a6e3fb);
+    --hi:#ff765f; --hi-glow:rgba(255,118,95,.6);
   }
   * { box-sizing:border-box; }
   html, body { margin:0; overscroll-behavior-y:none; }
@@ -84,8 +173,8 @@
   .nav { display:flex; align-items:center; justify-content:space-between; height:72px; gap:20px; }
   .brand { display:inline-flex; align-items:center; gap:12px; }
   .brand-mark img { width:34px; height:34px; }
-  .brand-mark .for-dark, html[data-theme="dark"] .brand-mark .for-light { display:none; }
-  html[data-theme="dark"] .brand-mark .for-dark { display:block; }
+  .brand-mark .for-dark, html[data-theme="dark"] .brand-mark .for-light, .core-logo .for-dark, html[data-theme="dark"] .core-logo .for-light { display:none; }
+  html[data-theme="dark"] .brand-mark .for-dark, html[data-theme="dark"] .core-logo .for-dark { display:block; }
   .word { font-weight:600; letter-spacing:.32em; font-size:15px; color:var(--ink); }
   .nav ul { display:flex; gap:32px; list-style:none; margin:0; padding:0; }
   .nav li a { font:500 11px "JetBrains Mono",monospace; letter-spacing:.2em; text-transform:uppercase; color:var(--body); }
@@ -95,9 +184,17 @@
   html[data-theme="dark"] .mode { color:#ff765f; }
   .mode svg { width:16px; height:16px; fill:currentColor; transition:transform .5s cubic-bezier(.2,.8,.2,1); }
   html[data-theme="dark"] .mode svg { transform:rotate(90deg); }
+  .mode:focus-visible { outline:2px solid var(--hi); outline-offset:2px; }
+  /* Language switch: DE (Swiss flag) / EN */
+  .lang { display:inline-flex; align-items:center; gap:2px; height:40px; padding:3px; border:1px solid var(--line-strong); border-radius:999px; }
+  .lang button { display:inline-flex; align-items:center; gap:6px; height:32px; padding:0 10px; border:0; border-radius:999px; background:transparent; color:var(--muted); font:500 11px "JetBrains Mono",monospace; letter-spacing:.12em; cursor:pointer; transition:background-color .25s, color .25s; }
+  .lang button:hover { color:var(--ink); }
+  .lang button[aria-pressed="true"] { background:var(--tag-bg); color:var(--ink); }
+  .lang button:focus-visible { outline:2px solid var(--hi); outline-offset:2px; }
+  .lang svg { width:14px; height:14px; border-radius:2px; flex-shrink:0; }
 
   /* Hero on the banner */
-  .hero { position:relative; overflow:hidden; padding:120px 0 330px; background:var(--hero-img) center bottom / cover no-repeat, var(--bg); }
+  .hero { position:relative; overflow:hidden; padding:120px 0 330px; background:var(--hero-img) 78% bottom / cover no-repeat, var(--bg); }
   .hero::before { content:""; position:absolute; inset:0; background:var(--hero-wash); }
   .hero .wrap { position:relative; }
   .hero .mono { color:var(--hero-eyebrow); }
@@ -131,7 +228,7 @@
   .core-logo { width:52px; height:52px; border-radius:14px; display:grid; place-items:center; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); }
   .core-logo img { width:36px; height:36px; animation:breathe 5s ease-in-out infinite; }
   @keyframes breathe { 50% { transform:scale(1.06); filter:drop-shadow(0 0 14px rgba(255,138,112,.45)); } }
-  .demo-meta { display:flex; flex-direction:column; align-items:flex-end; gap:6px; text-align:right; }
+  .demo-meta { display:none; }
   .demo-label { font-size:13px; color:#c9d4e0; max-width:300px; }
   .demo-label.swap { animation:pop .5s cubic-bezier(.2,.8,.2,1) both; }
   .chat.fade { opacity:0; transition:opacity .4s; }
@@ -156,12 +253,24 @@
   .tile p { font-size:13.5px; color:var(--muted); margin-top:3px; }
   .tile { cursor:pointer; }
   .tile:hover { transform:translateY(-3px); border-color:var(--line-strong); }
-  .tile:focus-visible { outline:2px solid #ff765f; outline-offset:3px; }
-  .tile.active { background:color-mix(in srgb,#ff765f 9%,var(--surface)); border-color:#ff765f; }
-  .tile.active h3 { color:#ff765f; }
-  .tile.lit { border-color:#ff765f; box-shadow:0 0 0 1px #ff765f, 0 18px 40px -22px rgba(255,118,95,.6); transform:translateY(-3px); }
-  .tile.lit .ico { color:#ff765f; }
-  .tile.lit .num { color:#ff765f; }
+  .tile:focus-visible { outline:2px solid var(--hi); outline-offset:3px; }
+  .tile.active { background:color-mix(in srgb,var(--hi) 9%,var(--surface)); border-color:var(--hi); }
+  .tile.active h3 { color:var(--hi); }
+  .tile.lit { border-color:var(--hi); box-shadow:0 0 0 1px var(--hi), 0 18px 40px -22px var(--hi-glow); transform:translateY(-3px); }
+  .tile.lit .ico { color:var(--hi); }
+  .tile.lit .num { color:var(--hi); }
+  /* Demo panel in light mode: white card, ice accents, light logo */
+  html:not([data-theme="dark"]) .core { background:var(--surface); color:var(--ink); border:1px solid var(--line); box-shadow:0 40px 80px -48px rgba(47,90,140,.35); }
+  html:not([data-theme="dark"]) .core-logo { background:var(--tag-bg); border-color:var(--line); }
+  html:not([data-theme="dark"]) .core-logo img { animation-name:breathe-ice; }
+  @keyframes breathe-ice { 50% { transform:scale(1.06); filter:drop-shadow(0 0 14px rgba(47,127,191,.35)); } }
+  html:not([data-theme="dark"]) .msg.you { background:#e8eef5; color:var(--ink); }
+  html:not([data-theme="dark"]) .msg.ai { background:linear-gradient(135deg,rgba(47,127,191,.08),rgba(166,227,251,.28)); border-color:var(--line); color:var(--ink); }
+  html:not([data-theme="dark"]) .msg.tool { color:#2f7fbf; }
+  html:not([data-theme="dark"]) .msg.tool b { color:#3d5c7e; }
+  html:not([data-theme="dark"]) .msg .approve { background:var(--hi); color:#fff; }
+  html:not([data-theme="dark"]) .typing { background:#e8eef5; }
+  html:not([data-theme="dark"]) .typing i { background:#6a7b8f; }
   .reveal .tile, .reveal .core { opacity:0; transform:translateY(18px); }
   .reveal.in .tile, .reveal.in .core { opacity:1; transform:none; transition:opacity .7s cubic-bezier(.2,.8,.2,1), transform .7s cubic-bezier(.2,.8,.2,1), border-color .35s, box-shadow .35s; transition-delay:calc(var(--i,0) * 55ms); }
 
@@ -176,7 +285,8 @@
   .okam-copy .mono { color:#ff9a82; }
   .okam-copy h2 { color:#f5f8fa; font-size:clamp(24px,2.6vw,32px); margin:8px 0 6px; }
   .okam-copy p { color:#aab6c3; }
-  .okam .btn { background:#ff765f; color:#071426; }
+  .okam .btn { background:#a6e3fb; color:#071426; }
+  html[data-theme="dark"] .okam .btn { background:#ff765f; }
 
   /* How we work: a timeline that draws in, phase by phase */
   .tl-when { display:inline-block; font:500 10.5px "JetBrains Mono",monospace; letter-spacing:.16em; text-transform:uppercase; color:var(--tag-ink); background:var(--tag-bg); border-radius:999px; padding:5px 10px; }
@@ -186,18 +296,111 @@
   .how h3 { font-size:28px; margin:14px 0 8px; }
   .how p { color:var(--muted); }
 
+  .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; margin-top:56px; }
+  .stat { display:flex; flex-direction:column; gap:6px; padding:22px; background:var(--surface); border:1px solid var(--line); border-radius:20px; }
+  .stat-ico { width:46px; height:46px; border-radius:14px; display:grid; place-items:center; background:var(--tag-bg); color:var(--hi); margin-bottom:8px; }
+  .stat-ico svg { width:22px; height:22px; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; }
+  .stat-n { font:600 40px/1.05 "Space Grotesk",sans-serif; color:var(--ink); letter-spacing:-.03em; }
+  .stat-l { color:var(--muted); font-size:14.5px; }
+  @media (max-width:700px) { .stats { grid-template-columns:repeat(2,1fr); } }
+  .live { margin-top:28px; padding:40px; border-radius:24px; background:var(--band); color:var(--band-ink); }
+  .live .mono { color:#a6e3fb; }
+  html[data-theme="dark"] .live { border:1px solid var(--band-line); }
+  html[data-theme="dark"] .live .mono { color:#ff9a82; }
+  .live-head { display:flex; justify-content:space-between; align-items:flex-end; gap:32px; }
+  .live h2 { color:#f5f8fa; font-size:clamp(26px,3.2vw,36px); margin:10px 0 10px; max-width:720px; }
+  .live-head p { color:#aab6c3; max-width:640px; }
+  .live .btn.primary { background:#a6e3fb; color:#071426; }
+  html[data-theme="dark"] .live .btn.primary { background:#ff765f; }
+  .live-steps { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-top:32px; }
+  .live-step { padding:18px 20px; border-radius:16px; background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); }
+  .live-w { font:500 11px "JetBrains Mono",monospace; letter-spacing:.18em; text-transform:uppercase; color:#a6e3fb; }
+  html[data-theme="dark"] .live-w { color:#ff9a82; }
+  .live-step p { color:#dbe4ee; font-size:14.5px; margin-top:8px; }
+  @media (max-width:960px) { .live-head { flex-direction:column; align-items:flex-start; } .live-steps { grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:700px) { .live { padding:28px 22px; } .live-steps { grid-template-columns:1fr; } }
   .how { position:relative; }
   .tl-track { position:absolute; left:28px; right:28px; top:27px; height:2px; background:var(--line); }
-  .tl-fill { position:absolute; inset:0; transform-origin:left; transform:scaleX(0); background:linear-gradient(90deg,#ff765f,#5c7fa3); transition:transform 1.6s cubic-bezier(.2,.8,.2,1) .2s; }
+  .tl-fill { position:absolute; inset:0; transform-origin:left; transform:scaleX(0); background:linear-gradient(90deg,var(--hi),#5c7fa3); transition:transform 1.6s cubic-bezier(.2,.8,.2,1) .2s; }
   .tl-steps { display:grid; grid-template-columns:repeat(3,1fr); gap:40px; position:relative; }
   .tl-node { width:56px; height:56px; border-radius:50%; display:grid; place-items:center; background:var(--bg); border:2px solid var(--line); font:500 13px "JetBrains Mono",monospace; color:var(--muted); margin-bottom:22px; transition:border-color .4s, color .4s, box-shadow .4s; }
   .in .tl-fill { transform:scaleX(1); }
-  .in .tl-step .tl-node { border-color:#ff765f; color:var(--ink); box-shadow:0 0 0 6px color-mix(in srgb,#ff765f 14%,transparent); }
+  .in .tl-step .tl-node { border-color:var(--hi); color:var(--ink); box-shadow:0 0 0 6px color-mix(in srgb,var(--hi) 14%,transparent); }
   .in .tl-step:nth-child(1) .tl-node { transition-delay:.2s; } .in .tl-step:nth-child(2) .tl-node { transition-delay:.9s; } .in .tl-step:nth-child(3) .tl-node { transition-delay:1.6s; }
 
 
+
+  /* Pricing */
+  .prices { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:20px; }
+  .price.wide { margin-top:20px; display:flex; justify-content:space-between; align-items:center; gap:32px; }
+  .price.wide .note { max-width:560px; }
+  .price { padding:28px; }
+  .price h3 { font-size:18px; }
+  .price .amt { font:600 40px/1.1 "Space Grotesk",sans-serif; color:var(--ink); letter-spacing:-.03em; margin:14px 0 4px; }
+  .price .amt small { font-size:16px; color:var(--muted); font-weight:500; letter-spacing:0; }
+  .price .amt small { white-space:nowrap; }
+  .price .amt small:first-child { margin-right:4px; }
+  .prices .price .amt { font-size:32px; }
+  .prices .price .amt .n { white-space:nowrap; }
+  .prices .price .amt small:last-child { margin-left:4px; }
+  .price .note { color:var(--muted); font-size:14.5px; }
+  .fineprint { margin-top:20px; color:var(--muted); font-size:14.5px; }
+  @media (max-width:1000px) { .prices { grid-template-columns:repeat(2,1fr); } }
+  @media (max-width:700px) { .prices { grid-template-columns:1fr; } .price.wide { flex-direction:column; align-items:flex-start; } }
+
   .close { text-align:center; padding:110px 0; }
   .close h2 { font-size:clamp(32px,4.4vw,48px); margin:16px auto 28px; max-width:760px; }
+
+
+
+  /* Pricing cards */
+  .prices .price { display:flex; flex-direction:column; padding:26px; }
+  .p-top { display:flex; align-items:center; gap:12px; }
+  .p-ico { width:40px; height:40px; border-radius:12px; display:grid; place-items:center; background:var(--tag-bg); color:var(--hi); flex-shrink:0; }
+  .p-ico svg, .feats svg { fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
+  .p-ico svg { width:20px; height:20px; }
+  .prices .price h3 { font-size:18px; margin:0; }
+  .prices .price .note { margin-top:10px; font-size:14px; min-height:3.2em; }
+  @media (max-width:700px) { .prices .price .note { min-height:0; } }
+  .prices .price .amt { display:flex; flex-direction:column; gap:2px; margin:18px 0 18px; padding-bottom:18px; border-bottom:1px solid var(--line); font-size:34px; }
+  .prices .price .amt .from { font-size:13px; margin:0; }
+  .prices .price .amt .row { display:flex; align-items:baseline; gap:6px; white-space:nowrap; }
+  .prices .price .amt .row small { margin:0; }
+  .feats { list-style:none; margin:0; padding:0; display:grid; gap:10px; font-size:14.5px; color:var(--body); }
+  .feats li { display:flex; gap:10px; align-items:flex-start; }
+  .feats svg { width:18px; height:18px; color:var(--hi); flex-shrink:0; margin-top:2px; }
+  .price.wide { align-items:center; }
+  .w-right { display:flex; align-items:center; gap:24px; flex-shrink:0; }
+  .w-right .amt { margin:0; white-space:nowrap; }
+  @media (max-width:700px) { .w-right { flex-direction:column; align-items:flex-start; gap:14px; } .w-right .amt { font-size:30px; } }
+
+  /* Contact dialog */
+  .contact { width:min(680px,calc(100vw - 32px)); max-height:calc(100vh - 32px); padding:0; border:1px solid var(--line); border-radius:24px; background:var(--surface); color:var(--body); box-shadow:0 40px 100px -30px rgba(5,8,13,.5); }
+  .contact::backdrop { background:rgba(5,8,13,.55); backdrop-filter:blur(4px); }
+  .contact[open] { animation:pop .3s cubic-bezier(.2,.8,.2,1) both; }
+  .ct-form { position:relative; padding:36px 36px 30px; }
+  .ct-form h2 { font-size:clamp(26px,3.4vw,34px); margin:10px 0 6px; }
+  .ct-sub { color:var(--muted); }
+  .ct-x { position:absolute; top:16px; right:16px; width:40px; height:40px; border-radius:50%; border:1px solid var(--line); background:transparent; color:var(--ink); font-size:22px; line-height:1; cursor:pointer; }
+  .whos { border:0; padding:0; margin:24px 0 20px; display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .who { display:block; cursor:pointer; }
+  .who input { position:absolute; opacity:0; pointer-events:none; }
+  .who span { display:flex; flex-direction:column; gap:2px; height:100%; padding:14px 16px; border:1px solid var(--line); border-radius:14px; background:var(--surface-2); transition:border-color .2s, background-color .2s; }
+  .who b { color:var(--ink); font-weight:600; }
+  .who small { color:var(--muted); font-size:13.5px; }
+  .who:hover span { border-color:var(--line-strong); }
+  .who input:checked + span { border-color:var(--hi); background:color-mix(in srgb,var(--hi) 9%,var(--surface)); }
+  .who input:focus-visible + span { outline:2px solid var(--hi); outline-offset:2px; }
+  .ct-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .ct-grid label { display:flex; flex-direction:column; gap:6px; font-size:13.5px; color:var(--muted); }
+  .ct-grid .wide { grid-column:1 / -1; }
+  .ct-grid input, .ct-grid textarea { font:inherit; font-size:15px; color:var(--ink); background:var(--bg); border:1px solid var(--line-strong); border-radius:12px; padding:11px 13px; resize:vertical; }
+  .ct-grid input:focus, .ct-grid textarea:focus { outline:2px solid var(--hi); outline-offset:1px; border-color:transparent; }
+  .ct-err { color:#d9482b; margin-top:14px; } .ct-done { color:var(--ink); margin-top:14px; padding:12px 14px; border-radius:12px; background:var(--tag-bg); }
+  .ct-foot { display:flex; align-items:center; gap:18px; flex-wrap:wrap; margin-top:22px; }
+  .ct-foot button { border:0; cursor:pointer; }
+  .ct-alt { color:var(--muted); font-size:13.5px; } .ct-alt a { color:var(--ink); border-bottom:1px solid var(--line-strong); }
+  @media (max-width:700px) { .ct-form { padding:28px 20px 22px; } .whos, .ct-grid { grid-template-columns:1fr; } }
 
   /* Footer */
   .foot { border-top:1px solid var(--line); padding:40px 0 48px; }
@@ -221,8 +424,8 @@
   @media (max-width:700px) {
     .wrap { padding:0 22px; }
     .nav .btn.ghost { display:none; }
-    .hero { padding:72px 0 240px; background-size:auto 100%; background-position:80% bottom; }
-    .hero::before { background:linear-gradient(180deg,color-mix(in srgb,var(--bg) 92%,transparent) 30%,color-mix(in srgb,var(--bg) 20%,transparent) 70%,transparent); }
+    .hero { padding:64px 0 340px; background-size:auto 46%; background-position:78% bottom; }
+    .hero::before { background:linear-gradient(180deg,var(--bg) 54%,color-mix(in srgb,var(--bg) 40%,transparent) 62%,transparent 72%); }
     .lede { font-size:17px; }
     .where { grid-template-columns:1fr; }
     .tl-steps { grid-template-columns:1fr; gap:28px; }
@@ -246,14 +449,16 @@
 <body>
 <header class="topbar">
   <div class="wrap">
-    <nav class="nav" aria-label="Main">
-      <a class="brand" href="/" aria-label="Nordane home"><span class="brand-mark"><img class="for-light" src="/assets/nordane-n-light.png" alt="" width="34" height="34" /><img class="for-dark" src="/assets/nordane-n-dark.png" alt="" width="34" height="34" /></span><span class="word">NORDANE</span></a>
+    <nav class="nav" aria-label="Main" data-i18n-aria="nav.aria">
+      <a class="brand" href="/" aria-label="Nordane home" data-i18n-aria="brand.aria"><span class="brand-mark"><img class="for-light" src="/assets/nordane-n-light.png" alt="" width="34" height="34" /><img class="for-dark" src="/assets/nordane-n-dark.png" alt="" width="34" height="34" /></span><span class="word">NORDANE</span></a>
       <ul>
-        <li><a href="#build">What we do</a></li>
-        <li><a href="#how">How we work</a></li>
+        <li><a href="#build" data-i18n="nav.build">What we do</a></li>
+        <li><a href="#how" data-i18n="nav.how">Our journey</a></li>
+        <li><a href="#pricing" data-i18n="nav.pricing">Pricing</a></li>
       </ul>
       <div class="nav-end">
-        <a class="btn ghost" href="mailto:info@nordane.ch">Get in touch</a>
+        <a class="btn ghost" href="mailto:info@nordane.ch" data-contact data-i18n="nav.contact">Get in touch</a>
+        <div class="lang" role="group" aria-label="Language" data-i18n-aria="lang.aria"><button type="button" data-lang="de" lang="de" aria-label="Deutsch" aria-pressed="false"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" fill="#DA291C"/><path fill="#fff" d="M13 6h6v7h7v6h-7v7h-6v-7H6v-6h7z"/></svg>DE</button><button type="button" data-lang="en" lang="en" aria-label="English" aria-pressed="true">EN</button></div>
         <button class="mode" type="button" id="mode" aria-label="Switch to dark mode"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 1.5 13.6 10.4 22.5 12 13.6 13.6 12 22.5 10.4 13.6 1.5 12 10.4 10.4Z"/></svg></button>
       </div>
     </nav>
@@ -263,39 +468,39 @@
 <main>
   <section class="hero">
     <div class="wrap">
-      <div class="mono">Swiss AI studio · Switzerland &amp; Norway</div>
-      <h1>We help businesses scale into the <span class="accent">agentic</span> era.</h1>
-      <p class="lede">We design, build and run the software behind it: native apps, platforms, AI agents and the infrastructure underneath. Our flagship, Okam, runs restaurants in Norway every day.</p>
-      <div class="cta"><a class="btn primary" href="#build">What we do →</a><a class="btn ghost" href="#okam">See Okam</a></div>
+      <div class="mono" data-i18n="hero.eyebrow">Swiss AI studio · Switzerland &amp; Norway</div>
+      <h1 data-i18n-html="hero.h1">We help businesses scale into the <span class="accent">agentic</span> era.</h1>
+      <p class="lede" data-i18n="hero.lede">We design, build and run the software behind it: native apps, platforms, AI agents and the infrastructure underneath. Our flagship, Okam, runs restaurants in Norway every day.</p>
+      <div class="cta"><a class="btn primary" href="#build" data-i18n="hero.cta1">What we do →</a><a class="btn ghost" href="#okam" data-i18n="hero.cta2">See Okam</a></div>
     </div>
   </section>
 
   <div class="where">
-    <div><span class="mono">Switzerland</span><h3>Company &amp; engineering</h3><p>Nordane is incorporated and run from Appenzell. Swiss-hosted infrastructure for clients who need their data to stay here.</p></div>
-    <div><span class="mono">Norway</span><h3>Okam, in daily service</h3><p>Restaurants in Norway take orders, run the till and plan staff on Okam.</p></div>
-    <div><span class="mono">Your business</span><h3>The same stack, for you</h3><p>We build and run the same infrastructure, agents and apps for other companies.</p></div>
+    <div><span class="mono" data-i18n="where.ch.k">Switzerland</span><h3 data-i18n="where.ch.h">Company &amp; engineering</h3><p data-i18n="where.ch.p">Nordane is incorporated and run from Appenzell. Swiss-hosted infrastructure for clients who need their data to stay here.</p></div>
+    <div><span class="mono" data-i18n="where.no.k">Norway</span><h3 data-i18n="where.no.h">Okam, in daily service</h3><p data-i18n="where.no.p">Restaurants in Norway take orders, run the till and plan staff on Okam.</p></div>
+    <div><span class="mono" data-i18n="where.you.k">Your business</span><h3 data-i18n="where.you.h">The same stack, for you</h3><p data-i18n="where.you.p">We build and run the same infrastructure, agents and apps for other companies.</p></div>
   </div>
 
   <section class="section" id="build">
     <div class="wrap">
-      <div class="section-head"><div><div class="mono">What Nordane does</div><h2>Everything an agentic business runs on.</h2></div><p>We build the whole stack and stay with you after launch: the infrastructure, the agents, the chat, the connections into your systems, and the support.</p></div>
+      <div class="section-head"><div><div class="mono" data-i18n="build.k">What Nordane does</div><h2 data-i18n="build.h">Everything an agentic business runs on.</h2></div><p data-i18n="build.p">We build the whole stack and stay with you after launch: the infrastructure, the agents, the chat, the connections into your systems, and the support.</p></div>
       <div class="bento reveal">
-        <div class="tile t1" data-k="infra"><span class="num">01</span><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><path d="M7 7h.01M7 17h.01"/></svg></span><h3>Infrastructure</h3><p>Swiss-hosted, built to scale</p></div>
-        <div class="tile t2" data-k="agents"><span class="num">02</span><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 4v4M9 13h.01M15 13h.01M9.5 16.5h5"/></svg></span><h3>AI agents</h3><p>Software that does the work</p></div>
-        <div class="tile t3" data-k="chat"><span class="num">03</span><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg></span><h3>The chat</h3><p>Assistants people actually talk to</p></div>
-        <div class="tile t4" data-k="mcp"><span class="num">04</span><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3v5M16 3v5M6 8h12v3a6 6 0 0 1-12 0zM12 17v4"/></svg></span><h3>MCP</h3><p>Your systems, open to AI</p></div>
-        <div class="core" aria-label="Demo: a Nordane agent at work">
-          <div class="core-head"><span class="core-logo"><img src="/assets/nordane-n.png" alt="" width="40" height="40" /></span><span class="demo-meta"><span class="mono">Live demo</span><span class="demo-label"></span></span></div>
+        <div class="tile t1" data-k="infra"><span class="num">01</span><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="6" rx="1.5"/><rect x="3" y="14" width="18" height="6" rx="1.5"/><path d="M7 7h.01M7 17h.01"/></svg></span><h3 data-i18n="tile.infra.h">Infrastructure</h3><p data-i18n="tile.infra.p">Swiss-hosted, built to scale</p></div>
+        <div class="tile t2" data-k="agents"><span class="num">02</span><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="8" width="14" height="11" rx="3"/><path d="M12 4v4M9 13h.01M15 13h.01M9.5 16.5h5"/></svg></span><h3 data-i18n="tile.agents.h">AI agents</h3><p data-i18n="tile.agents.p">Software that does the work</p></div>
+        <div class="tile t3" data-k="chat"><span class="num">03</span><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg></span><h3 data-i18n="tile.chat.h">The chat</h3><p data-i18n="tile.chat.p">Assistants people actually talk to</p></div>
+        <div class="tile t4" data-k="mcp"><span class="num">04</span><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3v5M16 3v5M6 8h12v3a6 6 0 0 1-12 0zM12 17v4"/></svg></span><h3 data-i18n="tile.mcp.h">MCP</h3><p data-i18n="tile.mcp.p">Your systems, open to AI</p></div>
+        <div class="core" aria-label="Demo: a Nordane agent at work" data-i18n-aria="demo.aria">
+          <div class="core-head"><span class="core-logo"><img class="for-light" src="/assets/nordane-n-light.png" alt="" width="40" height="40" /><img class="for-dark" src="/assets/nordane-n.png" alt="" width="40" height="40" /></span><span class="demo-meta"><span class="mono" data-i18n="demo.live">Live demo</span><span class="demo-label"></span></span></div>
           <div class="chat" aria-live="polite"></div>
         </div>
-        <div class="tile t5" data-k="apps"><span class="num">05</span><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 18h2"/></svg></span><h3>Apps</h3><p>iPhone, iPad and web</p></div>
-        <div class="tile t6" data-k="data"><span class="num">06</span><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 5-6"/></svg></span><h3>Live data</h3><p>One source of truth</p></div>
-        <div class="tile t7" data-k="security"><span class="num">07</span><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg></span><h3>Privacy</h3><p>Your data stays yours</p></div>
-        <div class="tile t8" data-k="auto"><span class="num">08</span><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"/><path d="M18 3v4h-4M6 21v-4h4"/></svg></span><h3>Automation</h3><p>Routine work, handled</p></div>
-        <div class="tile t9" data-k="integr"><span class="num">09</span><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7H6a4 4 0 0 0 0 8h3M15 7h3a4 4 0 0 1 0 8h-3M8 11h8"/></svg></span><h3>Integrations</h3><p>Payments, accounting, delivery</p></div>
-        <div class="tile t10" data-k="support"><span class="num">10</span><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13v-1a8 8 0 0 1 16 0v1"/><rect x="3" y="13" width="4" height="6" rx="1.5"/><rect x="17" y="13" width="4" height="6" rx="1.5"/></svg></span><h3>Support</h3><p>We run it with you</p></div>
-        <div class="tile t11" data-k="scale"><span class="num">11</span><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h16M7 20v-5M12 20V9M17 20V4"/></svg></span><h3>Scale</h3><p>Grows without a rebuild</p></div>
-        <div class="tile t12" data-k="evals"><span class="num">12</span><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r=".6"/></svg></span><h3>Tested</h3><p>Measured before it ships</p></div>
+        <div class="tile t5" data-k="apps"><span class="num">05</span><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 18h2"/></svg></span><h3 data-i18n="tile.apps.h">Apps</h3><p data-i18n="tile.apps.p">iPhone, iPad and web</p></div>
+        <div class="tile t6" data-k="data"><span class="num">06</span><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 19V5M4 19h16M8 15l3-4 3 2 5-6"/></svg></span><h3 data-i18n="tile.data.h">Live data</h3><p data-i18n="tile.data.p">One source of truth</p></div>
+        <div class="tile t7" data-k="security"><span class="num">07</span><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg></span><h3 data-i18n="tile.security.h">Privacy</h3><p data-i18n="tile.security.p">Your data stays yours</p></div>
+        <div class="tile t8" data-k="auto"><span class="num">08</span><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12a8 8 0 0 1 14-5.3M20 12a8 8 0 0 1-14 5.3"/><path d="M18 3v4h-4M6 21v-4h4"/></svg></span><h3 data-i18n="tile.auto.h">Automation</h3><p data-i18n="tile.auto.p">Routine work, handled</p></div>
+        <div class="tile t9" data-k="integr"><span class="num">09</span><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 7H6a4 4 0 0 0 0 8h3M15 7h3a4 4 0 0 1 0 8h-3M8 11h8"/></svg></span><h3 data-i18n="tile.integr.h">Integrations</h3><p data-i18n="tile.integr.p">Payments, accounting, delivery</p></div>
+        <div class="tile t10" data-k="support"><span class="num">10</span><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 13v-1a8 8 0 0 1 16 0v1"/><rect x="3" y="13" width="4" height="6" rx="1.5"/><rect x="17" y="13" width="4" height="6" rx="1.5"/></svg></span><h3 data-i18n="tile.support.h">Support</h3><p data-i18n="tile.support.p">We run it with you</p></div>
+        <div class="tile t11" data-k="scale"><span class="num">11</span><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20h16M7 20v-5M12 20V9M17 20V4"/></svg></span><h3 data-i18n="tile.scale.h">Scale</h3><p data-i18n="tile.scale.p">Grows without a rebuild</p></div>
+        <div class="tile t12" data-k="evals"><span class="num">12</span><span class="ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="4"/><circle cx="12" cy="12" r=".6"/></svg></span><h3 data-i18n="tile.evals.h">Tested</h3><p data-i18n="tile.evals.p">Measured before it ships</p></div>
       </div>
     </div>
   </section>
@@ -306,48 +511,187 @@
         <svg viewBox="-8 -8 116 116" aria-hidden="true"><path fill="#F6F3EC" d="M0 0H100V100H70A46 46 0 0 0 24 54L24 100H0Z"/><path fill="#E2712B" d="M12 54H24V100H12Z"/></svg>
         <span>okam</span>
       </a>
-      <div class="okam-copy"><div class="mono">Our flagship</div><h2>Okam, the operating system for restaurants.</h2><p>Built on the same stack. In daily service in Norway.</p></div>
-      <a class="btn" href="https://okam.no" target="_blank" rel="noopener">Visit okam.no ↗</a>
+      <div class="okam-copy"><div class="mono" data-i18n="okam.k">Our flagship</div><h2 data-i18n="okam.h">Okam, the operating system for restaurants.</h2><p data-i18n="okam.p">Built on the same stack. In daily service in Norway.</p></div>
+      <a class="btn" href="https://okam.no" target="_blank" rel="noopener" data-i18n="okam.cta">Visit okam.no ↗</a>
     </div>
   </section>
 
   <section class="section" id="how">
     <div class="wrap">
-      <div class="section-head"><div><div class="mono">How we work</div><h2>Build it. Run it. Scale it.</h2></div><p>One team from the first workshop to the hundredth site. You always know what happens next.</p></div>
+      <div class="section-head"><div><div class="mono" data-i18n="how.k">Our journey with Okam</div><h2 data-i18n="how.h">From the first line to launch in four months.</h2></div><p data-i18n="how.p">In July 2026 we started rebuilding Okam from the ground up. By October it runs the till, the kitchen, the online shop and the marketing, with AI built in.</p></div>
       <div class="how reveal-how">
         <div class="tl-track"><span class="tl-fill"></span></div>
         <div class="tl-steps">
-          <div class="tl-step"><span class="tl-node"><span>01</span></span><span class="tl-when">Weeks 1–6</span><h3>Build</h3><p>We start on your data, not a slide deck. A small senior team ships the first working version.</p><ul><li>Workshop on your real data</li><li>First working version</li><li>Your systems connected over MCP</li></ul></div>
-          <div class="tl-step"><span class="tl-node"><span>02</span></span><span class="tl-when">From launch</span><h3>Operate</h3><p>Agents take the routine work. People approve what matters. We keep everything running.</p><ul><li>Agents with approval for every change</li><li>Monitoring and support</li><li>Monthly review of what the agents did</li></ul></div>
-          <div class="tl-step"><span class="tl-node"><span>03</span></span><span class="tl-when">Year one and on</span><h3>Scale</h3><p>The same system grows to more sites, markets and users without a rebuild.</p><ul><li>New agents on the same base</li><li>More sites and markets</li><li>Swiss-hosted infrastructure that grows with you</li></ul></div>
+          <div class="tl-step"><span class="tl-node"><span>01</span></span><span class="tl-when" data-i18n="how.1.when">July – August 2026</span><h3 data-i18n="how.1.h">The till</h3><p data-i18n="how.1.p">We started where a restaurant makes its money: a new till for iPad and the back office behind it.</p><ul><li data-i18n="how.1.li1">Till (POS) for iPad</li><li data-i18n="how.1.li2">Card terminals and receipt printers</li><li data-i18n="how.1.li3">Norwegian certified cash register rules</li><li data-i18n="how.1.li4">Back office for menu, staff and money</li><li data-i18n="how.1.li5">Tripletex accounting link</li></ul></div>
+          <div class="tl-step"><span class="tl-node"><span>02</span></span><span class="tl-when" data-i18n="how.2.when">September – October 2026</span><h3 data-i18n="how.2.h">The whole restaurant</h3><p data-i18n="how.2.p">Then everything around the till, on the same base and the same data.</p><ul><li data-i18n="how.2.li1">Kitchen display</li><li data-i18n="how.2.li2">Online ordering, web and app</li><li data-i18n="how.2.li3">Table reservations</li><li data-i18n="how.2.li4">Staff planning</li><li data-i18n="how.2.li5">Gift cards, Wolt and Foodora</li></ul></div>
+          <div class="tl-step"><span class="tl-node"><span>03</span></span><span class="tl-when" data-i18n="how.3.when">October 2026</span><h3 data-i18n="how.3.h">Factory and launch</h3><p data-i18n="how.3.p">Now the platform improves itself every day and goes to market.</p><ul><li data-i18n="how.3.li1">Our software factory: problem reports become tested fixes, automatically</li><li data-i18n="how.3.li2">Ask Okam, the AI assistant for owners</li><li data-i18n="how.3.li3">The new okam.no website</li><li data-i18n="how.3.li4">Switzerland: CHF, German and TWINT</li></ul></div>
         </div>
+      </div>
+      <div class="stats"><div class="stat"><span class="stat-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="7" y="3" width="10" height="18" rx="2"/><path d="M11 18h2"/></svg></span><span class="stat-n">6</span><span class="stat-l" data-i18n="stat.1">Apps on one platform</span></div><div class="stat"><span class="stat-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8"/><path d="M12 7v5l3 2"/></svg></span><span class="stat-n">4</span><span class="stat-l" data-i18n="stat.2">months from start to launch</span></div><div class="stat"><span class="stat-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 21V4M4 4h11l-2 4 2 4H4"/></svg></span><span class="stat-n">2</span><span class="stat-l" data-i18n="stat.3">countries: Norway and Switzerland</span></div><div class="stat"><span class="stat-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 9h8M8 12h5"/></svg></span><span class="stat-n">3</span><span class="stat-l" data-i18n="stat.4">languages: Norwegian, German, English</span></div></div>
+      <div class="live">
+        <div class="live-head"><div><div class="mono" data-i18n="live.k">Your turn</div><h2 data-i18n="live.h">That was the proof. Now we get you live in one month.</h2><p data-i18n="live.p">The same platform, set up for your business: hardware, payments and integrations included, and a team that stays with you after launch.</p></div><a class="btn primary" href="mailto:info@nordane.ch" data-contact data-i18n="live.cta">Start your project →</a></div>
+        <div class="live-steps"><div class="live-step"><span class="live-w" data-i18n="live.1.h">Week 1</span><p data-i18n="live.1.p">Workshop, your menu and data imported</p></div><div class="live-step"><span class="live-w" data-i18n="live.2.h">Week 2</span><p data-i18n="live.2.p">Hardware delivered and set up: iPad, printer, card terminal</p></div><div class="live-step"><span class="live-w" data-i18n="live.3.h">Week 3</span><p data-i18n="live.3.p">Payments, TWINT, accounting and delivery connected</p></div><div class="live-step"><span class="live-w" data-i18n="live.4.h">Week 4</span><p data-i18n="live.4.p">Team trained, you go live, we stay on support</p></div></div>
       </div>
     </div>
   </section>
 
+  <section class="section" id="pricing">
+    <div class="wrap">
+      <div class="section-head"><div><div class="mono" data-i18n="price.k">Pricing</div><h2 data-i18n="price.h">Clear prices, in Swiss francs.</h2></div></div>
+      <div class="prices"><div class="card price" data-plan="till-light"><div class="p-top"><span class="p-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 7h6M9 11h6M9 15h3"/></svg></span><h3 data-i18n="price.light.h">Till Light</h3></div><p class="note" data-i18n="price.light.p">For cafés and small restaurants.</p><div class="amt"><small class="from" data-i18n="price.from">from</small><span class="row"><span class="n">CHF 69</span><small data-i18n="price.per">/ month</small></span></div><ul class="feats"><li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7"/></svg><span data-i18n="price.light.f1">Till for iPad</span></li><li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7"/></svg><span data-i18n="price.light.f2">Menu, prices and tables</span></li><li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7"/></svg><span data-i18n="price.light.f3">Daily closing and receipts</span></li></ul></div><div class="card price" data-plan="till-full"><div class="p-top"><span class="p-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg></span><h3 data-i18n="price.full.h">Till Full</h3></div><p class="note" data-i18n="price.full.p">For busy restaurants.</p><div class="amt"><small class="from" data-i18n="price.from">from</small><span class="row"><span class="n">CHF 139</span><small data-i18n="price.per">/ month</small></span></div><ul class="feats"><li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7"/></svg><span data-i18n="price.full.f1">Everything in Till Light</span></li><li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7"/></svg><span data-i18n="price.full.f2">Several tills and kitchen display</span></li><li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7"/></svg><span data-i18n="price.full.f3">Reports for every location</span></li></ul></div><div class="card price" data-plan="online-ordering"><div class="p-top"><span class="p-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 7h12l-1 13H7z"/><path d="M9 7a3 3 0 0 1 6 0"/></svg></span><h3 data-i18n="price.order.h">Online ordering</h3></div><p class="note" data-i18n="price.order.p">Guests order and pay online.</p><div class="amt"><small class="from" data-i18n="price.from">from</small><span class="row"><span class="n">CHF 45</span><small data-i18n="price.per">/ month</small></span></div><ul class="feats"><li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7"/></svg><span data-i18n="price.order.f1">Your own web shop</span></li><li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7"/></svg><span data-i18n="price.order.f2">Your own ordering app</span></li><li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7"/></svg><span data-i18n="price.order.f3">Card and TWINT</span></li></ul></div><div class="card price" data-plan="staff-planning"><div class="p-top"><span class="p-ico"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><path d="M3 20a6 6 0 0 1 12 0"/><path d="M16 4a3 3 0 0 1 0 6M21 20a6 6 0 0 0-4-5.6"/></svg></span><h3 data-i18n="price.people.h">Staff planning</h3></div><p class="note" data-i18n="price.people.p">Plan the team, see the cost.</p><div class="amt"><small class="from" data-i18n="price.from">from</small><span class="row"><span class="n">CHF 45</span><small data-i18n="price.per">/ month</small></span></div><ul class="feats"><li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7"/></svg><span data-i18n="price.people.f1">Rota in minutes</span></li><li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7"/></svg><span data-i18n="price.people.f2">Hours for payroll</span></li><li><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7"/></svg><span data-i18n="price.people.f3">Staff costs per week</span></li></ul></div></div>
+      <div class="card price wide"><div class="w-left"><div class="mono" data-i18n="price.c.k">Companies</div><h3 data-i18n="price.c.h">Projects and running</h3><p class="note" data-i18n="price.c.note">Apps, AI agents and infrastructure for your business, at a fixed price agreed in writing.</p></div><div class="w-right"><div class="amt" data-i18n-html="price.c.amt">Fixed quote <small>in CHF</small></div><a class="btn primary" href="mailto:info@nordane.ch" data-contact data-i18n="price.c.cta">Request a quote →</a></div></div>
+      <p class="fineprint" data-i18n="price.fine">Prices per location, in Swiss francs. Cancel any month. Hardware on request.</p>
+    </div>
+  </section>
+
   <section class="close">
-    <div class="wrap"><div class="mono">Nordane</div><h2>Ready for the agentic era? Let’s build what’s next.</h2><a class="btn primary" href="mailto:info@nordane.ch">info@nordane.ch →</a></div>
+    <div class="wrap"><div class="mono">Nordane</div><h2 data-i18n-html="close.h">Ready for the agentic era? Let’s build what’s next.</h2><a class="btn primary" href="mailto:info@nordane.ch" data-contact data-i18n="ct.cta">Get in touch →</a></div>
   </section>
 </main>
 
 <footer class="foot">
   <div class="wrap row">
-    <a class="brand" href="/" aria-label="Nordane home"><span class="brand-mark"><img class="for-light" src="/assets/nordane-n-light.png" alt="" width="34" height="34" /><img class="for-dark" src="/assets/nordane-n-dark.png" alt="" width="34" height="34" /></span><span class="word">NORDANE</span></a>
-    <span class="place">Nordane GmbH · Teufen, Switzerland · <a href="mailto:info@nordane.ch">info@nordane.ch</a> · © 2026</span>
+    <a class="brand" href="/" aria-label="Nordane home" data-i18n-aria="brand.aria"><span class="brand-mark"><img class="for-light" src="/assets/nordane-n-light.png" alt="" width="34" height="34" /><img class="for-dark" src="/assets/nordane-n-dark.png" alt="" width="34" height="34" /></span><span class="word">NORDANE</span></a>
+    <span class="place">Nordane GmbH · Stäheli 851, 9062 Lustmühle, <span data-i18n="foot.country">Switzerland</span> · <a href="mailto:info@nordane.ch">info@nordane.ch</a> · <a href="/impressum.html" data-i18n="foot.legal">Legal notice</a> · <a href="/datenschutz.html" data-i18n="foot.privacy">Privacy</a> · <a href="/agb.html" data-i18n="foot.terms">Terms</a> · © 2026</span>
     <div class="socials">
-      <a href="https://www.linkedin.com/company/nordane/" target="_blank" rel="noopener" aria-label="Nordane on LinkedIn"><svg viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9.75h4V21H3V9.75Zm6.5 0h3.8v1.6h.06c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.77 2.65 4.77 6.1V21h-4v-4.9c0-1.17-.02-2.68-1.63-2.68-1.64 0-1.89 1.28-1.89 2.6V21h-4V9.75Z"/></svg></a>
-      <a href="https://x.com/Nordane_ch" target="_blank" rel="noopener" aria-label="Nordane on X"><svg viewBox="0 0 24 24"><path d="M17.75 3h3.07l-6.7 7.66L22 21h-6.17l-4.83-6.32L5.47 21H2.4l7.17-8.2L2 3h6.33l4.37 5.78L17.75 3Zm-1.08 16.2h1.7L7.4 4.73H5.58L16.67 19.2Z"/></svg></a>
-      <a href="https://www.facebook.com/profile.php?id=61595439659661" target="_blank" rel="noopener" aria-label="Nordane on Facebook"><svg viewBox="0 0 24 24"><path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5.02 3.66 9.18 8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.52 1.49-3.91 3.78-3.91 1.1 0 2.24.2 2.24.2v2.47h-1.26c-1.24 0-1.63.78-1.63 1.57v1.88h2.78l-.44 2.91h-2.34V22c4.78-.76 8.44-4.92 8.44-9.94Z"/></svg></a>
+      <a href="https://www.linkedin.com/company/nordane/" target="_blank" rel="noopener" aria-label="Nordane on LinkedIn" data-i18n-aria="foot.li"><svg viewBox="0 0 24 24"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9.75h4V21H3V9.75Zm6.5 0h3.8v1.6h.06c.53-1 1.83-2.05 3.77-2.05 4.03 0 4.77 2.65 4.77 6.1V21h-4v-4.9c0-1.17-.02-2.68-1.63-2.68-1.64 0-1.89 1.28-1.89 2.6V21h-4V9.75Z"/></svg></a>
+      <a href="https://x.com/Nordane_ch" target="_blank" rel="noopener" aria-label="Nordane on X" data-i18n-aria="foot.x"><svg viewBox="0 0 24 24"><path d="M17.75 3h3.07l-6.7 7.66L22 21h-6.17l-4.83-6.32L5.47 21H2.4l7.17-8.2L2 3h6.33l4.37 5.78L17.75 3Zm-1.08 16.2h1.7L7.4 4.73H5.58L16.67 19.2Z"/></svg></a>
+      <a href="https://www.facebook.com/profile.php?id=61595439659661" target="_blank" rel="noopener" aria-label="Nordane on Facebook" data-i18n-aria="foot.fb"><svg viewBox="0 0 24 24"><path d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5.02 3.66 9.18 8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.52 1.49-3.91 3.78-3.91 1.1 0 2.24.2 2.24.2v2.47h-1.26c-1.24 0-1.63.78-1.63 1.57v1.88h2.78l-.44 2.91h-2.34V22c4.78-.76 8.44-4.92 8.44-9.94Z"/></svg></a>
     </div>
   </div>
 </footer>
 
+<dialog class="contact" id="contact" aria-labelledby="ct-title">
+  <form method="dialog" class="ct-form" novalidate>
+    <button type="button" class="ct-x" data-close data-i18n-aria="ct.close" aria-label="Close">×</button>
+    <div class="mono">Nordane</div>
+    <h2 id="ct-title" data-i18n="ct.title">Tell us who you are</h2>
+    <p class="ct-sub" data-i18n="ct.sub">Pick what fits, and we come back to you with the right person.</p>
+    <fieldset class="whos" aria-labelledby="ct-title"><label class="who"><input type="radio" name="who" value="r" /><span><b data-i18n="ct.r">Restaurant</b><small data-i18n="ct.r.d">I run a restaurant, café or takeaway</small></span></label><label class="who"><input type="radio" name="who" value="c" /><span><b data-i18n="ct.c">Company</b><small data-i18n="ct.c.d">I need software or AI agents built</small></span></label><label class="who"><input type="radio" name="who" value="p" /><span><b data-i18n="ct.p">Partner or investor</b><small data-i18n="ct.p.d">I want to work with Nordane</small></span></label><label class="who"><input type="radio" name="who" value="o" /><span><b data-i18n="ct.o">Something else</b><small data-i18n="ct.o.d">Press, jobs or anything else</small></span></label></fieldset>
+    <div class="ct-grid">
+      <label><span data-i18n="ct.name">Your name</span><input name="name" autocomplete="name" required /></label>
+      <label><span data-i18n="ct.org">Restaurant or company</span><input name="org" autocomplete="organization" /></label>
+      <label><span data-i18n="ct.email">E-mail</span><input name="email" type="email" autocomplete="email" required /></label>
+      <label><span data-i18n="ct.phone">Phone (optional)</span><input name="phone" type="tel" autocomplete="tel" /></label>
+      <label class="wide"><span data-i18n="ct.msg">How can we help?</span><textarea name="msg" rows="4" data-i18n-ph="ct.msg.ph" placeholder="A few lines about what you need"></textarea></label>
+    </div>
+    <p class="ct-err" role="alert" hidden data-i18n="ct.err">Please choose who you are and fill in your name and e-mail.</p>
+    <p class="ct-done" role="status" hidden data-i18n="ct.done">Your e-mail app has opened with your message ready. Press send there and we get back to you soon.</p>
+    <div class="ct-foot"><button type="submit" class="btn primary" data-i18n="ct.send">Send to Nordane →</button><span class="ct-alt"><span data-i18n="ct.alt">Prefer e-mail? Write to</span> <a href="mailto:info@nordane.ch">info@nordane.ch</a></span></div>
+  </form>
+</dialog>
+
+<script>
+  // Language: English lives in the HTML (no-JS fallback); German lives here. Elements carry
+  // data-i18n (text), data-i18n-html (markup), data-i18n-aria (aria-label) or data-i18n-content (meta).
+  // The path decides first: /de/ is a static German copy (built by tools/build-de.mjs, marked data-page-lang="de"),
+  // so crawlers that run no JavaScript still get German. On / the order of choice is ?lang=de|en, then the saved
+  // choice, then the browser language, applied in place without a redirect. The DE/EN buttons go to / or /de/.
+  (function(){
+    var root = document.documentElement, KEY = 'nordane-lang';
+    var D = { en:{
+      'ct.msg.ph':'A few lines about what you need',
+      'mode.toDark':'Switch to dark mode', 'mode.toLight':'Switch to light mode',
+      'demo.approve':'Approve', 'demo.approved':'Approved ✓', 'demo.tile':'Show the {x} demo'
+    }, de:{
+      'ct.title':'Wer sind Sie?', 'ct.sub':'Wählen Sie, was passt. Wir melden uns mit der richtigen Ansprechperson.', 'ct.r':'Restaurant', 'ct.r.d':'Ich führe ein Restaurant, Café oder Take-away', 'ct.c':'Unternehmen', 'ct.c.d':'Ich brauche Software oder KI-Agenten', 'ct.p':'Partner oder Investor', 'ct.p.d':'Ich möchte mit Nordane zusammenarbeiten', 'ct.o':'Etwas anderes', 'ct.o.d':'Presse, Jobs oder anderes', 'ct.name':'Ihr Name', 'ct.org':'Restaurant oder Unternehmen', 'ct.email':'E-Mail', 'ct.phone':'Telefon (optional)', 'ct.msg':'Wie können wir helfen?', 'ct.msg.ph':'Ein paar Zeilen zu Ihrem Anliegen', 'ct.send':'An Nordane senden →', 'ct.close':'Schliessen', 'ct.err':'Bitte wählen Sie aus, wer Sie sind, und geben Sie Name und E-Mail an.', 'ct.done':'Ihr E-Mail-Programm ist mit Ihrer Nachricht geöffnet. Drücken Sie dort auf Senden, wir melden uns bald.', 'ct.alt':'Lieber per E-Mail? Schreiben Sie an', 'ct.cta':'Kontakt aufnehmen →',
+      'title':'Nordane',
+      'og.desc':'Wir bringen Unternehmen ins Zeitalter der KI-Agenten. Schweizer KI-Studio, Macher von Okam.', 'og.alt':'Nordane, Schweizer Alpen in der Abenddämmerung mit dem Nordane-Zeichen',
+      'meta.desc':'Nordane ist ein Schweizer KI-Studio. Wir bringen Unternehmen ins Zeitalter der KI-Agenten: mit nativen Apps, Plattformen, KI-Agenten und der Infrastruktur darunter. Unser Flaggschiff ist Okam.',
+      'mode.toDark':'Dunkles Design einschalten', 'mode.toLight':'Helles Design einschalten',
+      'demo.approve':'Freigeben', 'demo.approved':'Freigegeben ✓', 'demo.tile':'Demo «{x}» anzeigen',
+      'lang.aria':'Sprache', 'nav.aria':'Hauptnavigation', 'brand.aria':'Nordane Startseite',
+      'nav.build':'Leistungen', 'nav.how':'Unsere Reise', 'nav.pricing':'Preise', 'nav.contact':'Kontakt',
+      'hero.eyebrow':'Schweizer KI-Studio · Schweiz und Norwegen',
+      'hero.h1':'Wir bringen Unternehmen ins Zeitalter der <span class="accent" style="white-space:nowrap">KI-Agenten</span>.',
+      'hero.lede':'Wir entwerfen, bauen und betreiben die Software dafür: native Apps, Plattformen, KI-Agenten und die Infrastruktur darunter. Unser Flaggschiff Okam ist jeden Tag in Restaurants in Norwegen im Einsatz.',
+      'hero.cta1':'Unsere Leistungen →', 'hero.cta2':'Okam ansehen',
+      'where.ch.k':'Schweiz', 'where.ch.h':'Firma und Entwicklung',
+      'where.ch.p':'Nordane hat ihren Sitz im Appenzellerland und wird von hier aus geführt. Infrastruktur in der Schweiz für Kunden, deren Daten hier bleiben müssen.',
+      'where.no.k':'Norwegen', 'where.no.h':'Okam, täglich im Einsatz',
+      'where.no.p':'Restaurants in Norwegen nehmen mit Okam Bestellungen auf, führen die Kasse und planen ihr Personal.',
+      'where.you.k':'Ihr Unternehmen', 'where.you.h':'Dieselbe Technik, für Sie',
+      'where.you.p':'Dieselbe Infrastruktur, dieselben Agenten und Apps bauen und betreiben wir auch für andere Unternehmen.',
+      'build.k':'Was Nordane macht', 'build.h':'Alles, was ein Unternehmen mit KI-Agenten braucht.',
+      'build.p':'Wir bauen alles aus einer Hand und bleiben nach dem Start an Ihrer Seite: Infrastruktur, Agenten, Chat, die Anbindung an Ihre Systeme und die Betreuung.',
+      'tile.infra.h':'Infrastruktur', 'tile.infra.p':'In der Schweiz betrieben, skalierbar',
+      'tile.agents.h':'KI-Agenten', 'tile.agents.p':'Software, die die Arbeit erledigt',
+      'tile.chat.h':'Der Chat', 'tile.chat.p':'Assistenten, mit denen man wirklich spricht',
+      'tile.mcp.h':'MCP', 'tile.mcp.p':'Ihre Systeme, offen für KI',
+      'tile.apps.h':'Apps', 'tile.apps.p':'iPhone, iPad und Web',
+      'tile.data.h':'Echtzeitdaten', 'tile.data.p':'Eine Zahl für alle',
+      'tile.security.h':'Datenschutz', 'tile.security.p':'Ihre Daten bleiben Ihre',
+      'tile.auto.h':'Automatisierung', 'tile.auto.p':'Routinearbeit, erledigt',
+      'tile.integr.h':'Anbindungen', 'tile.integr.p':'Zahlung, Buchhaltung, Lieferung',
+      'tile.support.h':'Betreuung', 'tile.support.p':'Wir betreiben es mit Ihnen',
+      'tile.scale.h':'Wachstum', 'tile.scale.p':'Wächst ohne Neubau',
+      'tile.evals.h':'Geprüft', 'tile.evals.p':'Gemessen vor jeder Auslieferung',
+      'demo.aria':'Demo: ein Nordane-Agent bei der Arbeit', 'demo.live':'Live-Demo',
+      'okam.k':'Unser Flaggschiff', 'okam.h':'Okam, das Betriebssystem für Restaurants.',
+      'okam.p':'Auf derselben Technik gebaut. In Norwegen täglich im Einsatz.', 'okam.cta':'Zu okam.no ↗',
+      'how.3.when':'Oktober 2026', 'how.3.h':'Fabrik und Start', 'how.3.p':'Jetzt verbessert sich die Plattform jeden Tag selbst und geht an den Markt.', 'how.3.li1':'Unsere Software-Fabrik: Meldungen werden automatisch zu getesteten Korrekturen', 'how.3.li2':'Ask Okam, der KI-Assistent für Inhaber', 'how.3.li3':'Die neue Website okam.no', 'how.3.li4':'Schweiz: CHF, Deutsch und TWINT', 'stat.1':'Apps auf einer Plattform', 'stat.2':'Monate vom Start bis zum Launch', 'stat.3':'Länder: Norwegen und die Schweiz', 'stat.4':'Sprachen: Norwegisch, Deutsch, Englisch', 'price.light.h':'Kasse Light', 'price.full.h':'Kasse Komplett', 'price.order.h':'Onlinebestellung', 'price.people.h':'Personalplanung', 'price.from':'ab', 'price.per':'/ Monat', 'price.fine':'Preise pro Standort, in Schweizer Franken. Monatlich kündbar. Hardware auf Anfrage.', 'live.k':'Jetzt Sie', 'live.h':'Das war der Beweis. Jetzt bringen wir Sie in einem Monat live.', 'live.p':'Dieselbe Plattform, eingerichtet für Ihren Betrieb: mit Hardware, Zahlungen und Anbindungen, und einem Team, das nach dem Start an Ihrer Seite bleibt.', 'live.1.h':'Woche 1', 'live.1.p':'Workshop, Menü und Daten übernommen', 'live.2.h':'Woche 2', 'live.2.p':'Hardware geliefert und eingerichtet: iPad, Drucker, Kartenterminal', 'live.3.h':'Woche 3', 'live.3.p':'Zahlungen, TWINT, Buchhaltung und Lieferdienste angebunden', 'live.4.h':'Woche 4', 'live.4.p':'Team geschult, Sie gehen live, wir bleiben im Support', 'live.cta':'Projekt starten →', 'price.light.p':'Für Cafés und kleine Restaurants.', 'price.light.f1':'Kasse fürs iPad', 'price.light.f2':'Menü, Preise und Tische', 'price.light.f3':'Tagesabschluss und Belege', 'price.full.p':'Für Betriebe mit viel Betrieb.', 'price.full.f1':'Alles aus Kasse Light', 'price.full.f2':'Mehrere Kassen und Küchenbildschirm', 'price.full.f3':'Auswertungen pro Standort', 'price.order.p':'Gäste bestellen und bezahlen online.', 'price.order.f1':'Eigener Webshop', 'price.order.f2':'Eigene Bestell-App', 'price.order.f3':'Karte und TWINT', 'price.people.p':'Team planen, Kosten sehen.', 'price.people.f1':'Dienstplan in Minuten', 'price.people.f2':'Stunden für die Lohnabrechnung', 'price.people.f3':'Personalkosten pro Woche', 'price.c.note':'Apps, KI-Agenten und Infrastruktur für Ihr Unternehmen, zum schriftlich vereinbarten Festpreis.', 'price.c.cta':'Offerte anfragen →', 'foot.privacy':'Datenschutz', 'foot.terms':'AGB', 'how.k':'Unsere Reise mit Okam', 'how.h':'Von der ersten Zeile zum Start in vier Monaten.', 'how.p':'Im Juli 2026 haben wir begonnen, Okam von Grund auf neu zu bauen. Seit Oktober laufen damit Kasse, Küche, Onlineshop und Marketing, mit KI an Bord.', 'how.1.when':'Juli – August 2026', 'how.1.h':'Die Kasse', 'how.1.p':'Wir haben dort angefangen, wo ein Restaurant sein Geld verdient: eine neue Kasse fürs iPad und die Verwaltung dahinter.', 'how.1.li1':'Kasse (POS) fürs iPad', 'how.1.li2':'Kartenterminals und Bondrucker', 'how.1.li3':'Zertifizierte Kassenregeln für Norwegen', 'how.1.li4':'Verwaltung für Menü, Personal und Finanzen', 'how.1.li5':'Anbindung an die Buchhaltung Tripletex', 'how.2.when':'September – Oktober 2026', 'how.2.h':'Das ganze Restaurant', 'how.2.p':'Danach alles rund um die Kasse, auf derselben Basis und mit denselben Daten.', 'how.2.li1':'Küchenbildschirm', 'how.2.li2':'Onlinebestellung, Web und App', 'how.2.li3':'Tischreservationen', 'how.2.li4':'Personalplanung', 'how.2.li5':'Gutscheine, Wolt und Foodora',
+      'price.k':'Preise', 'price.h':'Klare Preise in Schweizer Franken.',
+     
+     
+     
+     
+      'price.c.k':'Unternehmen', 'price.c.h':'Projekte und Betrieb',
+      'price.c.amt':'Festpreis <small>in CHF</small>',
+     
+     
+      'close.h':'Bereit für das Zeitalter der <span style="white-space:nowrap">KI-Agenten</span>? Bauen wir gemeinsam, was kommt.',
+      'foot.country':'Schweiz', 'foot.legal':'Impressum',
+      'foot.li':'Nordane auf LinkedIn', 'foot.x':'Nordane auf X', 'foot.fb':'Nordane auf Facebook'
+    }};
+    var base = 'en', kinds = [['data-i18n','text'],['data-i18n-html','html'],['data-i18n-aria','aria'],['data-i18n-content','content']];
+    function get(el, how){ return how === 'text' ? el.textContent : how === 'html' ? el.innerHTML : el.getAttribute(how === 'aria' ? 'aria-label' : 'content'); }
+    function put(el, how, v){ if (how === 'text') el.textContent = v; else if (how === 'html') el.innerHTML = v; else el.setAttribute(how === 'aria' ? 'aria-label' : 'content', v); }
+    var PATHS = { en:'/', de:'/de/' }, fixed = root.getAttribute('data-page-lang'), q = null;
+    try { q = new URLSearchParams(location.search).get('lang'); } catch(e) {}
+    // /de/?lang=en: the English page lives at /.
+    if (fixed && (q === 'de' || q === 'en') && q !== fixed) { try { localStorage.setItem(KEY, q); } catch(e) {} location.replace(PATHS[q] + location.hash); }
+    // The HTML of / is the source for the base language, so English only has to be edited in one place.
+    if (!fixed) {
+      D[base].title = document.title;
+      kinds.forEach(function(k){ document.querySelectorAll('[' + k[0] + ']').forEach(function(el){ var key = el.getAttribute(k[0]); if (!(key in D[base])) D[base][key] = get(el, k[1]); }); });
+    }
+    function pick(){
+      var s = null;
+      if (fixed) return fixed;
+      if (q === 'de' || q === 'en') { try { localStorage.setItem(KEY, q); } catch(e) {} return q; }
+      try { s = localStorage.getItem(KEY); } catch(e) {}
+      if (s === 'de' || s === 'en') return s;
+      return /^de/i.test((navigator.languages && navigator.languages[0]) || navigator.language || '') ? 'de' : 'en';
+    }
+    var I = window.NordaneI18n = { lang: base, t: function(key){ return (D[I.lang] && D[I.lang][key]) || D[base][key] || key; } };
+    function apply(lang, user){
+      I.lang = lang; root.setAttribute('lang', lang === 'de' ? 'de-CH' : 'en');
+      document.title = I.t('title');
+      kinds.forEach(function(k){ document.querySelectorAll('[' + k[0] + ']').forEach(function(el){ put(el, k[1], I.t(el.getAttribute(k[0]))); }); });
+      document.querySelectorAll('.lang button').forEach(function(b){ b.setAttribute('aria-pressed', b.dataset.lang === lang ? 'true' : 'false'); });
+      if (user) { try { localStorage.setItem(KEY, lang); } catch(e) {} }
+      document.querySelectorAll('a[href^="https://okam.no"]').forEach(function(a){ a.href = 'https://okam.no/' + (lang === 'de' ? 'de' : 'en'); });
+      document.dispatchEvent(new CustomEvent('nordane:lang', { detail: lang }));
+    }
+    // The switch goes to the page in that language and keeps the section (#hash). On / showing German in place,
+    // EN stays on / and switches in place.
+    document.querySelectorAll('.lang button').forEach(function(b){ b.addEventListener('click', function(){
+      var lang = b.dataset.lang, path = PATHS[lang];
+      if (lang === I.lang) return;
+      if (location.pathname === path || (!fixed && lang === 'en')) { apply(lang, true); if (location.search) history.replaceState(null, '', location.pathname + location.hash); return; }
+      try { localStorage.setItem(KEY, lang); } catch(e) {}
+      location.href = path + location.hash;
+    }); });
+    apply(pick(), false);
+  })();
+</script>
 <script>
   // Light/dark toggle. The choice is remembered under the same key the pre-paint script reads.
   (function(){
     var root = document.documentElement, btn = document.getElementById('mode'), meta = document.querySelector('meta[name="theme-color"]');
     var dark = new Image(); dark.src = '/assets/banner-night.jpg';
-    function sync(){ var d = root.getAttribute('data-theme') === 'dark'; btn.setAttribute('aria-label', d ? 'Switch to light mode' : 'Switch to dark mode'); meta.setAttribute('content', d ? '#05080d' : '#f5f7fa'); }
+    function sync(){ var d = root.getAttribute('data-theme') === 'dark'; btn.setAttribute('aria-label', NordaneI18n.t(d ? 'mode.toLight' : 'mode.toDark')); meta.setAttribute('content', d ? '#05080d' : '#f5f7fa'); }
+    document.addEventListener('nordane:lang', sync);
     btn.addEventListener('click', function(){
       var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
       if (next === 'dark') root.setAttribute('data-theme','dark'); else root.removeAttribute('data-theme');
@@ -366,7 +710,8 @@
     bento.querySelectorAll('.tile, .core').forEach(function(el, i){ el.style.setProperty('--i', i); if (el.dataset.k) tiles[el.dataset.k] = el; });
 
     // One customer problem per tile, played in tile order. [who, text, tiles to light, needs approval]
-    var scenarios = [
+    var S = {};
+    S.en = [
       { k:'infra', label:'Site down on the busiest day', lines:[
         ['you', 'Our shop went down on Black Friday last year. Will it happen again?'],
         ['tool', 'infra.status', ['mcp','infra']],
@@ -416,9 +761,62 @@
         ['tool', 'evals.run', ['mcp','evals']],
         ['ai', 'Every release is tested on more than 1,500 real questions before it ships. This week: no regressions.', ['evals','agents']] ]}
     ];
+    S.de = [
+      { k:'infra', label:'Ausfall am umsatzstärksten Tag', lines:[
+        ['you', 'Unser Shop ist letztes Jahr am Black Friday ausgefallen. Passiert das wieder?'],
+        ['tool', 'infra.status', ['mcp','infra']],
+        ['ai', 'Heute um 10:02 Uhr kamen dreimal so viele Besucher. Zusätzliche Kapazität schaltete sich von selbst zu, ohne einen einzigen Fehler.', ['infra','scale']] ]},
+      { k:'agents', label:'Stundenlanges Abtippen', lines:[
+        ['you', 'Wir tippen jeden Montag Bestellungen von Hand ins ERP ab.'],
+        ['tool', 'orders.sync', ['mcp','integr']],
+        ['ai', '214 Bestellungen erfasst und geprüft. Drei sehen ungewöhnlich aus, die habe ich für Sie zurückgelegt.', ['agents','auto'], 'approve'] ]},
+      { k:'chat', label:'Kunden warten tagelang auf Antwort', lines:[
+        ['you', 'Unsere Kunden warten zwei Tage auf eine Antwort.'],
+        ['tool', 'inbox.read', ['mcp','chat']],
+        ['ai', 'Ich habe über Nacht 46 von 52 Fragen beantwortet. Die sechs, die einen Menschen brauchen, stehen zuoberst in Ihrem Posteingang.', ['chat','support']] ]},
+      { k:'mcp', label:'Die KI sieht Ihre Systeme nicht', lines:[
+        ['you', 'Unser Team möchte dem ERP in seinem KI-Assistenten Fragen stellen.'],
+        ['tool', 'mcp.connect · erp', ['mcp']],
+        ['ai', 'Über MCP verbunden. Lesen ist offen; alles, was Daten ändert, braucht zuerst Ihre Freigabe.', ['mcp','security'], 'approve'] ]},
+      { k:'apps', label:'Bestellungen noch auf Papier', lines:[
+        ['you', 'Unser Personal schreibt Bestellungen noch auf Papier.'],
+        ['tool', 'app.publish · ipad', ['mcp','apps']],
+        ['ai', 'Die iPad-App ist bereit für Ihre drei Filialen und funktioniert auch offline. Jetzt einführen?', ['apps'], 'approve'] ]},
+      { k:'data', label:'Jeder Bericht zeigt eine andere Zahl', lines:[
+        ['you', 'Finanzen und Verkauf melden unterschiedliche Umsätze.'],
+        ['tool', 'data.reconcile', ['mcp','data']],
+        ['ai', 'Zwei Systeme zählen Rückerstattungen unterschiedlich. Behoben: eine Zahl für alle, CHF 412\'800 in diesem Quartal.', ['data','agents']] ]},
+      { k:'security', label:'Kundendaten und KI', lines:[
+        ['you', 'Können wir KI nutzen, ohne dass Kundendaten die Schweiz verlassen?'],
+        ['tool', 'audit.log', ['mcp','security']],
+        ['ai', 'Ja. Namen werden pseudonymisiert, bevor ein Modell sie sieht, alles läuft in der Schweiz, und jede Aktion wird protokolliert.', ['security','infra']] ]},
+      { k:'auto', label:'Niemand mahnt offene Rechnungen', lines:[
+        ['you', 'Rechnungen werden überfällig, und niemand mahnt.'],
+        ['tool', 'accounting.invoices', ['mcp','integr']],
+        ['ai', 'Sieben sind überfällig, total CHF 23\'900. Für jede ist eine freundliche Zahlungserinnerung vorbereitet.', ['auto','agents'], 'approve'] ]},
+      { k:'integr', label:'Programme, die nicht zusammenarbeiten', lines:[
+        ['you', 'Zahlung, Buchhaltung und Lieferung laufen in verschiedenen Programmen.'],
+        ['tool', 'integrations.map', ['mcp','integr']],
+        ['ai', 'Zahlung, Buchhaltung und Lieferung teilen jetzt einen gemeinsamen Bestelldatensatz. Keine doppelte Erfassung mehr.', ['integr','data']] ]},
+      { k:'support', label:'Probleme zu spät entdeckt', lines:[
+        ['you', 'Um 7 Uhr ist etwas ausgefallen, und bis am Mittag hat es niemand bemerkt.'],
+        ['tool', 'incident.open', ['mcp','support']],
+        ['ai', 'Wir haben es um 7:02 Uhr gesehen und um 7:11 Uhr behoben. Der Bericht liegt in Ihrem Posteingang.', ['support','infra']] ]},
+      { k:'scale', label:'Neue Standorte eröffnen', lines:[
+        ['you', 'Wir eröffnen nächstes Quartal fünf neue Standorte.'],
+        ['tool', 'sites.clone', ['mcp','scale']],
+        ['ai', 'Fünf Standorte aus Ihrer Vorlage eingerichtet: Produkte, Preise und Rollen fürs Personal. Bereit zur Prüfung.', ['scale','apps'], 'approve'] ]},
+      { k:'evals', label:'Kann man den Antworten trauen?', lines:[
+        ['you', 'Woher wissen wir, dass die KI nichts erfindet?'],
+        ['tool', 'evals.run', ['mcp','evals']],
+        ['ai', 'Jede neue Version wird vor der Auslieferung an über 1\'500 echten Fragen getestet. Diese Woche: keine Verschlechterungen.', ['evals','agents']] ]}
+    ];
+    var T = window.NordaneI18n || { lang:'en', t:function(k){ return k; } };
+    var scenarios = S[T.lang] || S.en;
     var label = bento.querySelector('.demo-label');
     var timer = null, scene = 0, step = 0, visible = false, held = false;
-    function light(keys){ Object.keys(tiles).forEach(function(k){ tiles[k].classList.toggle('lit', !!keys && keys.indexOf(k) > -1); }); }
+    // Only the tile of the running demo is highlighted (setActive); tiles the demo touches are no longer lit, which read as flicker.
+    function light(){}
     function setActive(i){ Object.keys(tiles).forEach(function(k){ tiles[k].classList.toggle('active', k === scenarios[i].k); }); }
     function add(cls, html){ var d = document.createElement('div'); d.className = 'msg ' + cls; d.innerHTML = html; chat.appendChild(d); while (chat.children.length > 6) chat.removeChild(chat.firstChild); return d; }
     function later(fn, ms){ timer = setTimeout(function(){ timer = null; if (visible) fn(); }, ms); }
@@ -438,8 +836,8 @@
         var dots = add('typing', '<i></i><i></i><i></i>'); dots.className = 'typing';
         later(function(){
           dots.remove(); light(line[2]);
-          var m = add('ai', line[1] + (line[3] ? '<br><span class="approve">Approve</span>' : ''));
-          if (line[3]) later(function(){ var b = m.querySelector('.approve'); b.textContent = 'Approved ✓'; b.classList.add('done'); later(next, 1500); }, 1500);
+          var m = add('ai', line[1] + (line[3] ? '<br><span class="approve">' + T.t('demo.approve') + '</span>' : ''));
+          if (line[3]) later(function(){ var b = m.querySelector('.approve'); b.textContent = T.t('demo.approved'); b.classList.add('done'); later(next, 1500); }, 1500);
           else later(next, 2400);
         }, 1100);
       }
@@ -447,8 +845,8 @@
     function start(){ if (!timer) next(); }
     // Clicking or tapping a tile plays its story now.
     scenarios.forEach(function(sc, i){
-      var t = tiles[sc.k]; t.setAttribute('role', 'button'); t.setAttribute('tabindex', '0'); t.setAttribute('aria-label', 'Show the ' + t.querySelector('h3').textContent + ' demo');
-      function go(){ if (reduce) { chat.innerHTML = ''; show(i); sc.lines.forEach(function(l){ if (l[0] !== 'tool') add(l[0], l[1]); }); return; } held = true; visible = true; play(i); }
+      var t = tiles[sc.k]; t.setAttribute('role', 'button'); t.setAttribute('tabindex', '0'); 
+      function go(){ if (reduce) { scene = i; staticScene(i); return; } held = true; visible = true; play(i); }
       t.addEventListener('click', go);
       t.addEventListener('keydown', function(e){ if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); go(); } });
     });
@@ -460,8 +858,16 @@
         if (visible) { bento.classList.add('in'); if (!reduce) start(); }
       });
     }, { threshold: 0.2 }).observe(bento);
+    function staticScene(i){ chat.innerHTML = ''; show(i); scenarios[i].lines.forEach(function(l){ if (l[0] !== 'tool') add(l[0], l[1]); }); }
+    function labelTiles(){ scenarios.forEach(function(sc){ var t = tiles[sc.k]; t.setAttribute('aria-label', T.t('demo.tile').replace('{x}', t.querySelector('h3').textContent)); }); }
+    labelTiles();
+    // Switching language swaps the script and replays the current story in the new language.
+    document.addEventListener('nordane:lang', function(e){
+      scenarios = S[e.detail] || S.en; labelTiles();
+      if (reduce) staticScene(scene); else { held = false; play(scene); }
+    });
     show(0);
-    if (reduce) { scenarios[0].lines.forEach(function(l){ if (l[0] !== 'tool') add(l[0], l[1]); }); }
+    if (reduce) staticScene(0);
   })();
 </script>
 <script>
@@ -469,6 +875,96 @@
   (function(){
     document.querySelectorAll('.reveal-how').forEach(function(el){
       new IntersectionObserver(function(es, o){ es.forEach(function(e){ if (e.isIntersecting) { el.classList.add('in'); o.disconnect(); } }); }, { threshold: .3 }).observe(el);
+    });
+  })();
+</script>
+<script>
+  // Contact: "who are you" dialog. No server: on send it opens the visitor's e-mail app with a
+  // ready message to info@nordane.ch, the subject naming who they are so it lands with the right person.
+  (function(){
+    var dlg = document.getElementById('contact'); if (!dlg || !dlg.showModal) return;
+    var f = dlg.querySelector('form'), err = f.querySelector('.ct-err'), done = f.querySelector('.ct-done'), last;
+    var ph = function(){ f.querySelectorAll('[data-i18n-ph]').forEach(function(el){ el.placeholder = NordaneI18n.t(el.getAttribute('data-i18n-ph')); }); };
+    document.addEventListener('nordane:lang', ph); ph();
+    function open(from){ last = from || document.activeElement; err.hidden = true; done.hidden = true; if (!dlg.open) dlg.showModal(); var c = f.querySelector('input[name=who]'); (f.querySelector('input[name=who]:checked') || c).focus(); }
+    document.querySelectorAll('[data-contact]').forEach(function(a){ a.addEventListener('click', function(e){ e.preventDefault(); open(a); }); });
+    // Used by the WebMCP tool below: fills the form and opens it. Nothing is sent; the visitor still presses send.
+    window.NordaneContact = { open: function(d){
+      d = d || {};
+      var who = f.querySelector('input[name=who][value="' + ({ restaurant:'r', company:'c', partner:'p', other:'o' }[d.who] || '') + '"]');
+      if (who) who.checked = true;
+      [['name','name'],['org','organisation'],['email','email'],['phone','phone'],['msg','message']].forEach(function(m){ if (typeof d[m[1]] === 'string') f.elements[m[0]].value = d[m[1]]; });
+      open(null);
+      f.querySelector('button[type=submit]').focus();
+    } };
+    dlg.querySelector('[data-close]').addEventListener('click', function(){ dlg.close(); });
+    dlg.addEventListener('click', function(e){ if (e.target === dlg) dlg.close(); });
+    dlg.addEventListener('close', function(){ if (last) last.focus(); });
+    f.addEventListener('submit', function(e){
+      e.preventDefault();
+      var v = function(n){ return (f.elements[n].value || '').trim(); }, who = f.querySelector('input[name=who]:checked');
+      if (!who || !v('name') || !/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v('email'))) { err.hidden = false; done.hidden = true; return; }
+      err.hidden = true;
+      var label = who.parentNode.querySelector('b').textContent;
+      var subject = 'Nordane: ' + label + (v('org') ? ' · ' + v('org') : '');
+      var body = [v('msg'), '', '--', v('name'), v('org'), v('email'), v('phone')].filter(function(x, i){ return i < 3 || x; }).join('\n');
+      location.href = 'mailto:info@nordane.ch?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+      done.hidden = false;
+    });
+  })();
+</script>
+<script>
+  // WebMCP (progressive enhancement): lets an AI agent in the browser read the prices and open the contact form
+  // for the visitor. Shape follows the W3C Web Machine Learning CG draft "WebMCP" (Draft CG Report, 20 October 2026,
+  // https://webmachinelearning.github.io/webmcp/) and Chrome's docs (https://developer.chrome.com/docs/ai/webmcp/imperative-api):
+  // document.modelContext.registerTool({ name, title, description, inputSchema, annotations, execute(input, { signal }) }),
+  // which returns a promise. navigator.modelContext is the older explainer's location, kept as a fallback.
+  // Browsers without WebMCP skip all of this.
+  (function(){
+    var mc = (document.modelContext || navigator.modelContext);
+    if (!mc || typeof mc.registerTool !== 'function') return;
+    function plans(){
+      return Array.prototype.map.call(document.querySelectorAll('.prices [data-plan]'), function(c){
+        var n = c.querySelector('.amt .n'), amount = n ? Number(n.textContent.replace(/[^0-9.]/g, '')) : null;
+        return { id: c.getAttribute('data-plan'), name: c.querySelector('h3').textContent.trim(), priceFrom: amount, currency: 'CHF', per: 'location per month', description: (c.querySelector('.note') || {}).textContent || '' };
+      });
+    }
+    var tools = [{
+      name: 'get_nordane_pricing',
+      title: 'Nordane prices',
+      description: 'Returns Nordane\'s prices for restaurants (Okam plans, monthly from-prices in CHF per location) and how company projects are priced. Read-only.',
+      inputSchema: { type: 'object', properties: {} },
+      annotations: { readOnlyHint: true },
+      execute: function(){
+        return Promise.resolve(JSON.stringify({
+          language: document.documentElement.lang, currency: 'CHF', url: 'https://nordane.ch/#pricing',
+          restaurantPlans: plans(),
+          companies: { pricing: 'fixed written quote in CHF before any work starts', note: (document.querySelector('.price.wide .note') || {}).textContent || '' },
+          terms: (document.querySelector('.fineprint') || {}).textContent || ''
+        }));
+      }
+    }, {
+      name: 'contact_nordane',
+      title: 'Contact Nordane',
+      description: 'Opens the Nordane contact form on this page, filled in with the given details, for the visitor to review. It does not send anything: the visitor presses the send button, which opens their own e-mail app with the message to info@nordane.ch.',
+      inputSchema: { type: 'object', required: ['who', 'name', 'email'], properties: {
+        who: { type: 'string', enum: ['restaurant', 'company', 'partner', 'other'], description: 'restaurant: runs a restaurant, cafe or takeaway; company: needs software or AI agents built; partner: partner or investor; other: press, jobs or anything else' },
+        name: { type: 'string', description: 'The visitor\'s name' },
+        email: { type: 'string', format: 'email', description: 'The visitor\'s e-mail address' },
+        organisation: { type: 'string', description: 'Restaurant or company name (optional)' },
+        phone: { type: 'string', description: 'Phone number (optional)' },
+        message: { type: 'string', description: 'What the visitor needs (optional)' }
+      } },
+      annotations: { readOnlyHint: false },
+      execute: function(input){
+        if (!window.NordaneContact) return Promise.reject(new Error('The contact form is not available on this page.'));
+        window.NordaneContact.open(input || {});
+        var send = (document.querySelector('#contact button[type=submit]') || {}).textContent || 'Send to Nordane';
+        return Promise.resolve('The contact form is open and filled in. Nothing has been sent: ask the visitor to check it and press "' + send.replace(/\s*→\s*$/, '') + '", which opens their e-mail app with the message ready.');
+      }
+    }];
+    tools.forEach(function(t){
+      try { var p = mc.registerTool(t); if (p && typeof p.catch === 'function') p.catch(function(){}); } catch(e) {}
     });
   })();
 </script>
