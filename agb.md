@@ -27,7 +27,7 @@ Abweichende Bedingungen des Kunden gelten nur, wenn Nordane ihnen schriftlich zu
 
 ### Leistungen
 
-- **Restaurant-Plattform:** Nordane stellt dem Kunden die Software der Plattform Okam (zum Beispiel Kasse, Verwaltung, Onlinebestellung und Personalplanung) im gewählten Umfang als Abonnement pro Standort zur Verfügung. Der Umfang ergibt sich aus der Bestellung. Hardware ist nicht enthalten und wird auf Anfrage separat angeboten.
+- **Restaurant-Plattform:** Nordane stellt dem Kunden die Software der Nordane-Restaurant-Plattform (zum Beispiel Kasse, Verwaltung, Onlinebestellung und Personalplanung) im gewählten Umfang als Abonnement pro Standort zur Verfügung. Der Umfang ergibt sich aus der Bestellung. Hardware ist nicht enthalten und wird auf Anfrage separat angeboten.
 - **Projekte für Unternehmen:** Apps, KI-Agenten, Infrastruktur und deren Betrieb erbringt Nordane nach dem angenommenen Angebot. Änderungen am Umfang werden schriftlich vereinbart und können Preis und Termine ändern.
 - **Zahlungen von Gästen:** Gäste bezahlen das Restaurant direkt über den Zahlungsanbieter Stripe. Der Kunde schliesst dafür einen eigenen Vertrag mit Stripe ab; dessen Bedingungen und Gebühren gelten. Nordane ist nicht Händler (Merchant of Record), nimmt keine Zahlungen von Gästen entgegen und haftet nicht für Leistungen von Stripe.
 - **Weiterentwicklung:** Nordane entwickelt die Plattform laufend weiter und darf Funktionen ändern, solange der vereinbarte Kern der Leistung erhalten bleibt.
@@ -128,7 +128,7 @@ The customer's own terms apply only if Nordane agrees to them in writing. In cas
 
 ### Services
 
-- **Restaurant platform:** Nordane provides the customer with the software of the Okam platform (for example till, back office, online ordering and staff planning) in the chosen scope as a subscription per location. The scope follows from the order. Hardware is not included and is offered separately on request.
+- **Restaurant platform:** Nordane provides the customer with the software of the Nordane restaurant platform (for example till, back office, online ordering and staff planning) in the chosen scope as a subscription per location. The scope follows from the order. Hardware is not included and is offered separately on request.
 - **Projects for companies:** Nordane delivers apps, AI agents, infrastructure and their operation according to the accepted quote. Changes to the scope are agreed in writing and may change price and dates.
 - **Guest payments:** Guests pay the restaurant directly through the payment provider Stripe. The customer enters into its own contract with Stripe, whose terms and fees apply. Nordane is not the merchant of record, does not receive payments from guests and is not liable for Stripe's services.
 - **Development:** Nordane keeps developing the platform and may change features as long as the agreed core of the service is preserved.
