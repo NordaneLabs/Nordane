@@ -109,7 +109,17 @@ h1, h2, h3, h4 { color: var(--ink); margin: 0; font-weight: 600; letter-spacing:
   position: sticky; top: 0; height: 100vh; overflow-y: auto; background: var(--canvas);
   border-right: 1px solid var(--border); padding: 14px 12px 16px; display: flex; flex-direction: column; gap: 4px;
 }
-[data-theme='dark'] .side { background: #0c111b; }
+[data-theme='dark'] .side { background: color-mix(in srgb, #0c111b 60%, transparent); }
+/* Summit view over misty ridges receding to the horizon, kept faint. Tune with --mist.
+   Light: snowy mist. Dark: red sunrise on the horizon, sky fading into --canvas at the top.
+   Both panoramas are composed from random pieces of mountain photos (near to far layers with aerial haze). */
+[data-theme='light'] { --mist: .55; --mist-img: url('../assets/mist-panorama.jpg'); }
+[data-theme='dark'] { --mist: .5; --mist-img: url('../assets/mist-panorama-dark.jpg'); }
+body::before {
+  content: ''; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background: var(--mist-img) center bottom / cover no-repeat; opacity: var(--mist); filter: blur(1px);
+}
+[data-theme='light'] .side { background: color-mix(in srgb, var(--canvas) 55%, transparent); }
 .ws {
   display: flex; align-items: center; gap: 10px; width: 100%; padding: 8px 8px; border: 1px solid transparent; border-radius: 10px;
   background: none; cursor: pointer; text-align: left; transition: background .15s, border-color .15s;
@@ -172,6 +182,17 @@ h1, h2, h3, h4 { color: var(--ink); margin: 0; font-weight: 600; letter-spacing:
 .search span { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 kbd { font-size: 11px; color: var(--muted); border: 1px solid var(--border-2); border-bottom-width: 2px; border-radius: 5px; padding: 0 5px; background: var(--sunken); line-height: 18px; }
 .top .sp { flex: 1; }
+/* Ask Nordane: white pill like Okam's "Ask okam", lifts slightly on hover. White in both themes. */
+.ask {
+  display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 8px 0 12px; border-radius: 10px; cursor: pointer;
+  background: #fff; color: #0f172a; border: 1px solid #e4e9f0; font-size: 13.5px; font-weight: 600; white-space: nowrap;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, .06), 0 4px 12px rgba(16, 24, 40, .06);
+  transition: transform .15s, box-shadow .15s;
+}
+.ask:hover { transform: translateY(-1px); box-shadow: 0 2px 4px rgba(16, 24, 40, .08), 0 8px 20px rgba(16, 24, 40, .1); }
+.ask:active { transform: none; }
+.ask kbd { color: #64748b; background: #f8fafc; border-color: #d3dbe6; }
+[data-theme='dark'] .ask { border-color: transparent; box-shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 6px 16px rgba(0, 0, 0, .35); }
 .icon-btn {
   width: 36px; height: 36px; display: grid; place-items: center; border-radius: 8px; border: 1px solid transparent; background: none; color: var(--muted); cursor: pointer;
   transition: background .15s, color .15s;
@@ -193,7 +214,7 @@ kbd { font-size: 11px; color: var(--muted); border: 1px solid var(--border-2); b
 .theme-sw button { border: 0; background: none; width: 30px; height: 28px; border-radius: 6px; display: grid; place-items: center; color: var(--muted); cursor: pointer; transition: background .15s, color .15s; }
 .theme-sw button[aria-pressed='true'] { background: var(--hover); color: var(--ink); }
 
-.content { padding: 8px 32px 64px; max-width: 1360px; width: 100%; }
+.content { padding: 8px 32px 64px; max-width: 1360px; width: 100%; margin-inline: auto; } /* centred; slides left when Ask Nordane docks */
 .ph { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; padding: 16px 0 24px; flex-wrap: wrap; }
 .ph .crumb { font-size: 13px; color: var(--muted); margin-bottom: 6px; display: flex; gap: 6px; align-items: center; }
 .ph .crumb a { color: var(--muted); }
@@ -367,6 +388,80 @@ table.tbl { width: 100%; border-collapse: separate; border-spacing: 0; font-size
 .drawer .d-h p { margin: 3px 0 0; color: var(--muted); font-size: 13px; }
 .drawer .d-b { padding: 18px 20px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 16px; }
 .drawer .d-f { padding: 14px 20px; border-top: 1px solid var(--border); display: flex; gap: 8px; justify-content: flex-end; }
+
+/* ---------- Ask Nordane panel (layout after Okam's "Ask okam") ---------- */
+.ask-panel {
+  position: fixed; top: 16px; right: 16px; bottom: 16px; width: 420px; max-width: calc(100vw - 32px); z-index: 75; display: flex; flex-direction: column;
+  border-radius: 16px; overflow: hidden;
+  /* Frosted glass: the mountain background stays visible through the panel. */
+  background-color: color-mix(in srgb, var(--canvas) 25%, transparent);
+  background-image: radial-gradient(color-mix(in srgb, var(--border-2) 70%, transparent) 1px, transparent 1.3px); background-size: 18px 18px;
+  backdrop-filter: blur(4px) saturate(1.2); -webkit-backdrop-filter: blur(4px) saturate(1.2);
+  border: 1px solid color-mix(in srgb, #fff 55%, transparent); box-shadow: 0 1px 2px rgba(16, 24, 40, .05), 0 24px 60px -16px rgba(16, 24, 40, .22);
+  transform: translateX(24px); opacity: 0; visibility: hidden;
+  transition: transform .22s cubic-bezier(.2, .8, .2, 1), opacity .18s, visibility .22s, width .22s cubic-bezier(.2, .8, .2, 1);
+}
+.ask-panel.on { transform: none; opacity: 1; visibility: visible; }
+.ask-panel.wide { width: 720px; }
+[data-theme='dark'] .ask-panel { border-color: rgba(255, 255, 255, .08); box-shadow: 0 24px 60px -16px rgba(0, 0, 0, .6); }
+/* Wide screens: dock instead of covering the cards; the page steps aside with a 16px gap. */
+.main { transition: padding-right .22s cubic-bezier(.2, .8, .2, 1); }
+@media (min-width: 1100px) {
+  body.ask-open .main { padding-right: 436px; }
+  body.ask-open.ask-wide .main { padding-right: 736px; }
+}
+.ask-panel .for-dark, [data-theme='dark'] .ask-panel .for-light { display: none; }
+[data-theme='dark'] .ask-panel .for-dark { display: block; }
+.ask-h { display: flex; align-items: center; gap: 2px; padding: 12px 12px 12px 16px; border-bottom: 1px solid color-mix(in srgb, var(--border) 70%, transparent); }
+.ask-h .sp { flex: 1; }
+.ask-conv { display: inline-flex; align-items: center; gap: 4px; border: 0; background: none; padding: 6px 8px; border-radius: 8px; font-size: 15px; font-weight: 600; color: var(--ink); cursor: pointer; }
+.ask-conv:hover { background: var(--hover); }
+.ask-body { flex: 1; overflow-y: auto; padding: 32px 24px 24px; }
+.ask-home { text-align: center; }
+.ask-hero { position: relative; width: 112px; height: 132px; margin: 8px auto 18px; }
+.ask-hero::before { content: ''; position: absolute; inset: -28px -28px 0; border-radius: 50%; background: radial-gradient(closest-side, rgba(53, 131, 196, .22), transparent); }
+[data-theme='dark'] .ask-hero::before { background: radial-gradient(closest-side, rgba(255, 118, 95, .22), rgba(90, 165, 230, .08) 60%, transparent); }
+.ask-mark { position: relative; width: 112px; height: 112px; animation: ask-float 5s ease-in-out infinite; }
+.ask-shadow { position: absolute; left: 22px; right: 22px; bottom: 0; height: 10px; border-radius: 50%; background: radial-gradient(closest-side, rgba(16, 24, 40, .22), transparent); animation: ask-shade 5s ease-in-out infinite; }
+[data-theme='dark'] .ask-shadow { background: radial-gradient(closest-side, rgba(0, 0, 0, .6), transparent); }
+@keyframes ask-float { 50% { transform: translateY(-6px); } }
+@keyframes ask-shade { 50% { transform: scaleX(.85); opacity: .7; } }
+.ask-home h2 { font-size: 24px; letter-spacing: -.02em; }
+.ask-home > p { margin: 6px 0 24px; color: var(--muted); font-size: 15px; }
+.ask-sugg { display: flex; flex-direction: column; gap: 10px; text-align: left; }
+.ask-sugg button {
+  display: flex; align-items: center; gap: 14px; padding: 12px 14px; border: 1px solid var(--border); border-radius: 12px;
+  background: color-mix(in srgb, var(--card) 82%, transparent);
+  box-shadow: var(--sh-1); cursor: pointer; transition: border-color .15s, box-shadow .15s, transform .15s; text-align: left;
+}
+.ask-sugg button:hover { border-color: var(--border-2); box-shadow: var(--sh-2); transform: translateY(-1px); }
+.ask-sugg .ico { width: 40px; height: 40px; flex: none; border-radius: 10px; display: grid; place-items: center; background: var(--primary-soft); color: var(--blue); }
+.ask-sugg b { display: block; color: var(--ink); font-size: 14.5px; }
+.ask-sugg small { display: block; color: var(--muted); font-size: 13px; margin-top: 1px; }
+.ask-thread { display: flex; flex-direction: column; gap: 14px; }
+.msg { max-width: 88%; font-size: 14px; line-height: 1.55; }
+.msg.me { align-self: flex-end; background: var(--primary); color: var(--on-primary); padding: 9px 13px; border-radius: 14px 14px 4px 14px; }
+.msg.bot { display: flex; gap: 10px; align-items: flex-start; }
+.msg.bot .av { width: 32px; height: 32px; flex: none; margin-top: 1px; }
+.msg.bot .bubble { background: var(--card); border: 1px solid var(--border); box-shadow: var(--sh-1); padding: 10px 13px; border-radius: 4px 14px 14px 14px; color: var(--text); }
+.msg.bot .bubble b { color: var(--ink); font-weight: 600; }
+.msg.bot .bubble ul { margin: 6px 0; padding-left: 18px; }
+.msg-act { display: flex; gap: 8px; margin-top: 10px; }
+.msg.typing .bubble { display: flex; gap: 4px; padding: 14px; }
+.msg.typing .bubble i { width: 6px; height: 6px; border-radius: 50%; background: var(--faint); animation: ask-dot 1s infinite; }
+.msg.typing .bubble i:nth-child(2) { animation-delay: .15s; }
+.msg.typing .bubble i:nth-child(3) { animation-delay: .3s; }
+@keyframes ask-dot { 30% { transform: translateY(-3px); opacity: .5; } }
+.ask-f {
+  display: flex; align-items: center; gap: 8px; margin: 12px; padding: 6px 6px 6px 16px; border: 1px solid var(--border-2); border-radius: 16px;
+  background: var(--card); box-shadow: var(--sh-2); transition: box-shadow .15s, border-color .15s;
+}
+.ask-f:focus-within { border-color: var(--primary-line); box-shadow: var(--sh-2), var(--ring); }
+.ask-f input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; font-size: 15px; height: 36px; color: var(--ink); }
+.ask-f input::placeholder { color: var(--muted); }
+.ask-f input:focus-visible { box-shadow: none; } /* the whole composer shows the focus ring instead */
+.ask-go { width: 38px; height: 38px; flex: none; border-radius: 50%; border: 0; display: grid; place-items: center; cursor: pointer; background: var(--border-2); color: var(--card); transition: background .15s; }
+.ask-f.has .ask-go { background: var(--primary); color: var(--on-primary); }
 dialog.dlg { border: 1px solid var(--border); border-radius: 14px; padding: 0; width: 480px; max-width: calc(100vw - 32px); background: var(--card); color: var(--text); box-shadow: var(--sh-3); }
 dialog.dlg::backdrop { background: var(--scrim); }
 dialog.dlg[open] { animation: pop .18s cubic-bezier(.2, .8, .2, 1); }
@@ -566,7 +661,8 @@ dialog.dlg[open] { animation: pop .18s cubic-bezier(.2, .8, .2, 1); }
   .ws { justify-content: flex-start; }
   .top { padding: 0 16px; gap: 8px; }
   .top .menu-btn { display: grid; }
-  .search kbd, .top .theme-sw, .top .help { display: none; }
+  .search kbd, .top .theme-sw, .top .help, .ask span, .ask kbd { display: none; }
+  .ask { width: 36px; padding: 0; justify-content: center; }
   .content { padding: 4px 16px 48px; }
   .ph h1 { font-size: 22px; }
   .g4, .g6 { grid-template-columns: repeat(2, minmax(0, 1fr)); }

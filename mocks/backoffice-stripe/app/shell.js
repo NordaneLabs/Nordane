@@ -62,6 +62,11 @@
     lock: '<rect x="4.5" y="9" width="11" height="8" rx="1.8"/><path d="M7 9V6.5a3 3 0 0 1 6 0V9"/>',
     wand: '<path d="m4 16 8.5-8.5M11 4.5v2M15.5 9h-2M14.3 5.7l-1.4 1.4M12.5 2.5"/>',
     out: '<path d="M8 4H4.5v12H8M12 6.5 15.5 10 12 13.5M15.5 10H7.5"/>',
+    bars: '<path d="M4 16.5h12M6.5 14v-3M10 14V7.5M13.5 14v-5"/>',
+    tag: '<path d="M3.5 10.2V4.5a1 1 0 0 1 1-1h5.7l6.3 6.3a1 1 0 0 1 0 1.4l-5.3 5.3a1 1 0 0 1-1.4 0z"/><circle cx="7.2" cy="7.2" r="1"/>',
+    trend: '<path d="M3.5 6.5 8 11l3-3 5.5 5.5M12.5 13.5h4v-4"/>',
+    expand: '<path d="M11.5 3.5h5v5M8.5 16.5h-5v-5M16.5 3.5l-5.5 5.5M3.5 16.5 9 11"/>',
+    shrink: '<path d="M16 8.5h-4.5V4M4 11.5h4.5V16M11.5 8.5 16.5 3.5M8.5 11.5l-5 5"/>',
   };
   const icon = (n, s = 18, sw = 1.6) => `<svg width="${s}" height="${s}" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${P[n] || ''}</svg>`;
 
@@ -110,6 +115,7 @@
       <button class="icon-btn menu-btn" id="menu-btn" aria-label="Menü öffnen" aria-expanded="false">${icon('menu')}</button>
       <button class="search" id="search-btn" aria-label="Suchen oder springen, Tastenkürzel Befehl K">${icon('search', 16)}<span>Suchen oder springen zu …</span><kbd>⌘K</kbd></button>
       <div class="sp"></div>
+      <button class="ask" id="ask-btn" aria-label="Nordane fragen, Tastenkürzel Befehl J">${icon('chat', 16)}<span>Ask Nordane</span><kbd>⌘J</kbd></button>
       <div class="theme-sw" role="group" aria-label="Darstellung"><button data-t="light" aria-pressed="${t === 'light'}" aria-label="Hell">${icon('sun', 16)}</button><button data-t="dark" aria-pressed="${t === 'dark'}" aria-label="Dunkel">${icon('moon', 16)}</button></div>
       <button class="icon-btn help" aria-label="Hilfe" title="Hilfe">${icon('help')}</button>
       <button class="icon-btn" aria-label="Mitteilungen" title="Mitteilungen">${icon('bell')}</button>
@@ -122,6 +128,80 @@
     document.querySelectorAll('.theme-sw button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.t === t)));
     const u = new URL(location.href); u.searchParams.set('theme', t); history.replaceState(null, '', u);
     document.dispatchEvent(new CustomEvent('themechange'));
+  }
+
+  // ---------- Ask Nordane ----------
+  // Side panel like Okam's "Ask okam": greeting, suggestions, composer. Answers are scripted from the demo data.
+  const ASK = [
+    { i: 'bars', q: 'Wie läuft der Abend?', s: 'Umsatz gegen einen normalen Freitag',
+      a: 'Bis 19:42 stehen <b>CHF 6\'694</b>, das sind <b>6.7 % unter</b> Freitag, 16. Oktober um diese Zeit. Der Mittag lief wie letzte Woche, der Rückstand kommt seit 18:00. 31 Gäste sitzen, 6 Bons sind in der Küche.' },
+    { i: 'clock', q: 'Wer arbeitet heute Abend?', s: 'Dienstplan und wer noch kommt',
+      a: 'Eingestempelt sind Corina Fässler, Jonas Inauen und Nico Signer an der Kasse sowie Thomas Rechsteiner und Maria Santos in der Küche. <b>Lara Manser</b> ist ab 17:00 eingeplant, aber noch nicht eingestempelt.' },
+    { i: 'tag', q: 'Preise anpassen', s: 'Hauptgänge um 5 % erhöhen. Sie geben zuerst frei',
+      a: 'Vorschlag, auf 50 Rappen gerundet:<ul><li>St. Galler Bratwurst: CHF 26.00 → <b>27.50</b></li><li>Kalbsgeschnetzeltes: CHF 46.00 → <b>48.50</b></li><li>Appenzeller Chäshörnli: CHF 27.50 → <b>29.00</b></li></ul>Nichts ist geändert, bis Sie freigeben.',
+      act: 'Preise freigeben' },
+    { i: 'trend', q: 'Warum ist der Umsatz tiefer?', s: '6.7 % unter letztem Freitag, was dahinter steckt',
+      a: 'Vor allem weniger Gäste ab 18:00. Der Umsatz pro Gast ist mit <b>CHF 56.73</b> stabil. Lieferung liegt mit 7 % unter dem üblichen Anteil, und Bestellung #1284 ist verspätet.' },
+    { i: 'check', q: 'Was muss ich freigeben?', s: 'Stempelzeiten, Preise und Anfragen',
+      a: 'Drei Dinge: <b>5 Anfragen</b> vom Team, der <b>Wochenplan KW 44</b> mit 4 offenen Schichten und 3 Regelverstössen, und die Rechnung an Huber + Suhner (#1281).' },
+  ];
+  let ask;
+  const askGreeting = () => 'Guten Abend'; // the demo is frozen at Friday 19:42, same as the Heute page
+  const askLogo = (cls) => `<img class="${cls} for-light" src="../assets/nordane-n-light.png" alt=""><img class="${cls} for-dark" src="../assets/nordane-n-dark.png" alt="">`;
+  function askHome() {
+    return `<div class="ask-home">
+      <div class="ask-hero" aria-hidden="true">${askLogo('ask-mark')}<i class="ask-shadow"></i></div>
+      <h2>${askGreeting()}, Corina.</h2><p>Was schauen wir uns heute an?</p>
+      <div class="ask-sugg">${ASK.map((x, k) => `<button data-k="${k}"><span class="ico">${icon(x.i, 18)}</span><span><b>${esc(x.q)}</b><small>${esc(x.s)}</small></span></button>`).join('')}</div>
+    </div>`;
+  }
+  function askReset() {
+    ask.querySelector('.ask-body').innerHTML = askHome();
+    ask.querySelectorAll('.ask-sugg button').forEach((b) => b.addEventListener('click', () => askSend(ASK[+b.dataset.k].q, ASK[+b.dataset.k])));
+  }
+  function askSend(text, hit) {
+    const body = ask.querySelector('.ask-body');
+    if (body.querySelector('.ask-home')) body.innerHTML = '<div class="ask-thread"></div>';
+    const th = body.querySelector('.ask-thread');
+    hit = hit || ASK.find((x) => x.q.toLowerCase() === text.trim().toLowerCase());
+    th.insertAdjacentHTML('beforeend', `<div class="msg me">${esc(text)}</div><div class="msg bot typing">${askLogo('av')}<div class="bubble"><i></i><i></i><i></i></div></div>`);
+    body.scrollTop = body.scrollHeight;
+    setTimeout(() => {
+      const t = th.querySelector('.typing'); t.classList.remove('typing');
+      t.querySelector('.bubble').innerHTML = hit ? hit.a + (hit.act ? `<div class="msg-act"><button class="btn primary">${esc(hit.act)}</button><button class="btn">Anpassen</button></div>` : '')
+        : 'Im Mock beantworte ich nur die Vorschläge. Im fertigen Produkt sehe ich Umsatz, Dienstplan, Karte und Anfragen der Linde und antworte direkt darauf.';
+      t.querySelectorAll('.msg-act .btn').forEach((b, k) => b.addEventListener('click', () => toast(k ? 'Demo: hier liessen sich die Preise einzeln anpassen.' : 'Demo: 3 Preise freigegeben, gültig ab morgen.')));
+      body.scrollTop = body.scrollHeight;
+    }, 750);
+  }
+  function askNordane() {
+    if (!ask) {
+      ask = document.createElement('aside'); ask.className = 'ask-panel'; ask.setAttribute('role', 'dialog'); ask.setAttribute('aria-label', 'Ask Nordane');
+      ask.innerHTML = `<div class="ask-h">
+          <button class="ask-conv">Neues Gespräch ${icon('chev', 16)}</button><span class="sp"></span>
+          <button class="icon-btn" data-a="new" aria-label="Neues Gespräch" title="Neues Gespräch">${icon('plus')}</button>
+          <button class="icon-btn" data-a="wide" aria-label="Breiter anzeigen" title="Breiter anzeigen">${icon('expand')}</button>
+          <button class="icon-btn" data-a="close" aria-label="Schliessen" title="Schliessen">${icon('x')}</button></div>
+        <div class="ask-body"></div>
+        <form class="ask-f"><input placeholder="Frag Nordane etwas" aria-label="Frage an Nordane"><kbd>⌘J</kbd><button class="ask-go" aria-label="Senden">${icon('up', 18, 2)}</button></form>`;
+      document.body.appendChild(ask);
+      ask.querySelector('[data-a="new"]').addEventListener('click', askReset);
+      ask.querySelector('[data-a="close"]').addEventListener('click', () => askSet(false));
+      ask.querySelector('[data-a="wide"]').addEventListener('click', (e) => { const w = ask.classList.toggle('wide'); document.body.classList.toggle('ask-wide', w); e.currentTarget.innerHTML = icon(w ? 'shrink' : 'expand'); });
+      ask.querySelector('.ask-conv').addEventListener('click', () => toast('Demo: frühere Gespräche erscheinen hier.'));
+      const f = ask.querySelector('.ask-f'), inp = f.querySelector('input');
+      inp.addEventListener('input', () => f.classList.toggle('has', !!inp.value.trim()));
+      f.addEventListener('submit', (e) => { e.preventDefault(); if (inp.value.trim()) { askSend(inp.value); inp.value = ''; f.classList.remove('has'); } });
+      ask.addEventListener('keydown', (e) => { if (e.key === 'Escape') askSet(false); });
+      askReset();
+    }
+    askSet(!ask.classList.contains('on'));
+  }
+  // On wide screens the panel docks: body.ask-open makes the page step aside, leaving a gap of mountain view.
+  function askSet(open) {
+    ask.classList.toggle('on', open);
+    document.body.classList.toggle('ask-open', open);
+    if (open) requestAnimationFrame(() => ask.querySelector('.ask-f input').focus());
   }
 
   // ---------- Toast, dialog, drawer ----------
@@ -288,6 +368,10 @@
     document.querySelector('.main').prepend(top);
     top.querySelectorAll('.theme-sw button').forEach((b) => b.addEventListener('click', () => setTheme(b.dataset.t)));
     top.querySelector('#search-btn').addEventListener('click', openPalette);
+    top.querySelector('#ask-btn').addEventListener('click', askNordane);
+    // ?ask opens the panel on load; ?ask=2 also asks the third suggestion (for demos and screenshots).
+    const askQ = new URLSearchParams(location.search).get('ask');
+    if (askQ !== null) { askNordane(); if (ASK[askQ]) askSend(ASK[askQ].q, ASK[askQ]); }
     const mb = top.querySelector('#menu-btn');
     mb.addEventListener('click', () => { const on = side.classList.toggle('on'); mb.setAttribute('aria-expanded', String(on)); });
     const ws = side.querySelector('#ws'), wm = side.querySelector('#ws-menu');
@@ -304,6 +388,7 @@
   function bindKeys() {
     document.addEventListener('keydown', (e) => {
       if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openPalette(); }
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'j') { e.preventDefault(); askNordane(); }
       if (e.key === 'Escape') { closeDrawer(); closePalette(); }
     });
   }
