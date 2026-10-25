@@ -36,17 +36,24 @@
 <meta property="og:url" content="https://nordane.ch/" />
 <meta property="og:locale" content="en_US" />
 <meta property="og:locale:alternate" content="de_CH" />
-<meta property="og:image" content="https://nordane.ch/assets/og.png?v=3" />
-<meta property="og:image:secure_url" content="https://nordane.ch/assets/og.png?v=3" />
-<meta property="og:image:type" content="image/png" />
+<!-- Link preview: Messages (iMessage) downloads a direct MP4 from og:video and plays it inline (Apple TN3156).
+     The poster is the fallback for apps that show only an image (WhatsApp, LinkedIn, Slack). Keep both under 10 MB together. -->
+<meta property="og:image" content="https://nordane.ch/assets/preview-poster.jpg?v=1" />
+<meta property="og:image:secure_url" content="https://nordane.ch/assets/preview-poster.jpg?v=1" />
+<meta property="og:image:type" content="image/jpeg" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:image:alt" data-i18n-content="og.alt" content="Nordane, Swiss Alps at dusk with the Nordane mark" />
+<meta property="og:image:alt" data-i18n-content="og.alt" content="Nordane, the Swiss Alps at night drawn in points of light, with the Nordane mark" />
+<meta property="og:video" content="https://nordane.ch/assets/preview.mp4?v=1" />
+<meta property="og:video:secure_url" content="https://nordane.ch/assets/preview.mp4?v=1" />
+<meta property="og:video:type" content="video/mp4" />
+<meta property="og:video:width" content="1200" />
+<meta property="og:video:height" content="630" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@Nordane_ch" />
 <meta name="twitter:title" content="Nordane" />
 <meta name="twitter:description" data-i18n-content="og.desc" content="Helping businesses scale into the agentic era. Swiss AI studio, makers of Okam." />
-<meta name="twitter:image" content="https://nordane.ch/assets/og.png?v=3" />
+<meta name="twitter:image" content="https://nordane.ch/assets/preview-poster.jpg?v=1" />
 <!-- schema.org data for search engines and AI agents. The four plan prices must match the pricing cards below:
      tools/build-de.mjs checks them on every run and stops if they differ. -->
 <script type="application/ld+json">
@@ -628,7 +635,7 @@
     }, de:{
       'ct.title':'Wer sind Sie?', 'ct.sub':'Wählen Sie, was passt. Wir melden uns mit der richtigen Ansprechperson.', 'ct.r':'Restaurant', 'ct.r.d':'Ich führe ein Restaurant, Café oder Take-away', 'ct.c':'Unternehmen', 'ct.c.d':'Ich brauche Software oder KI-Agenten', 'ct.p':'Partner oder Investor', 'ct.p.d':'Ich möchte mit Nordane zusammenarbeiten', 'ct.o':'Etwas anderes', 'ct.o.d':'Presse, Jobs oder anderes', 'ct.name':'Ihr Name', 'ct.org':'Restaurant oder Unternehmen', 'ct.email':'E-Mail', 'ct.phone':'Telefon (optional)', 'ct.msg':'Wie können wir helfen?', 'ct.msg.ph':'Ein paar Zeilen zu Ihrem Anliegen', 'ct.send':'An Nordane senden →', 'ct.close':'Schliessen', 'ct.err':'Bitte wählen Sie aus, wer Sie sind, und geben Sie Name und E-Mail an.', 'ct.done':'Ihr E-Mail-Programm ist mit Ihrer Nachricht geöffnet. Drücken Sie dort auf Senden, wir melden uns bald.', 'ct.alt':'Lieber per E-Mail? Schreiben Sie an', 'ct.cta':'Kontakt aufnehmen →',
       'title':'Nordane',
-      'og.desc':'Wir bringen Unternehmen ins Zeitalter der KI-Agenten. Schweizer KI-Studio, Macher von Okam.', 'og.alt':'Nordane, Schweizer Alpen in der Abenddämmerung mit dem Nordane-Zeichen',
+      'og.desc':'Wir bringen Unternehmen ins Zeitalter der KI-Agenten. Schweizer KI-Studio, Macher von Okam.', 'og.alt':'Nordane, die Schweizer Alpen bei Nacht aus Lichtpunkten, mit dem Nordane-Zeichen',
       'meta.desc':'Nordane ist ein Schweizer KI-Studio. Wir bringen Unternehmen ins Zeitalter der KI-Agenten: mit nativen Apps, Plattformen, KI-Agenten und der Infrastruktur darunter. Unser Flaggschiff ist Okam.',
       'mode.toDark':'Dunkles Design einschalten', 'mode.toLight':'Helles Design einschalten',
       'demo.approve':'Freigeben', 'demo.approved':'Freigegeben ✓', 'demo.tile':'Demo «{x}» anzeigen',
